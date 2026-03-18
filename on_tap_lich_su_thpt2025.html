@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ôn Thi Lịch Sử THPT 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #c0392b;
+    --gold: #f0a500;
+    --dark: #0d1117;
+    --dark2: #161b22;
+    --dark3: #21262d;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --green: #2ea043;
+    --green-bg: rgba(46,160,67,0.15);
+    --red-bg: rgba(192,57,43,0.15);
+    --gold-bg: rgba(240,165,0,0.12);
+    --blue: #58a6ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BG pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(192,57,43,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(240,165,0,0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    position: relative;
+    z-index: 10;
+    border-bottom: 1px solid var(--border);
+    background: rgba(13,17,23,0.95);
+    backdrop-filter: blur(10px);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--red), var(--gold));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #fff, var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header-stats {
+    display: flex; gap: 20px; align-items: center;
+  }
+  .hstat {
+    font-size: 13px; color: var(--text2);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .hstat span { color: var(--text); font-weight: 600; }
+
+  /* ===== MAIN LAYOUT ===== */
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+
+  /* ===== SCREEN ===== */
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeUp 0.4s ease; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== HOME SCREEN ===== */
+  .home-hero {
+    text-align: center;
+    padding: 48px 0 40px;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--gold-bg);
+    border: 1px solid rgba(240,165,0,0.3);
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 6vw, 56px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero-title span {
+    background: linear-gradient(90deg, var(--red), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-sub {
+    color: var(--text2);
+    font-size: 16px;
+    max-width: 500px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+
+  /* Mode cards */
+  .mode-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .mode-card {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+  .mode-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .mode-card.red::before { background: linear-gradient(135deg, rgba(192,57,43,0.1), transparent); }
+  .mode-card.gold::before { background: linear-gradient(135deg, rgba(240,165,0,0.1), transparent); }
+  .mode-card.blue::before { background: linear-gradient(135deg, rgba(88,166,255,0.1), transparent); }
+  .mode-card:hover { border-color: rgba(240,165,0,0.4); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
+  .mode-card:hover::before { opacity: 1; }
+  .mode-icon { font-size: 32px; margin-bottom: 14px; }
+  .mode-name { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .mode-desc { color: var(--text2); font-size: 13px; line-height: 1.5; }
+  .mode-tag {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+  .red .mode-tag { background: var(--red-bg); color: var(--red); }
+  .gold .mode-tag { background: var(--gold-bg); color: var(--gold); }
+  .blue .mode-tag { background: rgba(88,166,255,0.12); color: var(--blue); }
+
+  /* Topic selector */
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text2);
+    margin-bottom: 14px;
+  }
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .topic-btn {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    cursor: pointer;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .topic-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .topic-btn.selected { background: var(--gold-bg); border-color: var(--gold); color: var(--gold); }
+  .topic-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+  .topic-btn.selected .topic-dot { background: var(--gold); }
+
+  /* count selector */
+  .count-row {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 32px; flex-wrap: wrap;
+  }
+  .count-btn {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 20px;
+    cursor: pointer;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .count-btn:hover { border-color: var(--red); color: var(--red); }
+  .count-btn.selected { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+
+  /* Start button */
+  .btn-start {
+    display: block;
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, var(--red), #e74c3c);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.25s;
+    box-shadow: 0 8px 24px rgba(192,57,43,0.3);
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(192,57,43,0.45); }
+  .btn-start:active { transform: translateY(0); }
+
+  /* ===== QUIZ SCREEN ===== */
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .quiz-info {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .quiz-mode-badge {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 100px;
+    background: var(--gold-bg);
+    color: var(--gold);
+    border: 1px solid rgba(240,165,0,0.3);
+  }
+  .quiz-counter {
+    font-size: 14px;
+    color: var(--text2);
+  }
+  .quiz-counter strong { color: var(--text); }
+
+  /* Timer */
+  .timer-wrap {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .timer {
+    font-size: 20px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--gold);
+    min-width: 55px;
+    text-align: right;
+  }
+  .timer.warning { color: var(--red); animation: pulse 0.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+  /* Progress bar */
+  .progress-bar-outer {
+    height: 4px;
+    background: var(--dark3);
+    border-radius: 100px;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), var(--gold));
+    border-radius: 100px;
+    transition: width 0.4s ease;
+  }
+
+  /* Question card */
+  .question-card {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 20px;
+  }
+  .question-num {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 12px;
+  }
+  .question-text {
+    font-size: clamp(16px, 2.5vw, 20px);
+    font-weight: 600;
+    line-height: 1.55;
+    color: var(--text);
+  }
+  .question-topic {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+    background: rgba(88,166,255,0.1);
+    color: var(--blue);
+    border: 1px solid rgba(88,166,255,0.2);
+  }
+
+  /* Options */
+  .options-grid {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .option-btn {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    transition: all 0.2s;
+    font-family: inherit;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .option-btn:not(.disabled):hover {
+    border-color: var(--gold);
+    background: var(--gold-bg);
+    transform: translateX(4px);
+  }
+  .option-label {
+    min-width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .option-btn.selected .option-label {
+    background: var(--gold);
+    color: var(--dark);
+    border-color: var(--gold);
+  }
+  .option-btn.correct {
+    border-color: var(--green);
+    background: var(--green-bg);
+  }
+  .option-btn.correct .option-label {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+  }
+  .option-btn.wrong {
+    border-color: var(--red);
+    background: var(--red-bg);
+  }
+  .option-btn.wrong .option-label {
+    background: var(--red);
+    color: #fff;
+    border-color: var(--red);
+  }
+  .option-btn.disabled { cursor: default; }
+  .option-text { flex: 1; }
+
+  /* Explain box */
+  .explain-box {
+    background: var(--dark3);
+    border-left: 3px solid var(--gold);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .explain-box.show { display: block; animation: fadeUp 0.3s; }
+  .explain-box strong { color: var(--gold); }
+
+  /* Quiz actions */
+  .quiz-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--red), #e74c3c);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(192,57,43,0.25);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(192,57,43,0.35); }
+  .btn-secondary {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-secondary:hover { border-color: var(--text2); }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), #f5b800);
+    color: var(--dark);
+    font-weight: 700;
+  }
+  .btn-gold:hover { transform: translateY(-2px); }
+
+  /* Skip indicator */
+  .skip-dots {
+    display: flex; gap: 5px;
+  }
+  .skip-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .skip-dot.answered { background: var(--green); border-color: var(--green); }
+  .skip-dot.wrong-ans { background: var(--red); border-color: var(--red); }
+  .skip-dot.skipped { background: var(--gold); border-color: var(--gold); }
+  .skip-dot.current { border-color: var(--blue); transform: scale(1.3); }
+
+  /* ===== RESULT SCREEN ===== */
+  .result-hero {
+    text-align: center;
+    padding: 48px 0 40px;
+  }
+  .result-emoji { font-size: 64px; margin-bottom: 16px; }
+  .result-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+  .result-sub { color: var(--text2); font-size: 16px; margin-bottom: 40px; }
+
+  /* Score ring */
+  .score-ring-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .score-ring {
+    width: 160px; height: 160px;
+    position: relative;
+  }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .score-ring-num {
+    font-size: 36px;
+    font-weight: 900;
+    font-family: 'Playfair Display', serif;
+  }
+  .score-ring-label { font-size: 12px; color: var(--text2); }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    font-family: 'Playfair Display', serif;
+  }
+  .stat-label { font-size: 12px; color: var(--text2); }
+  .stat-card.green .stat-num { color: var(--green); }
+  .stat-card.red .stat-num { color: var(--red); }
+  .stat-card.gold .stat-num { color: var(--gold); }
+  .stat-card.blue .stat-num { color: var(--blue); }
+
+  /* Review section */
+  .review-section { margin-top: 40px; }
+  .review-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .review-item {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 10px;
+  }
+  .review-item.correct-r { border-left: 3px solid var(--green); }
+  .review-item.wrong-r { border-left: 3px solid var(--red); }
+  .review-item.skipped-r { border-left: 3px solid var(--gold); }
+  .review-q { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+  .review-answers { display: flex; flex-direction: column; gap: 4px; }
+  .review-answer { font-size: 13px; display: flex; align-items: flex-start; gap: 8px; }
+  .review-answer .ra-label {
+    font-size: 11px; font-weight: 700; padding: 2px 7px;
+    border-radius: 4px; flex-shrink: 0; margin-top: 1px;
+  }
+  .ra-correct { background: var(--green-bg); color: var(--green); }
+  .ra-wrong { background: var(--red-bg); color: var(--red); }
+  .ra-your { background: rgba(88,166,255,0.1); color: var(--blue); }
+
+  /* Result buttons */
+  .result-actions {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    margin-top: 32px;
+  }
+
+  /* ===== FLASHCARD SCREEN ===== */
+  .flashcard-wrap {
+    perspective: 1200px;
+    margin: 40px auto;
+    max-width: 560px;
+    cursor: pointer;
+  }
+  .flashcard {
+    width: 100%;
+    aspect-ratio: 16/10;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .fc-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    text-align: center;
+    backface-visibility: hidden;
+  }
+  .fc-front {
+    background: linear-gradient(135deg, var(--dark2), var(--dark3));
+    border: 1px solid var(--border);
+  }
+  .fc-back {
+    background: linear-gradient(135deg, rgba(192,57,43,0.15), rgba(240,165,0,0.08));
+    border: 1px solid rgba(240,165,0,0.25);
+    transform: rotateY(180deg);
+  }
+  .fc-hint { font-size: 12px; color: var(--text2); margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  .fc-label { font-size: 13px; color: var(--gold); font-weight: 600; margin-bottom: 12px; letter-spacing: 1px; }
+  .fc-content { font-size: clamp(15px, 2.5vw, 20px); font-weight: 600; line-height: 1.5; }
+  .fc-date { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--gold); }
+  .fc-nav { display: flex; gap: 12px; justify-content: center; margin-top: 16px; }
+  .fc-counter { text-align: center; color: var(--text2); font-size: 13px; margin-bottom: 8px; }
+
+  /* ===== LOADING ===== */
+  .loading { text-align: center; padding: 80px 20px; color: var(--text2); }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--dark3);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    max-width: 480px;
+    width: 100%;
+    animation: fadeUp 0.3s;
+    text-align: center;
+  }
+  .modal h3 { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+  .modal p { color: var(--text2); margin-bottom: 24px; line-height: 1.6; }
+  .modal-actions { display: flex; gap: 10px; justify-content: center; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .question-card { padding: 20px; }
+    .quiz-actions { flex-direction: column; }
+    .quiz-actions .btn { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">⭐</div>
+    <div class="logo-text">Lịch Sử THPT 2025</div>
+  </div>
+  <div class="header-stats" id="headerStats">
+    <div class="hstat">Câu hỏi: <span id="totalQs">0</span></div>
+    <div class="hstat">Đúng hôm nay: <span id="todayCorrect">0</span></div>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- HOME SCREEN -->
+  <div class="screen active" id="homeScreen">
+    <div class="home-hero">
+      <div class="hero-badge">🎓 Kiến thức thi THPT 2025</div>
+      <h1 class="hero-title">Ôn Thi<br><span>Lịch Sử</span><br>Hiệu Quả</h1>
+      <p class="hero-sub">Hệ thống ôn luyện thông minh với đầy đủ kiến thức Lịch Sử Thế Giới, Việt Nam và hoạt động của Hồ Chí Minh.</p>
+    </div>
+
+    <p class="section-title">🎮 Chọn chế độ</p>
+    <div class="mode-grid">
+      <div class="mode-card red" onclick="selectMode('quiz')">
+        <div class="mode-icon">📝</div>
+        <div class="mode-name">Trắc Nghiệm</div>
+        <div class="mode-desc">4 phương án ABCD, trộn ngẫu nhiên, tính điểm và giải thích đáp án</div>
+        <div class="mode-tag">Phổ biến nhất</div>
+      </div>
+      <div class="mode-card gold" onclick="selectMode('flashcard')">
+        <div class="mode-icon">🃏</div>
+        <div class="mode-name">Thẻ Ghi Nhớ</div>
+        <div class="mode-desc">Xem thời gian → đoán sự kiện, hoặc xem sự kiện → đoán thời gian. Lật thẻ để xem đáp án</div>
+        <div class="mode-tag">Ghi nhớ nhanh</div>
+      </div>
+      <div class="mode-card blue" onclick="selectMode('typing')">
+        <div class="mode-icon">⌨️</div>
+        <div class="mode-name">Nhập Đáp Án</div>
+        <div class="mode-desc">Nhìn sự kiện, nhập năm xảy ra. Luyện ghi nhớ chính xác mốc thời gian</div>
+        <div class="mode-tag">Thử thách</div>
+      </div>
+    </div>
+
+    <p class="section-title">📚 Chủ đề</p>
+    <div class="topic-grid" id="topicGrid"></div>
+
+    <p class="section-title">🔢 Số câu hỏi</p>
+    <div class="count-row" id="countRow">
+      <button class="count-btn selected" onclick="selectCount(10, this)">10 câu</button>
+      <button class="count-btn" onclick="selectCount(20, this)">20 câu</button>
+      <button class="count-btn" onclick="selectCount(30, this)">30 câu</button>
+      <button class="count-btn" onclick="selectCount(50, this)">50 câu</button>
+      <button class="count-btn" onclick="selectCount(999, this)">Tất cả</button>
+    </div>
+
+    <button class="btn-start" onclick="startSession()">🚀 Bắt đầu ôn tập</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div class="screen" id="quizScreen">
+    <div class="quiz-header">
+      <div class="quiz-info">
+        <div class="quiz-mode-badge" id="modeBadge">Trắc Nghiệm</div>
+        <div class="quiz-counter">Câu <strong id="qCurrent">1</strong> / <strong id="qTotal">10</strong></div>
+      </div>
+      <div class="timer-wrap">
+        <span style="font-size:16px;">⏱️</span>
+        <div class="timer" id="timerDisplay">30</div>
+      </div>
+    </div>
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
+    </div>
+
+    <!-- Dot nav -->
+    <div class="skip-dots" id="dotNav" style="margin-bottom:20px; flex-wrap:wrap; gap:5px; display:flex;"></div>
+
+    <div class="question-card" id="questionCard">
+      <div class="question-num" id="questionNum">Câu 1</div>
+      <div class="question-text" id="questionText"></div>
+      <div class="question-topic" id="questionTopic"></div>
+    </div>
+
+    <div class="options-grid" id="optionsGrid"></div>
+    <div class="explain-box" id="explainBox"></div>
+
+    <div class="quiz-actions">
+      <button class="btn btn-secondary" onclick="skipQuestion()">⏭ Bỏ qua</button>
+      <button class="btn btn-secondary" onclick="goHome()">🏠 Thoát</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none;">Tiếp theo →</button>
+    </div>
+  </div>
+
+  <!-- TYPING QUIZ SCREEN -->
+  <div class="screen" id="typingScreen">
+    <div class="quiz-header">
+      <div class="quiz-info">
+        <div class="quiz-mode-badge" style="background:rgba(88,166,255,0.12);color:var(--blue);border-color:rgba(88,166,255,0.3)">Nhập Đáp Án</div>
+        <div class="quiz-counter">Câu <strong id="tqCurrent">1</strong> / <strong id="tqTotal">10</strong></div>
+      </div>
+      <div class="timer-wrap">
+        <span style="font-size:16px;">⏱️</span>
+        <div class="timer" id="timerDisplay2">30</div>
+      </div>
+    </div>
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="progressBar2" style="width:0%"></div>
+    </div>
+    <div class="question-card">
+      <div class="question-num" id="tquestionNum">Câu 1</div>
+      <div class="question-text" id="tquestionText"></div>
+      <div class="question-topic" id="tquestionTopic"></div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <input id="typingInput" type="text" placeholder="Nhập năm xảy ra sự kiện..."
+        style="width:100%;background:var(--dark2);border:2px solid var(--border);border-radius:12px;padding:16px 20px;
+               color:var(--text);font-family:inherit;font-size:18px;font-weight:700;outline:none;transition:border-color 0.2s;"
+        onkeydown="if(event.key==='Enter')checkTypingAnswer()"
+        onfocus="this.style.borderColor='var(--gold)'"
+        onblur="this.style.borderColor='var(--border)'">
+    </div>
+    <div class="explain-box" id="explainBox2"></div>
+    <div class="quiz-actions">
+      <button class="btn btn-secondary" onclick="skipTyping()">⏭ Bỏ qua</button>
+      <button class="btn btn-secondary" onclick="goHome()">🏠 Thoát</button>
+      <button class="btn btn-gold" onclick="checkTypingAnswer()">✓ Kiểm tra</button>
+      <button class="btn btn-primary" id="nextBtnT" onclick="nextTyping()" style="display:none;">Tiếp theo →</button>
+    </div>
+  </div>
+
+  <!-- FLASHCARD SCREEN -->
+  <div class="screen" id="flashcardScreen">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <button class="btn btn-secondary" onclick="goHome()">← Về trang chủ</button>
+      <div class="quiz-mode-badge" style="background:var(--gold-bg);color:var(--gold);border:1px solid rgba(240,165,0,0.3);">🃏 Thẻ Ghi Nhớ</div>
+      <div style="font-size:13px;color:var(--text2);">Nhấn thẻ để lật</div>
+    </div>
+    <div class="fc-counter" id="fcCounter">1 / 10</div>
+    <div class="flashcard-wrap" onclick="flipCard()">
+      <div class="flashcard" id="flashcard">
+        <div class="fc-face fc-front">
+          <div class="fc-hint">📅 Thời gian</div>
+          <div class="fc-date" id="fcDate"></div>
+          <div style="margin-top:12px;font-size:13px;color:var(--text2);">Nhấp để xem sự kiện</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-label">📜 Sự kiện</div>
+          <div class="fc-content" id="fcContent"></div>
+          <div class="fc-hint" style="margin-top:16px;">Chủ đề: <span id="fcTopic"></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="btn btn-secondary" onclick="prevCard()">← Trước</button>
+      <button class="btn btn-gold" onclick="shuffleCards()">🔀 Xáo trộn</button>
+      <button class="btn btn-secondary" onclick="nextCard()">Tiếp →</button>
+    </div>
+    <div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn" style="background:var(--green-bg);border:1px solid var(--green);color:var(--green);" onclick="markCard('know')">✓ Đã thuộc</button>
+      <button class="btn" style="background:var(--red-bg);border:1px solid var(--red);color:var(--red);" onclick="markCard('unknown')">✗ Chưa thuộc</button>
+    </div>
+    <div style="margin-top:16px;text-align:center;font-size:13px;color:var(--text2);">
+      Đã thuộc: <span id="knownCount" style="color:var(--green);font-weight:700;">0</span> / 
+      Chưa thuộc: <span id="unknownCount" style="color:var(--red);font-weight:700;">0</span>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div class="screen" id="resultScreen">
+    <div class="result-hero">
+      <div class="result-emoji" id="resultEmoji">🎉</div>
+      <h2 class="result-title" id="resultTitle">Xuất sắc!</h2>
+      <p class="result-sub" id="resultSub">Kết quả bài kiểm tra của bạn</p>
+    </div>
+
+    <div class="score-ring-wrap">
+      <div class="score-ring">
+        <svg width="160" height="160" viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="65" fill="none" stroke="var(--dark3)" stroke-width="10"/>
+          <circle cx="80" cy="80" r="65" fill="none" stroke="url(#rg)" stroke-width="10"
+            stroke-linecap="round" stroke-dasharray="408" id="ringCircle" stroke-dashoffset="408"/>
+          <defs>
+            <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#c0392b"/>
+              <stop offset="100%" stop-color="#f0a500"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="score-ring-text">
+          <div class="score-ring-num" id="scorePercent">0%</div>
+          <div class="score-ring-label">Điểm</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card green"><div class="stat-num" id="resCorrect">0</div><div class="stat-label">✅ Đúng</div></div>
+      <div class="stat-card red"><div class="stat-num" id="resWrong">0</div><div class="stat-label">❌ Sai</div></div>
+      <div class="stat-card gold"><div class="stat-num" id="resSkipped">0</div><div class="stat-label">⏭ Bỏ qua</div></div>
+      <div class="stat-card blue"><div class="stat-num" id="resTime">0s</div><div class="stat-label">⏱ Thời gian</div></div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn btn-gold" onclick="retryQuiz()">🔄 Thử lại</button>
+      <button class="btn btn-primary" onclick="goHome()">🏠 Về trang chủ</button>
+    </div>
+
+    <div class="review-section">
+      <div class="review-title">📋 Xem lại câu hỏi <span id="reviewCount" style="font-size:13px;color:var(--text2);font-weight:400;"></span></div>
+      <div id="reviewList"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Confirm modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <h3>⚠️ Thoát bài kiểm tra?</h3>
+    <p>Kết quả sẽ không được lưu. Bạn có chắc muốn thoát không?</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Tiếp tục làm</button>
+      <button class="btn btn-primary" onclick="confirmHome()">Thoát</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA — tất cả câu hỏi từ tài liệu
+// ============================================================
+const DATA = {
+  "Lịch Sử Thế Giới": [
+    {time:"1914-1918", event:"Chiến tranh thế giới thứ nhất"},
+    {time:"1917", event:"Cách mạng tháng Hai và Cách mạng tháng Mười ở Nga"},
+    {time:"1922", event:"Liên bang Cộng hòa xã hội chủ nghĩa Xô Viết (Liên Xô) ra đời"},
+    {time:"1939-1945", event:"Chiến tranh thế giới thứ hai"},
+    {time:"1940 đến nay", event:"Cách mạng Khoa học-kĩ thuật / Cách mạng khoa học công nghệ bùng nổ"},
+    {time:"1945", event:"Liên hợp quốc được thành lập"},
+    {time:"1945-1991", event:"Trật tự hai cực I-an-ta hình thành và tồn tại"},
+    {time:"1947-1989", event:"Cuộc Chiến tranh lạnh diễn ra"},
+    {time:"1947", event:"Kế hoạch Mác-san ra đời"},
+    {time:"1949", event:"Tổ chức Bắc Đại Tây Dương (NATO) thành lập và Hội đồng tương trợ kinh tế (SEV) ra đời"},
+    {time:"1950-1953", event:"Cuộc chiến tranh Triều Tiên"},
+    {time:"1955", event:"Tổ chức Hiệp ước Vác-sa-va được thành lập"},
+    {time:"1957", event:"Liên minh châu Âu ra đời (tiền thân)"},
+    {time:"1961", event:"Hiệp hội Đông Nam Á (ASA) ra đời"},
+    {time:"1967", event:"Hiệp hội các quốc gia Đông Nam Á (ASEAN) ra đời — Tuyên bố Băng Cốc"},
+    {time:"1971", event:"ASEAN ra Tuyên bố khu vực hòa bình, tự do và trung lập (ZOPFAN)"},
+    {time:"1976", event:"Hiệp ước Thân thiện và Hợp tác ở ĐNA (TAC) / Hiệp ước Ba-li kí kết"},
+    {time:"1980", event:"Xu thế toàn cầu hóa xuất hiện"},
+    {time:"1989", event:"Diễn đàn Hợp tác Kinh tế châu Á-Thái Bình Dương (APEC) thành lập"},
+    {time:"1991", event:"Chế độ XHCN ở Liên Xô và Đông Âu tan rã"},
+    {time:"1996", event:"Diễn đàn hợp tác Á-Âu (ASEM) thành lập"},
+    {time:"1997", event:"Tầm nhìn ASEAN 2020 thông qua tại HNCC ASEAN lần 2 (Ma-lai-xi-a)"},
+    {time:"2003", event:"Tuyên bố về sự hoà hợp ASEAN II (Ba-li II) tại HNCC ASEAN lần 9 (Inđônêxia)"},
+    {time:"2007", event:"Hiến chương ASEAN được thông qua, có hiệu lực năm 2008"},
+    {time:"2009", event:"Lộ trình xây dựng Cộng đồng ASEAN (2009-2015) được thông qua"},
+    {time:"2015", event:"Cộng đồng ASEAN được thành lập (với 3 trụ cột) tại HNCC ASEAN lần thứ 27 (Ma-lai-xi-a); ASEAN thông qua Tầm nhìn ASEAN 2025 và Lộ trình giai đoạn 2 (2015-2020)"},
+    {time:"2020", event:"Tuyên bố Hà Nội về Tầm nhìn Cộng đồng ASEAN sau năm 2025 tại HNCC ASEAN lần thứ 37"},
+  ],
+  "Lịch Sử Việt Nam": [
+    {time:"938 (X)", event:"Kháng chiến chống quân Nam Hán của Ngô Quyền — trận Bạch Đằng"},
+    {time:"1075-1077 (XI)", event:"Kháng chiến chống Tống thời Lý — trận Sông Như Nguyệt (Lý Thường Kiệt lãnh đạo)"},
+    {time:"1258-1288 (XIII)", event:"Kháng chiến chống Mông-Nguyên thời Trần — trận Tây Kết, Chương Dương, Hàm Tử, Bạch Đằng (Trần Hưng Đạo)"},
+    {time:"1418-1427 (XV)", event:"Kháng chiến chống quân Minh (Lê Lợi lãnh đạo) — trận Chi Lăng, Xương Giang"},
+    {time:"1771-1789 (XVIII)", event:"Phong trào Tây Sơn (Nguyễn Huệ, Nguyễn Nhạc, Nguyễn Lữ lãnh đạo) — lật đổ Chúa Nguyễn, kháng chiến chống Xiêm (1785), chống Thanh (1789)"},
+    {time:"1858-1884 (XIX)", event:"Kháng chiến chống Pháp thời Nguyễn: trận Đà Nẵng (1858), Gia Định (1859), Cầu Giấy (1874, 1883); Các Hiệp ước Nhâm Tuất (1862), Giáp Tuất (1874), Hác-măng (1883), Pa-tơ-nốt (1884)"},
+    {time:"1905-1908", event:"Phan Bội Châu phát động phong trào Đông Du (Nhật Bản)"},
+    {time:"1908", event:"Phan Bội Châu tham gia thành lập Đông Á Đồng minh hội và Điền-Quế-Việt liên minh"},
+    {time:"1912", event:"Phan Bội Châu thành lập Việt Nam Quang phục hội, tham gia thành lập Hội Chấn Hoa Hưng Á"},
+    {time:"1925", event:"Hội Việt Nam Cách mạng Thanh niên thành lập"},
+    {time:"1929", event:"Ba tổ chức cộng sản ra đời: An Nam Cộng sản Đảng, Đông Dương Cộng sản Đảng, Đông Dương Cộng sản liên đoàn"},
+    {time:"1930", event:"Đảng Cộng sản Việt Nam ra đời"},
+    {time:"1941", event:"Hội nghị lần 8 BCH Trung ương ĐCS Đông Dương; Mặt trận Việt Nam Độc lập đồng minh thành lập"},
+    {time:"1944", event:"Đội Việt Nam Tuyên truyền giải phóng quân thành lập"},
+    {time:"1945", event:"Cách mạng tháng Tám (Tổng khởi nghĩa) thành công; Nước Việt Nam Dân chủ Cộng hòa ra đời; Nhân dân Nam Bộ kháng chiến chống Pháp (23/9/1945)"},
+    {time:"1946", event:"Hiệp định Sơ bộ (Việt-Pháp) và bản Tạm ước được kí kết; Cuộc kháng chiến toàn quốc bùng nổ"},
+    {time:"1946-1947", event:"Cuộc chiến đấu ở đô thị-Bắc vĩ tuyến 16, bước đầu đánh bại kế hoạch ĐNTN"},
+    {time:"1947", event:"Chiến dịch Việt Bắc thu-đông, đánh bại kế hoạch ĐNTN"},
+    {time:"1950", event:"Chiến dịch Biên giới thu-đông, đánh bại kế hoạch Rơ-ve, giành thế chủ động; Pháp đề ra Kế hoạch Đờ Lát đơ Tát-xi-nhi; Việt Nam thiết lập quan hệ ngoại giao với TQ, LX và XHCN"},
+    {time:"1951", event:"Đại hội Đại biểu toàn quốc lần thứ hai; Đảng Lao động Việt Nam; Mặt trận Liên Việt thành lập; Liên minh nhân dân Việt-Miên-Lào thành lập"},
+    {time:"1951-1953", event:"Chiến dịch Hòa Bình, chiến dịch Tây Bắc, chiến dịch Thượng Lào"},
+    {time:"1953-1954", event:"Pháp-Mỹ đề ra Kế hoạch Na-va (1953); Cuộc Tiến công chiến lược Đông Xuân (1953-1954); Chiến dịch Điện Biên Phủ (1954); Hiệp định Giơ-ne-vơ kí kết (1954)"},
+    {time:"1945-1954", event:"Kháng chiến chống Pháp xâm lược"},
+    {time:"1954-1975", event:"Kháng chiến chống Mỹ, cứu nước"},
+    {time:"1959", event:"Hội nghị BCH Trung ương lần thứ 15 (Hà Nội)"},
+    {time:"1959-1960", event:"Phong trào Đồng khởi"},
+    {time:"1960", event:"Đại hội đại biểu toàn quốc lần thứ III (Hà Nội); Mặt trận Dân tộc Giải phóng MNVN; Việt Nam thiết lập quan hệ ngoại giao với Cu-ba"},
+    {time:"1961", event:"Quân Giải phóng miền Nam ra đời"},
+    {time:"1961-1965", event:"Chiến tranh đặc biệt"},
+    {time:"1962", event:"Việt Nam thiết lập quan hệ ngoại giao với Lào"},
+    {time:"1963", event:"Chiến thắng Ấp Bắc (Mỹ Tho)"},
+    {time:"1964", event:"Chiến thắng Bình Giã, An Lão"},
+    {time:"1965", event:"Chiến thắng Ba Gia, Đồng Xoài; Hội nghị nhân dân ba nước Đông Dương triệu tập"},
+    {time:"1965-1968", event:"Chiến tranh cục bộ, quân Mỹ và đồng minh vào Việt Nam"},
+    {time:"1967", event:"Việt Nam thiết lập quan hệ ngoại giao với Cam-pu-chia"},
+    {time:"1968", event:"Cuộc Tổng tiến công và nổi dậy Xuân Mậu Thân — Mỹ tuyên bố 'Phi Mỹ hóa', xuống thang chiến tranh, chấp nhận đàm phán ở Pa-ri"},
+    {time:"1969-1973", event:"Chiến lược Việt Nam hóa chiến tranh, Đông Dương hóa chiến tranh"},
+    {time:"1969", event:"Chính phủ lâm thời Cộng hòa miền Nam Việt Nam ra đời"},
+    {time:"1970", event:"Hội nghị cấp cao 3 nước Đông Dương; Đánh bại cuộc hành quân xâm lược Cam-pu-chia của Mỹ"},
+    {time:"1971", event:"Đánh bại cuộc hành quân Lam Sơn ở Đường 9-Nam Lào"},
+    {time:"1972", event:"Cuộc Tiến công chiến lược ở miền Nam — buộc Mỹ tuyên bố 'Mỹ hóa'; Trận 'Điện Biên Phủ trên không' (miền Bắc); Mỹ kí Hiệp định Pa-ri; Việt Nam thiết lập quan hệ ngoại giao với Ấn Độ"},
+    {time:"1973", event:"Hiệp định Pa-ri về chấm dứt chiến tranh Việt Nam được kí kết; Mỹ và đồng minh rút hết quân về nước; Việt Nam thiết lập quan hệ ngoại giao với Nhật Bản, Ô-xtrây-li-a, Pháp, Hà Lan"},
+    {time:"1975", event:"Chiến thắng Đường 14-Phước Long (1-1975); Cuộc Tổng tiến công và nổi dậy Xuân 1975 — Đại thắng mùa Xuân (3 chiến dịch: Tây Nguyên, Huế-Đà Nẵng, Hồ Chí Minh) — kết thúc kháng chiến chống Mỹ"},
+    {time:"1976", event:"Thống nhất đất nước về mặt Nhà nước; Việt Nam gia nhập Phong trào Không liên kết"},
+    {time:"1977", event:"Việt Nam gia nhập Liên hợp quốc; Việt Nam và Lào kí Hiệp ước hữu nghị và hợp tác"},
+    {time:"1978", event:"Việt Nam và Liên Xô kí Hiệp ước hữu nghị và hợp tác; Việt Nam gia nhập Hội đồng tương trợ kinh tế (SEV)"},
+    {time:"1979-1986", event:"Chiến tranh biên giới Tây Nam, chiến tranh biên giới phía Bắc (Bảo vệ Tổ quốc)"},
+    {time:"1986", event:"Đại hội đại biểu toàn quốc lần VI — Mở đầu công cuộc Đổi mới đất nước"},
+    {time:"1991", event:"Việt Nam bình thường hóa quan hệ ngoại giao với Trung Quốc; Đại hội đại biểu toàn quốc lần VII — Công nghiệp hóa, hiện đại hóa đất nước"},
+    {time:"1995", event:"Việt Nam bình thường hóa quan hệ ngoại giao với Mỹ; Việt Nam gia nhập ASEAN, tham gia Hiệp định Thương mại tự do ASEAN"},
+    {time:"1996", event:"Việt Nam tham gia Diễn đàn Hợp tác Á-Âu (ASEM)"},
+    {time:"1998", event:"Việt Nam đảm nhiệm vai trò Chủ tịch ASEAN; Việt Nam tham gia Diễn đàn Hợp tác Kinh tế châu Á-Thái Bình Dương (APEC)"},
+    {time:"2001", event:"Đại hội đại biểu toàn quốc lần IX — chủ động hội nhập kinh tế quốc tế"},
+    {time:"2007", event:"Việt Nam gia nhập Tổ chức Thương mại Thế giới (WTO)"},
+    {time:"2008", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Trung Quốc"},
+    {time:"2010", event:"Việt Nam đảm nhiệm vai trò Chủ tịch ASEAN"},
+    {time:"2011", event:"Đại hội đại biểu toàn quốc lần XI — chủ động và tích cực hội nhập quốc tế"},
+    {time:"2012", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Nga"},
+    {time:"2014", event:"Việt Nam bắt đầu tham gia hoạt động giữ gìn hòa bình của Liên hợp quốc"},
+    {time:"2016", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Ấn Độ"},
+    {time:"2020", event:"Việt Nam đảm nhiệm vai trò Chủ tịch ASEAN"},
+    {time:"2022", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Hàn Quốc"},
+    {time:"2023", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Mỹ và Nhật"},
+    {time:"2024", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Úc, Pháp, Ma-lai-xi-a"},
+    {time:"2025", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với In-đô-nê-xi-a, Xin-ga-po, Niu-di-lân"},
+  ],
+  "Hồ Chí Minh": [
+    {time:"1911", event:"Nguyễn Ái Quốc-Hồ Chí Minh sang phương Tây tìm đường cứu nước"},
+    {time:"1918", event:"Gia nhập Đảng xã hội Pháp"},
+    {time:"1919", event:"Gửi bản Yêu sách của nhân dân An Nam đến Hội nghị Véc-xai"},
+    {time:"1920", event:"Đọc Luận cương của Lê-nin, tìm ra con đường cứu nước; Sáng lập Đảng Cộng sản Pháp; Gia nhập Quốc tế Cộng sản"},
+    {time:"1921", event:"Tham gia sáng lập Hội Liên hiệp thuộc địa (Pa-ri)"},
+    {time:"1923", event:"Sang Liên Xô dự Hội nghị Quốc tế Nông dân"},
+    {time:"1925", event:"Sáng lập Hội Việt Nam Cách mạng Thanh niên; Viết Bản án chế độ thực dân Pháp; Sáng lập Báo Thanh niên; Thành lập Hội Liên hiệp các dân tộc bị áp bức ở Á Đông; Đào tạo, bồi dưỡng và tuyên truyền lý luận cách mạng giải phóng dân tộc"},
+    {time:"1927", event:"Xuất bản tác phẩm Đường Kách mệnh"},
+    {time:"1930", event:"Thống nhất các tổ chức Cộng sản thành lập Đảng Cộng sản Việt Nam; Soạn thảo Cương lĩnh chính trị (Chính cương vắn tắt, Sách lược vắn tắt)"},
+    {time:"1941", event:"Chủ trì Hội nghị lần thứ 8 BCH Trung ương ĐCS Đông Dương; Thành lập Mặt trận Việt Nam Độc lập Đồng minh (Việt Minh)"},
+    {time:"1944", event:"Thành lập Đội Việt Nam Tuyên truyền giải phóng quân; Thành lập Khu giải phóng Việt Bắc"},
+    {time:"1945", event:"Lãnh đạo Cách mạng tháng Tám thành công; Đọc Tuyên ngôn độc lập — Khai sinh nước Việt Nam Dân chủ Cộng hòa"},
+    {time:"1946", event:"Lãnh đạo giải quyết khó khăn về đói, dốt, tài chính; Kí Hiệp định Sơ bộ (Việt-Pháp) và bản Tạm ước; Ra Lời kêu gọi toàn quốc kháng chiến; Phát động toàn quốc kháng chiến chống Pháp"},
+    {time:"1947", event:"Lãnh đạo chiến dịch Việt Bắc"},
+    {time:"1950", event:"Lãnh đạo chiến dịch Biên giới"},
+    {time:"1951", event:"Chủ trì Đại hội đại biểu toàn quốc lần thứ II của Đảng"},
+    {time:"1953-1954", event:"Lãnh đạo cuộc Tiến công chiến lược Đông-Xuân và chiến dịch Điện Biên Phủ"},
+    {time:"1959", event:"Chủ trì Hội nghị lần thứ 15 BCH Trung ương"},
+    {time:"1960", event:"Chủ trì Đại hội đại biểu toàn quốc lần thứ III của Đảng"},
+  ]
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  mode: 'quiz',
+  selectedTopics: ['Lịch Sử Thế Giới', 'Lịch Sử Việt Nam', 'Hồ Chí Minh'],
+  questionCount: 10,
+  questions: [],
+  currentIndex: 0,
+  answers: [],       // {chosen, correct, skipped, time}
+  startTime: 0,
+  totalTime: 0,
+  timer: null,
+  timeLeft: 30,
+  todayCorrect: parseInt(localStorage.getItem('todayCorrect')||'0'),
+  totalAttempts: parseInt(localStorage.getItem('totalAttempts')||'0'),
+  // flashcard
+  fcCards: [],
+  fcIndex: 0,
+  fcKnown: new Set(),
+  fcUnknown: new Set(),
+  fcFlipped: false,
+};
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  renderTopics();
+  document.getElementById('totalQs').textContent = state.totalAttempts;
+  document.getElementById('todayCorrect').textContent = state.todayCorrect;
+}
+
+function renderTopics() {
+  const grid = document.getElementById('topicGrid');
+  const topics = Object.keys(DATA);
+  grid.innerHTML = topics.map(t => `
+    <button class="topic-btn selected" onclick="toggleTopic(this,'${t}')" data-topic="${t}">
+      <div class="topic-dot"></div> ${t}
+    </button>
+  `).join('');
+}
+
+function toggleTopic(btn, topic) {
+  if (state.selectedTopics.includes(topic)) {
+    if (state.selectedTopics.length === 1) return; // at least 1
+    state.selectedTopics = state.selectedTopics.filter(t => t !== topic);
+    btn.classList.remove('selected');
+  } else {
+    state.selectedTopics.push(topic);
+    btn.classList.add('selected');
+  }
+}
+
+function selectMode(m) {
+  state.mode = m;
+  document.querySelectorAll('.mode-card').forEach(c => c.style.borderColor = '');
+  event.currentTarget.style.borderColor = 'var(--gold)';
+}
+
+function selectCount(n, btn) {
+  state.questionCount = n;
+  document.querySelectorAll('.count-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+// ============================================================
+// BUILD QUESTIONS
+// ============================================================
+function buildPool() {
+  let pool = [];
+  state.selectedTopics.forEach(topic => {
+    DATA[topic].forEach(item => {
+      pool.push({...item, topic});
+    });
+  });
+  return pool;
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function buildQuizQuestions(pool) {
+  const shuffled = shuffle([...pool]);
+  const count = Math.min(state.questionCount, shuffled.length);
+  const qs = shuffled.slice(0, count);
+  const allPool = buildPool(); // toàn bộ data thật
+
+  return qs.map(item => {
+    const type = Math.random() < 0.5 ? 0 : 1;
+
+    if (type === 0) {
+      // Hỏi: năm X → chọn đúng SỰ KIỆN (4 đáp án đều là sự kiện thật)
+      const wrongItems = shuffle(
+        allPool.filter(x => x.event !== item.event)
+      ).slice(0, 3);
+      const options = shuffle([item.event, ...wrongItems.map(x => x.event)]);
+      return {
+        question: `Sự kiện nào xảy ra vào năm/giai đoạn <strong>${item.time}</strong>?`,
+        options,
+        correct: item.event,
+        topic: item.topic,
+        explain: `Năm <strong>${item.time}</strong>: ${item.event}`
+      };
+    } else {
+      // Hỏi: sự kiện X → chọn đúng NĂM (4 đáp án đều là năm thật)
+      const wrongItems = shuffle(
+        allPool.filter(x => x.time !== item.time)
+      ).slice(0, 3);
+      const options = shuffle([item.time, ...wrongItems.map(x => x.time)]);
+      return {
+        question: `Sự kiện "<strong>${item.event}</strong>" xảy ra vào thời gian nào?`,
+        options,
+        correct: item.time,
+        topic: item.topic,
+        explain: `Đáp án: <strong>${item.time}</strong> — ${item.event}`
+      };
+    }
+  });
+}
+
+function buildTypingQuestions(pool) {
+  const shuffled = shuffle([...pool]);
+  const count = Math.min(state.questionCount, shuffled.length);
+  return shuffled.slice(0, count).map(item => ({
+    question: `Sự kiện "<strong>${item.event}</strong>" xảy ra vào năm/giai đoạn nào?`,
+    correct: item.time,
+    topic: item.topic,
+    explain: `Đáp án: <strong>${item.time}</strong> — ${item.event}`
+  }));
+}
+
+// ============================================================
+// START SESSION
+// ============================================================
+function startSession() {
+  const pool = buildPool();
+  if (pool.length < 4) { alert('Chọn thêm chủ đề!'); return; }
+
+  state.startTime = Date.now();
+  state.answers = [];
+  state.currentIndex = 0;
+
+  if (state.mode === 'quiz') {
+    state.questions = buildQuizQuestions(pool);
+    showScreen('quizScreen');
+    document.getElementById('modeBadge').textContent = '📝 Trắc Nghiệm';
+    renderQuizQuestion();
+  } else if (state.mode === 'typing') {
+    state.questions = buildTypingQuestions(pool);
+    showScreen('typingScreen');
+    renderTypingQuestion();
+  } else {
+    // flashcard
+    state.fcCards = shuffle([...pool]).slice(0, Math.min(state.questionCount, pool.length));
+    state.fcIndex = 0;
+    state.fcKnown = new Set();
+    state.fcUnknown = new Set();
+    state.fcFlipped = false;
+    showScreen('flashcardScreen');
+    renderFlashcard();
+  }
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+function renderQuizQuestion() {
+  const q = state.questions[state.currentIndex];
+  const total = state.questions.length;
+
+  document.getElementById('qCurrent').textContent = state.currentIndex + 1;
+  document.getElementById('qTotal').textContent = total;
+  document.getElementById('progressBar').style.width = (state.currentIndex / total * 100) + '%';
+  document.getElementById('questionNum').textContent = `Câu ${state.currentIndex + 1}`;
+  document.getElementById('questionText').innerHTML = q.question;
+  document.getElementById('questionTopic').textContent = q.topic;
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('explainBox').classList.remove('show');
+
+  // Dot nav
+  renderDotNav('dotNav', total, state.currentIndex, state.answers);
+
+  // Options
+  const grid = document.getElementById('optionsGrid');
+  const labels = ['A', 'B', 'C', 'D'];
+  grid.innerHTML = q.options.map((opt, i) => `
+    <button class="option-btn" onclick="selectAnswer(${i}, this)">
+      <div class="option-label">${labels[i]}</div>
+      <div class="option-text">${opt}</div>
+    </button>
+  `).join('');
+
+  // Timer
+  startTimer('timerDisplay', () => {
+    // timeout → mark as wrong/skipped
+    recordAnswer(null, null, true);
+    showCorrectAnswer(q);
+  });
+}
+
+function renderDotNav(id, total, current, answers) {
+  const nav = document.getElementById(id);
+  nav.innerHTML = Array.from({length: total}, (_, i) => {
+    const ans = answers[i];
+    let cls = '';
+    if (i === current) cls = 'current';
+    else if (!ans) cls = '';
+    else if (ans.skipped) cls = 'skipped';
+    else if (ans.chosen === ans.correct) cls = 'answered';
+    else cls = 'wrong-ans';
+    return `<div class="skip-dot ${cls}" title="Câu ${i+1}"></div>`;
+  }).join('');
+}
+
+function selectAnswer(optIndex, btn) {
+  const q = state.questions[state.currentIndex];
+  const chosen = q.options[optIndex];
+  const isCorrect = chosen === q.correct;
+
+  clearTimer();
+  recordAnswer(chosen, q.correct, false);
+
+  // Mark all buttons
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.classList.add('disabled'));
+
+  btns.forEach((b, i) => {
+    if (q.options[i] === q.correct) b.classList.add('correct');
+    else if (i === optIndex) b.classList.add('wrong');
+  });
+
+  showExplain(q.explain, 'explainBox');
+  document.getElementById('nextBtn').style.display = '';
+
+  if (isCorrect) {
+    state.todayCorrect++;
+    localStorage.setItem('todayCorrect', state.todayCorrect);
+    document.getElementById('todayCorrect').textContent = state.todayCorrect;
+  }
+
+  renderDotNav('dotNav', state.questions.length, state.currentIndex, state.answers);
+}
+
+function showCorrectAnswer(q) {
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.classList.add('disabled'));
+  btns.forEach((b, i) => {
+    if (q.options[i] === q.correct) b.classList.add('correct');
+  });
+  showExplain(q.explain, 'explainBox');
+  document.getElementById('nextBtn').style.display = '';
+  renderDotNav('dotNav', state.questions.length, state.currentIndex, state.answers);
+}
+
+function recordAnswer(chosen, correct, skipped) {
+  const timeUsed = 30 - state.timeLeft;
+  state.answers[state.currentIndex] = { chosen, correct, skipped, time: timeUsed };
+  state.totalAttempts++;
+  localStorage.setItem('totalAttempts', state.totalAttempts);
+  document.getElementById('totalQs').textContent = state.totalAttempts;
+}
+
+function skipQuestion() {
+  clearTimer();
+  const q = state.questions[state.currentIndex];
+  recordAnswer(null, q.correct, true);
+  showCorrectAnswer(q);
+}
+
+function nextQuestion() {
+  clearTimer();
+  if (state.currentIndex + 1 >= state.questions.length) {
+    showResult();
+    return;
+  }
+  state.currentIndex++;
+  renderQuizQuestion();
+}
+
+// ============================================================
+// TYPING MODE
+// ============================================================
+function renderTypingQuestion() {
+  const q = state.questions[state.currentIndex];
+  const total = state.questions.length;
+
+  document.getElementById('tqCurrent').textContent = state.currentIndex + 1;
+  document.getElementById('tqTotal').textContent = total;
+  document.getElementById('progressBar2').style.width = (state.currentIndex / total * 100) + '%';
+  document.getElementById('tquestionNum').textContent = `Câu ${state.currentIndex + 1}`;
+  document.getElementById('tquestionText').innerHTML = q.question;
+  document.getElementById('tquestionTopic').textContent = q.topic;
+  document.getElementById('typingInput').value = '';
+  document.getElementById('typingInput').disabled = false;
+  document.getElementById('typingInput').style.borderColor = 'var(--border)';
+  document.getElementById('explainBox2').classList.remove('show');
+  document.getElementById('nextBtnT').style.display = 'none';
+
+  setTimeout(() => document.getElementById('typingInput').focus(), 100);
+
+  startTimer('timerDisplay2', () => {
+    recordAnswer(null, q.correct, true);
+    document.getElementById('typingInput').disabled = true;
+    showExplain(q.explain, 'explainBox2');
+    document.getElementById('nextBtnT').style.display = '';
+  });
+}
+
+function checkTypingAnswer() {
+  const q = state.questions[state.currentIndex];
+  const val = document.getElementById('typingInput').value.trim();
+  if (!val) return;
+
+  clearTimer();
+  document.getElementById('typingInput').disabled = true;
+
+  // Normalize: remove spaces, lowercase
+  const norm = s => s.replace(/\s/g,'').toLowerCase();
+  const isCorrect = norm(val) === norm(q.correct);
+
+  const input = document.getElementById('typingInput');
+  input.style.borderColor = isCorrect ? 'var(--green)' : 'var(--red)';
+  input.style.color = isCorrect ? 'var(--green)' : 'var(--red)';
+
+  recordAnswer(val, q.correct, false);
+  if (isCorrect) {
+    state.todayCorrect++;
+    localStorage.setItem('todayCorrect', state.todayCorrect);
+    document.getElementById('todayCorrect').textContent = state.todayCorrect;
+  }
+
+  showExplain(q.explain, 'explainBox2');
+  document.getElementById('nextBtnT').style.display = '';
+}
+
+function skipTyping() {
+  clearTimer();
+  const q = state.questions[state.currentIndex];
+  document.getElementById('typingInput').disabled = true;
+  recordAnswer(null, q.correct, true);
+  showExplain(q.explain, 'explainBox2');
+  document.getElementById('nextBtnT').style.display = '';
+}
+
+function nextTyping() {
+  clearTimer();
+  if (state.currentIndex + 1 >= state.questions.length) {
+    showResult();
+    return;
+  }
+  state.currentIndex++;
+  document.getElementById('typingInput').style.color = 'var(--text)';
+  renderTypingQuestion();
+}
+
+// ============================================================
+// FLASHCARD
+// ============================================================
+function renderFlashcard() {
+  const card = state.fcCards[state.fcIndex];
+  document.getElementById('fcDate').textContent = card.time;
+  document.getElementById('fcContent').textContent = card.event;
+  document.getElementById('fcTopic').textContent = card.topic;
+  document.getElementById('fcCounter').textContent = `${state.fcIndex + 1} / ${state.fcCards.length}`;
+  document.getElementById('knownCount').textContent = state.fcKnown.size;
+  document.getElementById('unknownCount').textContent = state.fcUnknown.size;
+
+  // Reset flip
+  state.fcFlipped = false;
+  document.getElementById('flashcard').classList.remove('flipped');
+}
+
+function flipCard() {
+  state.fcFlipped = !state.fcFlipped;
+  document.getElementById('flashcard').classList.toggle('flipped', state.fcFlipped);
+}
+
+function nextCard() {
+  if (state.fcIndex + 1 < state.fcCards.length) {
+    state.fcIndex++;
+    renderFlashcard();
+  }
+}
+
+function prevCard() {
+  if (state.fcIndex > 0) {
+    state.fcIndex--;
+    renderFlashcard();
+  }
+}
+
+function shuffleCards() {
+  state.fcCards = shuffle([...state.fcCards]);
+  state.fcIndex = 0;
+  renderFlashcard();
+}
+
+function markCard(status) {
+  const idx = state.fcIndex;
+  if (status === 'know') {
+    state.fcKnown.add(idx);
+    state.fcUnknown.delete(idx);
+  } else {
+    state.fcUnknown.add(idx);
+    state.fcKnown.delete(idx);
+  }
+  document.getElementById('knownCount').textContent = state.fcKnown.size;
+  document.getElementById('unknownCount').textContent = state.fcUnknown.size;
+  nextCard();
+}
+
+// ============================================================
+// RESULT
+// ============================================================
+function showResult() {
+  clearTimer();
+  const totalTime = Math.round((Date.now() - state.startTime) / 1000);
+  const answers = state.answers;
+  const total = state.questions.length;
+  const correct = answers.filter(a => a && !a.skipped && a.chosen === a.correct).length;
+  const wrong = answers.filter(a => a && !a.skipped && a.chosen !== a.correct).length;
+  const skipped = answers.filter(a => a && a.skipped).length;
+  const pct = Math.round(correct / total * 100);
+
+  // Emoji + title
+  let emoji = '😔', title = 'Cần cố gắng hơn!';
+  if (pct >= 90) { emoji = '🏆'; title = 'Xuất sắc!'; }
+  else if (pct >= 70) { emoji = '🎉'; title = 'Giỏi lắm!'; }
+  else if (pct >= 50) { emoji = '💪'; title = 'Khá tốt!'; }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultSub').textContent = `Bạn đạt ${correct}/${total} câu đúng (${pct}%)`;
+  document.getElementById('resCorrect').textContent = correct;
+  document.getElementById('resWrong').textContent = wrong;
+  document.getElementById('resSkipped').textContent = skipped;
+  document.getElementById('resTime').textContent = totalTime + 's';
+  document.getElementById('scorePercent').textContent = pct + '%';
+  document.getElementById('scorePercent').style.color = pct >= 70 ? 'var(--green)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+
+  // Animate ring
+  const circumference = 408;
+  const offset = circumference - (pct / 100 * circumference);
+  setTimeout(() => {
+    document.getElementById('ringCircle').style.transition = 'stroke-dashoffset 1.2s ease';
+    document.getElementById('ringCircle').style.strokeDashoffset = offset;
+  }, 100);
+
+  // Review
+  const reviewList = document.getElementById('reviewList');
+  const labels = ['A','B','C','D'];
+  reviewList.innerHTML = state.questions.map((q, i) => {
+    const ans = answers[i] || {};
+    let cls = ans.skipped ? 'skipped-r' : (ans.chosen === q.correct ? 'correct-r' : 'wrong-r');
+    let icon = ans.skipped ? '⏭' : (ans.chosen === q.correct ? '✅' : '❌');
+    const yourAns = ans.chosen || '(Bỏ qua)';
+    return `
+      <div class="review-item ${cls}">
+        <div class="review-q">${icon} ${q.question.replace(/<[^>]+>/g,'')}</div>
+        <div class="review-answers">
+          <div class="review-answer">
+            <span class="ra-label ra-correct">✓ Đúng</span>
+            <span>${q.correct}</span>
+          </div>
+          ${ans.chosen !== q.correct ? `
+          <div class="review-answer">
+            <span class="ra-label ${ans.skipped ? 'ra-your' : 'ra-wrong'}">${ans.skipped ? '⏭ Skip' : '✗ Bạn'}</span>
+            <span style="color:var(--text2)">${yourAns}</span>
+          </div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('reviewCount').textContent = `(${total} câu)`;
+
+  showScreen('resultScreen');
+}
+
+function retryQuiz() {
+  startSession();
+}
+
+// ============================================================
+// TIMER
+// ============================================================
+function startTimer(elId, onTimeout) {
+  clearTimer();
+  state.timeLeft = 30;
+  const el = document.getElementById(elId);
+  el.textContent = 30;
+  el.classList.remove('warning');
+
+  state.timer = setInterval(() => {
+    state.timeLeft--;
+    el.textContent = state.timeLeft;
+    if (state.timeLeft <= 10) el.classList.add('warning');
+    if (state.timeLeft <= 0) {
+      clearTimer();
+      el.textContent = 0;
+      onTimeout();
+    }
+  }, 1000);
+}
+
+function clearTimer() {
+  if (state.timer) { clearInterval(state.timer); state.timer = null; }
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function showExplain(text, elId) {
+  const el = document.getElementById(elId);
+  el.innerHTML = `💡 ${text}`;
+  el.classList.add('show');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function goHome() {
+  const activeScreen = document.querySelector('.screen.active');
+  if (activeScreen && activeScreen.id !== 'homeScreen' && activeScreen.id !== 'resultScreen') {
+    document.getElementById('confirmModal').classList.add('show');
+  } else {
+    clearTimer();
+    showScreen('homeScreen');
+  }
+}
+
+function closeModal() {
+  document.getElementById('confirmModal').classList.remove('show');
+}
+
+function confirmHome() {
+  closeModal();
+  clearTimer();
+  showScreen('homeScreen');
+}
+
+// ============================================================
+init();
+</script>
+</body>
+</html>
