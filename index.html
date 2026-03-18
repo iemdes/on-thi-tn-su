@@ -743,10 +743,6 @@
         <div class="quiz-mode-badge" id="modeBadge">Trắc Nghiệm</div>
         <div class="quiz-counter">Câu <strong id="qCurrent">1</strong> / <strong id="qTotal">10</strong></div>
       </div>
-      <div class="timer-wrap">
-        <span style="font-size:16px;">⏱️</span>
-        <div class="timer" id="timerDisplay">30</div>
-      </div>
     </div>
     <div class="progress-bar-outer">
       <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
@@ -777,10 +773,6 @@
       <div class="quiz-info">
         <div class="quiz-mode-badge" style="background:rgba(88,166,255,0.12);color:var(--blue);border-color:rgba(88,166,255,0.3)">Nhập Đáp Án</div>
         <div class="quiz-counter">Câu <strong id="tqCurrent">1</strong> / <strong id="tqTotal">10</strong></div>
-      </div>
-      <div class="timer-wrap">
-        <span style="font-size:16px;">⏱️</span>
-        <div class="timer" id="timerDisplay2">30</div>
       </div>
     </div>
     <div class="progress-bar-outer">
@@ -1042,7 +1034,7 @@ let state = {
   startTime: 0,
   totalTime: 0,
   timer: null,
-  timeLeft: 30,
+  timer: null,
   todayCorrect: parseInt(localStorage.getItem('todayCorrect')||'0'),
   totalAttempts: parseInt(localStorage.getItem('totalAttempts')||'0'),
   // flashcard
@@ -1227,12 +1219,7 @@ function renderQuizQuestion() {
     </button>
   `).join('');
 
-  // Timer
-  startTimer('timerDisplay', () => {
-    // timeout → mark as wrong/skipped
-    recordAnswer(null, null, true);
-    showCorrectAnswer(q);
-  });
+
 }
 
 function renderDotNav(id, total, current, answers) {
@@ -1254,7 +1241,7 @@ function selectAnswer(optIndex, btn) {
   const chosen = q.options[optIndex];
   const isCorrect = chosen === q.correct;
 
-  clearTimer();
+
   recordAnswer(chosen, q.correct, false);
 
   // Mark all buttons
@@ -1290,22 +1277,21 @@ function showCorrectAnswer(q) {
 }
 
 function recordAnswer(chosen, correct, skipped) {
-  const timeUsed = 30 - state.timeLeft;
-  state.answers[state.currentIndex] = { chosen, correct, skipped, time: timeUsed };
+  state.answers[state.currentIndex] = { chosen, correct, skipped };
   state.totalAttempts++;
   localStorage.setItem('totalAttempts', state.totalAttempts);
   document.getElementById('totalQs').textContent = state.totalAttempts;
 }
 
 function skipQuestion() {
-  clearTimer();
+
   const q = state.questions[state.currentIndex];
   recordAnswer(null, q.correct, true);
   showCorrectAnswer(q);
 }
 
 function nextQuestion() {
-  clearTimer();
+
   if (state.currentIndex + 1 >= state.questions.length) {
     showResult();
     return;
@@ -1335,12 +1321,7 @@ function renderTypingQuestion() {
 
   setTimeout(() => document.getElementById('typingInput').focus(), 100);
 
-  startTimer('timerDisplay2', () => {
-    recordAnswer(null, q.correct, true);
-    document.getElementById('typingInput').disabled = true;
-    showExplain(q.explain, 'explainBox2');
-    document.getElementById('nextBtnT').style.display = '';
-  });
+
 }
 
 function checkTypingAnswer() {
@@ -1348,7 +1329,7 @@ function checkTypingAnswer() {
   const val = document.getElementById('typingInput').value.trim();
   if (!val) return;
 
-  clearTimer();
+
   document.getElementById('typingInput').disabled = true;
 
   // Normalize: remove spaces, lowercase
@@ -1371,7 +1352,7 @@ function checkTypingAnswer() {
 }
 
 function skipTyping() {
-  clearTimer();
+
   const q = state.questions[state.currentIndex];
   document.getElementById('typingInput').disabled = true;
   recordAnswer(null, q.correct, true);
@@ -1380,7 +1361,7 @@ function skipTyping() {
 }
 
 function nextTyping() {
-  clearTimer();
+
   if (state.currentIndex + 1 >= state.questions.length) {
     showResult();
     return;
@@ -1450,7 +1431,7 @@ function markCard(status) {
 // RESULT
 // ============================================================
 function showResult() {
-  clearTimer();
+
   const totalTime = Math.round((Date.now() - state.startTime) / 1000);
   const answers = state.answers;
   const total = state.questions.length;
@@ -1517,31 +1498,7 @@ function retryQuiz() {
   startSession();
 }
 
-// ============================================================
-// TIMER
-// ============================================================
-function startTimer(elId, onTimeout) {
-  clearTimer();
-  state.timeLeft = 30;
-  const el = document.getElementById(elId);
-  el.textContent = 30;
-  el.classList.remove('warning');
 
-  state.timer = setInterval(() => {
-    state.timeLeft--;
-    el.textContent = state.timeLeft;
-    if (state.timeLeft <= 10) el.classList.add('warning');
-    if (state.timeLeft <= 0) {
-      clearTimer();
-      el.textContent = 0;
-      onTimeout();
-    }
-  }, 1000);
-}
-
-function clearTimer() {
-  if (state.timer) { clearInterval(state.timer); state.timer = null; }
-}
 
 // ============================================================
 // HELPERS
@@ -1563,7 +1520,7 @@ function goHome() {
   if (activeScreen && activeScreen.id !== 'homeScreen' && activeScreen.id !== 'resultScreen') {
     document.getElementById('confirmModal').classList.add('show');
   } else {
-    clearTimer();
+  
     showScreen('homeScreen');
   }
 }
@@ -1574,7 +1531,7 @@ function closeModal() {
 
 function confirmHome() {
   closeModal();
-  clearTimer();
+
   showScreen('homeScreen');
 }
 
