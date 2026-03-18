@@ -20,8 +20,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 body::before{content:'';position:fixed;inset:0;pointer-events:none;
   background:radial-gradient(ellipse 55% 45% at 10% 5%,rgba(224,85,85,.07) 0%,transparent 60%),
              radial-gradient(ellipse 50% 50% at 90% 95%,rgba(91,156,246,.06) 0%,transparent 60%)}
-
-/* HEADER */
 .hdr{position:sticky;top:0;z-index:99;background:rgba(15,17,23,.93);backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border);padding:0 20px;height:58px;
   display:flex;align-items:center;justify-content:space-between}
@@ -34,29 +32,20 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .hstats{display:flex;gap:18px}
 .hs{font-size:12px;color:var(--muted)}
 .hs strong{color:var(--text)}
-
-/* WRAP */
 .wrap{position:relative;max-width:820px;margin:0 auto;padding:28px 16px 80px}
-
-/* SCREEN */
 .screen{display:none}
 .screen.active{display:block;animation:up .35s ease}
 @keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-
-/* HOME */
 .hero{text-align:center;padding:44px 0 36px}
 .pill{display:inline-block;background:var(--gold-s);border:1px solid rgba(245,166,35,.3);
   color:var(--gold);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
   padding:5px 16px;border-radius:100px;margin-bottom:18px}
 .hero h1{font-size:clamp(26px,6vw,46px);font-weight:900;line-height:1.15;margin-bottom:12px}
 .hero h1 span{color:var(--gold)}
-.hero p{color:var(--muted);font-size:14px;max-width:400px;margin:0 auto 36px;line-height:1.65}
-
+.hero p{color:var(--muted);font-size:14px;max-width:440px;margin:0 auto 36px;line-height:1.65}
 .sec-lbl{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
   color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* Mode cards */
 .modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
 @media(max-width:560px){.modes{grid-template-columns:1fr}}
 .mc{background:var(--card);border:2px solid var(--border);border-radius:var(--r);
@@ -66,44 +55,32 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .mc-ico{font-size:26px;margin-bottom:10px}
 .mc-name{font-size:14px;font-weight:800;margin-bottom:4px}
 .mc-desc{font-size:12px;color:var(--muted);line-height:1.5}
-
-/* Topics */
 .topics{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
 .tb{background:var(--card);border:2px solid var(--border);border-radius:100px;
   padding:7px 18px;cursor:pointer;color:var(--muted);font-family:inherit;
   font-size:13px;font-weight:700;transition:.2s}
 .tb:hover{border-color:var(--gold);color:var(--gold)}
 .tb.on{background:var(--gold-s);border-color:var(--gold);color:var(--gold)}
-
-/* Counts */
 .cnts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
 .cb{background:var(--card);border:2px solid var(--border);border-radius:var(--r2);
   padding:8px 20px;cursor:pointer;color:var(--muted);font-family:inherit;
   font-size:13px;font-weight:700;transition:.2s}
 .cb:hover{border-color:var(--blue);color:var(--blue)}
 .cb.on{background:var(--blue-s);border-color:var(--blue);color:var(--blue)}
-
-/* Start */
 .go{display:block;width:100%;max-width:280px;margin:0 auto;padding:14px;
   border:none;border-radius:12px;
   background:linear-gradient(135deg,#e05555,#f5a623);
   color:#fff;font-family:inherit;font-size:15px;font-weight:800;
   cursor:pointer;box-shadow:0 6px 22px rgba(224,85,85,.3);transition:.2s}
 .go:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(224,85,85,.4)}
-
-/* QUIZ HEADER */
 .qhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
 .badge{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
   padding:5px 14px;border-radius:100px;background:var(--gold-s);
   color:var(--gold);border:1px solid rgba(245,166,35,.3)}
 .qinfo{font-size:13px;color:var(--muted)}
 .qinfo b{color:var(--text)}
-
-/* Progress */
 .pbar{height:4px;background:var(--card2);border-radius:100px;overflow:hidden;margin-bottom:18px}
 .pbar-f{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:100px;transition:width .4s}
-
-/* Dots */
 .dots{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:18px}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--card2);
   border:1.5px solid var(--border);cursor:pointer;transition:.2s}
@@ -111,8 +88,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .dot.ok{background:var(--green);border-color:var(--green)}
 .dot.no{background:var(--red);border-color:var(--red)}
 .dot.sk{background:var(--gold);border-color:var(--gold)}
-
-/* Question */
 .qcard{background:var(--card);border:1px solid var(--border);
   border-radius:18px;padding:26px 22px;margin-bottom:14px}
 .qno{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
@@ -121,8 +96,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .qtag{display:inline-block;margin-top:10px;font-size:10px;font-weight:800;
   padding:3px 12px;border-radius:100px;background:var(--blue-s);
   color:var(--blue);border:1px solid rgba(91,156,246,.2)}
-
-/* Options */
 .opts{display:grid;gap:9px;margin-bottom:14px}
 .opt{background:var(--card);border:2px solid var(--border);border-radius:12px;
   padding:13px 16px;cursor:pointer;display:flex;align-items:flex-start;gap:11px;
@@ -137,14 +110,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .opt.no{border-color:var(--red);background:var(--red-s)}
 .opt.no .olbl{background:var(--red);color:#fff;border-color:var(--red)}
 .opt.dis{cursor:default}
-
-/* Explain */
 .expl{background:var(--card2);border-left:3px solid var(--gold);border-radius:9px;
   padding:12px 16px;font-size:13px;color:var(--muted);line-height:1.6;
   margin-bottom:14px;display:none}
 .expl.show{display:block;animation:up .25s}
-
-/* Buttons */
 .acts{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:space-between}
 .btn{padding:10px 20px;border-radius:9px;border:none;cursor:pointer;
   font-family:inherit;font-size:13px;font-weight:700;transition:.18s;
@@ -155,14 +124,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
   box-shadow:0 4px 14px rgba(224,85,85,.25)}
 .btn-next:hover{transform:translateY(-1px)}
 .btn-gold{background:linear-gradient(135deg,var(--gold),#f0c040);color:#1a1d27;font-weight:800}
-
-/* TYPING */
 .tinput{width:100%;background:var(--card);border:2px solid var(--border);
   border-radius:12px;padding:14px 18px;color:var(--text);font-family:inherit;
   font-size:17px;font-weight:800;outline:none;transition:.2s;margin-bottom:12px}
 .tinput:focus{border-color:var(--gold)}
-
-/* FLASHCARD */
 .fc-wrap{perspective:1200px;margin:28px auto;max-width:520px;cursor:pointer}
 .fc{width:100%;aspect-ratio:16/9;position:relative;
   transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1)}
@@ -176,26 +141,21 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .fc-yr{font-size:38px;font-weight:900;color:var(--gold)}
 .fc-hint{font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:1px}
 .fc-evt{font-size:15px;font-weight:700;line-height:1.55}
-.fc-tp{font-size:11px;color:var(--blue);margin-top:10px;font-weight:700;letter-spacing:.5px}
+.fc-tp{font-size:11px;color:var(--blue);margin-top:10px;font-weight:700}
 .fc-cnt{text-align:center;font-size:13px;color:var(--muted);margin-bottom:4px}
 .fc-nav{display:flex;gap:10px;justify-content:center;margin-top:10px}
 .fc-marks{display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap}
 .fc-stat{text-align:center;font-size:12px;color:var(--muted);margin-top:10px}
-
-/* RESULT */
 .res-hero{text-align:center;padding:36px 0 24px}
 .res-ico{font-size:56px;margin-bottom:10px}
 .res-ttl{font-size:30px;font-weight:900;margin-bottom:6px}
 .res-sub{color:var(--muted);font-size:14px;margin-bottom:28px}
-
 .ring-w{display:flex;justify-content:center;margin-bottom:24px}
 .ring{width:140px;height:140px;position:relative}
 .ring svg{transform:rotate(-90deg)}
-.ring-in{position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center}
+.ring-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .ring-n{font-size:30px;font-weight:900}
 .ring-l{font-size:10px;color:var(--muted);font-weight:800;letter-spacing:1px}
-
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:20px}
 @media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}}
 .st{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
@@ -203,7 +163,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .st-l{font-size:10px;color:var(--muted);font-weight:800}
 .sg .st-n{color:var(--green)} .sr .st-n{color:var(--red)}
 .sy .st-n{color:var(--gold)} .sb .st-n{color:var(--blue)}
-
 .res-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
 .rev-hd{font-size:14px;font-weight:800;margin-bottom:12px}
 .rev-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);
@@ -217,8 +176,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .rt-ok{background:var(--green-s);color:var(--green)}
 .rt-no{background:var(--red-s);color:var(--red)}
 .rt-sk{background:var(--gold-s);color:var(--gold)}
-
-/* MODAL */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);
   z-index:999;align-items:center;justify-content:center;padding:20px}
 .overlay.show{display:flex}
@@ -230,7 +187,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 </style>
 </head>
 <body>
-
 <div class="hdr">
   <div class="logo">
     <div class="logo-box">📚</div>
@@ -241,7 +197,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <div class="hs">Đúng hôm nay: <strong id="hCorrect">0</strong></div>
   </div>
 </div>
-
 <div class="wrap">
 
 <!-- HOME -->
@@ -251,13 +206,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <h1>Ôn Thi<br><span>Lịch Sử</span></h1>
     <p>Đầy đủ kiến thức Lịch Sử Thế Giới, Việt Nam và hoạt động Nguyễn Ái Quốc – Hồ Chí Minh.</p>
   </div>
-
   <div class="sec-lbl">🎮 Chế độ</div>
   <div class="modes">
     <div class="mc sel" id="mQuiz" onclick="pickMode('quiz',this)">
       <div class="mc-ico">📝</div>
       <div class="mc-name">Trắc Nghiệm</div>
-      <div class="mc-desc">4 đáp án ABCD thật từ dữ liệu, trộn ngẫu nhiên</div>
+      <div class="mc-desc">4 đáp án ABCD thật, trộn ngẫu nhiên, có giải thích</div>
     </div>
     <div class="mc" id="mFlash" onclick="pickMode('flash',this)">
       <div class="mc-ico">🃏</div>
@@ -270,10 +224,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
       <div class="mc-desc">Đọc sự kiện, nhập đúng năm xảy ra</div>
     </div>
   </div>
-
   <div class="sec-lbl">📚 Chủ đề</div>
   <div class="topics" id="topicBox"></div>
-
   <div class="sec-lbl">🔢 Số câu</div>
   <div class="cnts">
     <button class="cb" onclick="pickCount(10,this)">10 câu</button>
@@ -282,7 +234,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <button class="cb" onclick="pickCount(50,this)">50 câu</button>
     <button class="cb on" onclick="pickCount(9999,this)">Tất cả</button>
   </div>
-
   <button class="go" onclick="go()">🚀 Bắt đầu</button>
 </div>
 
@@ -383,8 +334,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
         <circle cx="70" cy="70" r="58" fill="none" stroke="url(#rg)" stroke-width="9"
           stroke-linecap="round" stroke-dasharray="364" id="ringC" stroke-dashoffset="364"/>
         <defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#e05555"/>
-          <stop offset="100%" stop-color="#f5a623"/>
+          <stop offset="0%" stop-color="#e05555"/><stop offset="100%" stop-color="#f5a623"/>
         </linearGradient></defs>
       </svg>
       <div class="ring-in">
@@ -403,13 +353,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <button class="btn btn-gold" onclick="retryQ()">🔄 Làm lại</button>
     <button class="btn btn-next" onclick="goHome()">🏠 Về trang chủ</button>
   </div>
-  <div class="rev-hd">📋 Xem lại câu hỏi <span id="revCnt" style="font-size:12px;color:var(--muted);font-weight:600"></span></div>
+  <div class="rev-hd">📋 Xem lại <span id="revCnt" style="font-size:12px;color:var(--muted);font-weight:600"></span></div>
   <div id="revList"></div>
 </div>
+</div>
 
-</div><!-- wrap -->
-
-<!-- MODAL -->
 <div class="overlay" id="modal">
   <div class="modal">
     <h3>⚠️ Thoát bài?</h3>
@@ -422,292 +370,229 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 </div>
 
 <script>
-// ═══════════════════════════════════════
-// DATA
-// ═══════════════════════════════════════
 const DATA = {
-  "Lịch Sử Thế Giới": [
-    {time:"1914-1918", event:"Chiến tranh thế giới thứ nhất"},
-    {time:"1917", event:"Cách mạng tháng Hai và Cách mạng tháng Mười ở Nga"},
-    {time:"1922", event:"Liên bang Cộng hòa xã hội chủ nghĩa Xô Viết (Liên Xô) ra đời"},
-    {time:"1939-1945", event:"Chiến tranh thế giới thứ hai"},
-    {time:"1940 đến nay", event:"Cách mạng Khoa học-kĩ thuật / Cách mạng khoa học công nghệ bùng nổ"},
-    {time:"1945", event:"Liên hợp quốc được thành lập"},
-    {time:"1945-1991", event:"Trật tự hai cực I-an-ta hình thành và tồn tại"},
-    {time:"1947-1989", event:"Cuộc Chiến tranh lạnh diễn ra"},
-    {time:"1947", event:"Kế hoạch Mác-san ra đời"},
-    {time:"1949", event:"Tổ chức Bắc Đại Tây Dương (NATO) thành lập và Hội đồng tương trợ kinh tế (SEV) ra đời"},
-    {time:"1950-1953", event:"Cuộc chiến tranh Triều Tiên"},
-    {time:"1955", event:"Tổ chức Hiệp ước Vác-sa-va được thành lập"},
-    {time:"1957", event:"Liên minh châu Âu ra đời (tiền thân)"},
-    {time:"1961", event:"Hiệp hội Đông Nam Á (ASA) ra đời"},
-    {time:"1967", event:"Hiệp hội các quốc gia Đông Nam Á (ASEAN) ra đời — Tuyên bố Băng Cốc"},
-    {time:"1971", event:"ASEAN ra Tuyên bố khu vực hòa bình, tự do và trung lập (ZOPFAN)"},
-    {time:"1976", event:"Hiệp ước Thân thiện và Hợp tác ở ĐNA (TAC) / Hiệp ước Ba-li kí kết"},
-    {time:"1980", event:"Xu thế toàn cầu hóa xuất hiện"},
-    {time:"1989", event:"Diễn đàn Hợp tác Kinh tế châu Á-Thái Bình Dương (APEC) thành lập"},
-    {time:"1991", event:"Chế độ XHCN ở Liên Xô và Đông Âu tan rã"},
-    {time:"1996", event:"Diễn đàn hợp tác Á-Âu (ASEM) thành lập"},
-    {time:"1997", event:"Tầm nhìn ASEAN 2020 thông qua tại HNCC ASEAN lần 2 (Ma-lai-xi-a)"},
-    {time:"2003", event:"Tuyên bố về sự hoà hợp ASEAN II (Ba-li II) tại HNCC ASEAN lần 9 (Inđônêxia)"},
-    {time:"2007", event:"Hiến chương ASEAN được thông qua, có hiệu lực năm 2008"},
-    {time:"2009", event:"Lộ trình xây dựng Cộng đồng ASEAN (2009-2015) được thông qua"},
-    {time:"2015", event:"Cộng đồng ASEAN được thành lập (3 trụ cột) tại HNCC ASEAN lần 27 (Ma-lai-xi-a)"},
-    {time:"2020", event:"Tuyên bố Hà Nội về Tầm nhìn Cộng đồng ASEAN sau năm 2025 tại HNCC ASEAN lần 37"},
-  ],
-  "Lịch Sử Việt Nam": [
-    {time:"938 (X)", event:"Kháng chiến chống quân Nam Hán của Ngô Quyền — trận Bạch Đằng"},
-    {time:"1075-1077 (XI)", event:"Kháng chiến chống Tống thời Lý — trận Sông Như Nguyệt (Lý Thường Kiệt lãnh đạo)"},
-    {time:"1258-1288 (XIII)", event:"Kháng chiến chống Mông-Nguyên thời Trần — trận Tây Kết, Chương Dương, Hàm Tử, Bạch Đằng (Trần Hưng Đạo)"},
-    {time:"1418-1427 (XV)", event:"Kháng chiến chống quân Minh (Lê Lợi lãnh đạo) — trận Chi Lăng, Xương Giang"},
-    {time:"1771-1789 (XVIII)", event:"Phong trào Tây Sơn — lật đổ Chúa Nguyễn, kháng chiến chống Xiêm (1785), chống Thanh (1789)"},
-    {time:"1858-1884 (XIX)", event:"Kháng chiến chống Pháp thời Nguyễn: trận Đà Nẵng (1858), Gia Định (1859), Cầu Giấy; Các Hiệp ước Nhâm Tuất, Giáp Tuất, Hác-măng, Pa-tơ-nốt"},
-    {time:"1905-1908", event:"Phan Bội Châu phát động phong trào Đông Du (Nhật Bản)"},
-    {time:"1908", event:"Phan Bội Châu tham gia thành lập Đông Á Đồng minh hội và Điền-Quế-Việt liên minh"},
-    {time:"1912", event:"Phan Bội Châu thành lập Việt Nam Quang phục hội"},
-    {time:"1925", event:"Hội Việt Nam Cách mạng Thanh niên thành lập"},
-    {time:"1929", event:"Ba tổ chức cộng sản ra đời: An Nam Cộng sản Đảng, Đông Dương Cộng sản Đảng, Đông Dương Cộng sản liên đoàn"},
-    {time:"1930", event:"Đảng Cộng sản Việt Nam ra đời"},
-    {time:"1941", event:"Hội nghị lần 8 BCH Trung ương ĐCS Đông Dương; Mặt trận Việt Minh thành lập"},
-    {time:"1944", event:"Đội Việt Nam Tuyên truyền giải phóng quân thành lập"},
-    {time:"1945", event:"Cách mạng tháng Tám thành công; Nước Việt Nam Dân chủ Cộng hòa ra đời; Nhân dân Nam Bộ kháng chiến (23/9/1945)"},
-    {time:"1946", event:"Hiệp định Sơ bộ (Việt-Pháp) và Tạm ước kí kết; Cuộc kháng chiến toàn quốc bùng nổ"},
-    {time:"1947", event:"Chiến dịch Việt Bắc thu-đông, đánh bại kế hoạch ĐNTN"},
-    {time:"1950", event:"Chiến dịch Biên giới thu-đông, đánh bại kế hoạch Rơ-ve; Việt Nam thiết lập quan hệ ngoại giao với TQ, LX"},
-    {time:"1951", event:"Đại hội Đại biểu toàn quốc lần II; Đảng Lao động Việt Nam; Mặt trận Liên Việt thành lập"},
-    {time:"1953-1954", event:"Kế hoạch Na-va; Chiến dịch Điện Biên Phủ (1954); Hiệp định Giơ-ne-vơ kí kết (1954)"},
-    {time:"1945-1954", event:"Kháng chiến chống Pháp xâm lược"},
-    {time:"1954-1975", event:"Kháng chiến chống Mỹ, cứu nước"},
-    {time:"1959-1960", event:"Phong trào Đồng khởi"},
-    {time:"1960", event:"Đại hội đại biểu toàn quốc lần III; Mặt trận Dân tộc Giải phóng MNVN thành lập"},
-    {time:"1961-1965", event:"Chiến tranh đặc biệt"},
-    {time:"1965-1968", event:"Chiến tranh cục bộ, quân Mỹ và đồng minh vào Việt Nam"},
-    {time:"1968", event:"Cuộc Tổng tiến công và nổi dậy Xuân Mậu Thân — Mỹ tuyên bố 'Phi Mỹ hóa'"},
-    {time:"1969-1973", event:"Chiến lược Việt Nam hóa chiến tranh, Đông Dương hóa chiến tranh"},
-    {time:"1972", event:"Cuộc Tiến công chiến lược miền Nam; Trận 'Điện Biên Phủ trên không'; Mỹ kí Hiệp định Pa-ri"},
-    {time:"1973", event:"Hiệp định Pa-ri về chấm dứt chiến tranh Việt Nam được kí kết; Mỹ rút quân"},
-    {time:"1975", event:"Cuộc Tổng tiến công mùa Xuân — Đại thắng (3 chiến dịch: Tây Nguyên, Huế-Đà Nẵng, Hồ Chí Minh)"},
-    {time:"1976", event:"Thống nhất đất nước về mặt Nhà nước; Việt Nam gia nhập Phong trào Không liên kết"},
-    {time:"1977", event:"Việt Nam gia nhập Liên hợp quốc"},
-    {time:"1978", event:"Việt Nam và Liên Xô kí Hiệp ước hữu nghị; Việt Nam gia nhập SEV"},
-    {time:"1979-1986", event:"Chiến tranh biên giới Tây Nam, chiến tranh biên giới phía Bắc (Bảo vệ Tổ quốc)"},
-    {time:"1986", event:"Đại hội đại biểu toàn quốc lần VI — Mở đầu công cuộc Đổi mới đất nước"},
-    {time:"1991", event:"Việt Nam bình thường hóa quan hệ ngoại giao với Trung Quốc; Đại hội VII — CNH, HĐH"},
-    {time:"1995", event:"Việt Nam bình thường hóa quan hệ với Mỹ; Việt Nam gia nhập ASEAN"},
-    {time:"1998", event:"Việt Nam đảm nhiệm Chủ tịch ASEAN; tham gia APEC"},
-    {time:"2001", event:"Đại hội IX — chủ động hội nhập kinh tế quốc tế"},
-    {time:"2007", event:"Việt Nam gia nhập Tổ chức Thương mại Thế giới (WTO)"},
-    {time:"2008", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Trung Quốc"},
-    {time:"2010", event:"Việt Nam đảm nhiệm Chủ tịch ASEAN"},
-    {time:"2012", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Nga"},
-    {time:"2014", event:"Việt Nam tham gia hoạt động giữ gìn hòa bình của Liên hợp quốc"},
-    {time:"2016", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Ấn Độ"},
-    {time:"2020", event:"Việt Nam đảm nhiệm Chủ tịch ASEAN"},
-    {time:"2022", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Hàn Quốc"},
-    {time:"2023", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Mỹ và Nhật"},
-    {time:"2024", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Úc, Pháp, Ma-lai-xi-a"},
-    {time:"2025", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với In-đô-nê-xi-a, Xin-ga-po, Niu-di-lân"},
-  ],
-  "Hồ Chí Minh": [
-    {time:"1911", event:"Nguyễn Ái Quốc sang phương Tây tìm đường cứu nước"},
-    {time:"1918", event:"Gia nhập Đảng xã hội Pháp"},
-    {time:"1919", event:"Gửi bản Yêu sách của nhân dân An Nam đến Hội nghị Véc-xai"},
-    {time:"1920", event:"Đọc Luận cương của Lê-nin, tìm ra con đường cứu nước; Sáng lập Đảng Cộng sản Pháp; Gia nhập Quốc tế Cộng sản"},
-    {time:"1921", event:"Tham gia sáng lập Hội Liên hiệp thuộc địa (Pa-ri)"},
-    {time:"1923", event:"Sang Liên Xô dự Hội nghị Quốc tế Nông dân"},
-    {time:"1925", event:"Sáng lập Hội Việt Nam Cách mạng Thanh niên; Viết Bản án chế độ thực dân Pháp; Sáng lập Báo Thanh niên"},
-    {time:"1927", event:"Xuất bản tác phẩm Đường Kách mệnh"},
-    {time:"1930", event:"Thống nhất các tổ chức Cộng sản, thành lập Đảng Cộng sản Việt Nam; Soạn thảo Cương lĩnh chính trị"},
-    {time:"1941", event:"Chủ trì Hội nghị lần 8 BCH TW ĐCS Đông Dương; Thành lập Mặt trận Việt Minh"},
-    {time:"1944", event:"Thành lập Đội Việt Nam Tuyên truyền giải phóng quân; Thành lập Khu giải phóng Việt Bắc"},
-    {time:"1945", event:"Lãnh đạo Cách mạng tháng Tám thành công; Đọc Tuyên ngôn độc lập — Khai sinh nước Việt Nam DCCH"},
-    {time:"1946", event:"Kí Hiệp định Sơ bộ và Tạm ước; Ra Lời kêu gọi toàn quốc kháng chiến chống Pháp"},
-    {time:"1947", event:"Lãnh đạo chiến dịch Việt Bắc"},
-    {time:"1950", event:"Lãnh đạo chiến dịch Biên giới"},
-    {time:"1951", event:"Chủ trì Đại hội đại biểu toàn quốc lần II của Đảng"},
-    {time:"1953-1954", event:"Lãnh đạo Tiến công chiến lược Đông-Xuân và chiến dịch Điện Biên Phủ"},
-    {time:"1959", event:"Chủ trì Hội nghị lần 15 BCH Trung ương"},
-    {time:"1960", event:"Chủ trì Đại hội đại biểu toàn quốc lần III của Đảng"},
-  ]
+"Lịch Sử Thế Giới": [
+  {time:"1914-1918", event:"Chiến tranh thế giới thứ nhất"},
+  {time:"1917", event:"Cách mạng tháng Hai và Cách mạng tháng Mười ở Nga"},
+  {time:"1922", event:"Liên bang Cộng hòa xã hội chủ nghĩa Xô Viết (Liên Xô) ra đời"},
+  {time:"1939-1945", event:"Chiến tranh thế giới thứ hai"},
+  {time:"1940 đến nay", event:"Cách mạng Khoa học-kĩ thuật / Cách mạng khoa học công nghệ"},
+  {time:"1945", event:"Liên hợp quốc được thành lập"},
+  {time:"1945-1991", event:"Trật tự hai cực I-an-ta"},
+  {time:"1947-1989", event:"Cuộc Chiến tranh lạnh"},
+  {time:"1947", event:"Kế hoạch Mác-san ra đời"},
+  {time:"1949", event:"NATO thành lập; Hội đồng tương trợ kinh tế (SEV) ra đời"},
+  {time:"1950-1953", event:"Cuộc chiến tranh Triều Tiên"},
+  {time:"1955", event:"Tổ chức Hiệp ước Vác-sa-va được thành lập"},
+  {time:"1957", event:"Liên minh châu Âu ra đời (tiền thân)"},
+  {time:"1961", event:"Hiệp hội Đông Nam Á (ASA) ra đời"},
+  {time:"1967", event:"Hiệp hội các quốc gia Đông Nam Á (ASEAN) ra đời — Tuyên bố Băng Cốc 1967"},
+  {time:"1971", event:"ASEAN ra Tuyên bố khu vực hòa bình, tự do và trung lập (ZOPFAN)"},
+  {time:"1976", event:"Hiệp ước Thân thiện và Hợp tác ở ĐNA (TAC) / Hiệp ước Ba-li kí kết"},
+  {time:"1980", event:"Xu thế toàn cầu hóa xuất hiện"},
+  {time:"1989", event:"Diễn đàn Hợp tác Kinh tế châu Á-Thái Bình Dương (APEC) thành lập"},
+  {time:"1991", event:"Chế độ XHCN ở Liên Xô và Đông Âu tan rã"},
+  {time:"1996", event:"Diễn đàn hợp tác Á-Âu (ASEM) thành lập"},
+  {time:"1997", event:"Tầm nhìn ASEAN 2020 thông qua tại HNCC ASEAN lần 2 (Ma-lai-xi-a)"},
+  {time:"2003", event:"Tuyên bố về sự hoà hợp ASEAN II (Ba-li II) tại HNCC ASEAN lần 9 (Inđônêxia)"},
+  {time:"2007", event:"Hiến chương ASEAN được thông qua, có hiệu lực năm 2008"},
+  {time:"2009", event:"Lộ trình xây dựng Cộng đồng ASEAN (2009-2015) được thông qua"},
+  {time:"2015", event:"Cộng đồng ASEAN được thành lập (3 trụ cột) tại HNCC ASEAN lần 27; ASEAN thông qua Tầm nhìn ASEAN 2025 và Lộ trình giai đoạn 2 (2015-2020)"},
+  {time:"2020", event:"Tuyên bố Hà Nội về Tầm nhìn Cộng đồng ASEAN sau năm 2025 tại HNCC ASEAN lần 37 (Hà Nội)"},
+],
+"Lịch Sử Việt Nam": [
+  {time:"938 (thế kỷ X)", event:"Kháng chiến chống quân Nam Hán của Ngô Quyền — trận Bạch Đằng"},
+  {time:"1075-1077 (thế kỷ XI)", event:"Kháng chiến chống Tống thời Lý — trận Sông Như Nguyệt (Lý Thường Kiệt lãnh đạo)"},
+  {time:"1258-1288 (thế kỷ XIII)", event:"Kháng chiến chống Mông-Nguyên thời Trần — trận Tây Kết, Chương Dương, Hàm Tử, Bạch Đằng (Trần Hưng Đạo)"},
+  {time:"1418-1427 (thế kỷ XV)", event:"Kháng chiến chống quân Minh (Lê Lợi lãnh đạo) — trận Chi Lăng, Xương Giang"},
+  {time:"1771-1789 (thế kỷ XVIII)", event:"Phong trào Tây Sơn (Nguyễn Huệ, Nguyễn Nhạc, Nguyễn Lữ) — lật đổ Chúa Nguyễn, tập đoàn Lê-Trịnh, kháng chiến chống Xiêm (1785), chống Thanh (1789)"},
+  {time:"1858-1884 (thế kỷ XIX)", event:"Kháng chiến chống Pháp thời Nguyễn: trận Đà Nẵng (1858), Gia Định (1859), Cầu Giấy (1874, 1883); Các Hiệp ước: Nhâm Tuất (1862), Giáp Tuất (1874), Hác-măng (1883), Pa-tơ-nốt (1884)"},
+  {time:"1905-1908", event:"Phan Bội Châu phát động phong trào Đông Du (Nhật Bản)"},
+  {time:"1908", event:"Phan Bội Châu tham gia thành lập Đông Á Đồng minh hội và Điền-Quế-Việt liên minh"},
+  {time:"1912", event:"Phan Bội Châu thành lập Việt Nam Quang phục hội, tham gia thành lập Hội Chấn Hoa Hưng Á"},
+  {time:"1925", event:"Hội Việt Nam Cách mạng Thanh niên thành lập"},
+  {time:"1929", event:"Ba tổ chức cộng sản ra đời: An Nam Cộng sản Đảng, Đông Dương Cộng sản Đảng, Đông Dương Cộng sản liên đoàn"},
+  {time:"1930", event:"Đảng Cộng sản Việt Nam ra đời"},
+  {time:"1941", event:"Hội nghị lần 8 BCH TW ĐCS Đông Dương; Mặt trận Việt Nam Độc lập đồng minh (Việt Minh) thành lập"},
+  {time:"1944", event:"Đội Việt Nam Tuyên truyền giải phóng quân thành lập"},
+  {time:"1945", event:"Cách mạng tháng Tám thành công, nước Việt Nam DCCH ra đời; Nhân dân Nam Bộ kháng chiến chống Pháp (23/9/1945)"},
+  {time:"1946", event:"Hiệp định Sơ bộ (Việt-Pháp) và bản Tạm ước kí kết; Cuộc kháng chiến toàn quốc bùng nổ"},
+  {time:"1946-1947", event:"Cuộc chiến đấu ở đô thị Bắc vĩ tuyến 16, bước đầu đánh bại kế hoạch ĐNTN"},
+  {time:"1947", event:"Chiến dịch Việt Bắc thu-đông, đánh bại kế hoạch ĐNTN"},
+  {time:"1950", event:"Chiến dịch Biên giới thu-đông, đánh bại kế hoạch Rơ-ve, giành thế chủ động; Pháp đề ra Kế hoạch Đờ Lát đơ Tát-xi-nhi; Việt Nam thiết lập ngoại giao với TQ, LX và XHCN"},
+  {time:"1951", event:"Đại hội Đại biểu toàn quốc lần II; Đảng Lao động Việt Nam; Mặt trận Liên Việt; Liên minh nhân dân Việt-Miên-Lào thành lập"},
+  {time:"1951-1953", event:"Chiến dịch Hòa Bình, chiến dịch Tây Bắc, chiến dịch Thượng Lào"},
+  {time:"1953-1954", event:"Pháp-Mỹ đề ra Kế hoạch Na-va (1953); Cuộc Tiến công chiến lược Đông Xuân (1953-1954); Chiến dịch Điện Biên Phủ (1954); Hiệp định Giơ-ne-vơ kí kết (1954)"},
+  {time:"1945-1954", event:"Kháng chiến chống Pháp xâm lược"},
+  {time:"1954-1975", event:"Kháng chiến chống Mỹ, cứu nước"},
+  {time:"1959", event:"Hội nghị BCH TW lần thứ 15 (Hà Nội)"},
+  {time:"1959-1960", event:"Phong trào Đồng khởi"},
+  {time:"1960", event:"Đại hội đại biểu toàn quốc lần III (Hà Nội); Mặt trận Dân tộc Giải phóng MNVN; Việt Nam thiết lập quan hệ ngoại giao với Cu-ba"},
+  {time:"1961", event:"Quân Giải phóng miền Nam ra đời"},
+  {time:"1961-1965", event:"Chiến tranh đặc biệt"},
+  {time:"1962", event:"Việt Nam thiết lập quan hệ ngoại giao với Lào"},
+  {time:"1963", event:"Chiến thắng Ấp Bắc (Mỹ Tho)"},
+  {time:"1964", event:"Chiến thắng Bình Giã, An Lão"},
+  {time:"1965", event:"Chiến thắng Ba Gia, Đồng Xoài; Hội nghị nhân dân ba nước Đông Dương triệu tập"},
+  {time:"1965-1968", event:"Chiến tranh cục bộ, quân Mỹ và đồng minh vào Việt Nam"},
+  {time:"1965 (1965)", event:"Chiến thắng Vạn Tường, Núi Thành"},
+  {time:"1967", event:"Việt Nam thiết lập quan hệ ngoại giao với Cam-pu-chia"},
+  {time:"1968", event:"Cuộc Tổng tiến công và nổi dậy Xuân Mậu Thân; Mỹ tuyên bố 'Phi Mỹ hóa', xuống thang chiến tranh, chấp nhận đàm phán ở Pa-ri"},
+  {time:"1969-1973", event:"Chiến lược Việt Nam hóa chiến tranh, Đông Dương hóa chiến tranh"},
+  {time:"1969", event:"Chính phủ lâm thời Cộng hòa miền Nam Việt Nam ra đời"},
+  {time:"1970", event:"Hội nghị cấp cao 3 nước Đông Dương; Đánh bại cuộc hành quân xâm lược Cam-pu-chia của Mỹ"},
+  {time:"1971", event:"Đánh bại cuộc hành quân Lam Sơn ở Đường 9-Nam Lào"},
+  {time:"1972", event:"Cuộc Tiến công chiến lược miền Nam — buộc Mỹ tuyên bố 'Mỹ hóa'; Trận 'Điện Biên Phủ trên không' (miền Bắc); Mỹ kí Hiệp định Pa-ri; Việt Nam thiết lập quan hệ ngoại giao với Ấn Độ"},
+  {time:"1973", event:"Hiệp định Pa-ri về chấm dứt chiến tranh Việt Nam kí kết; Mỹ và đồng minh rút hết quân; Việt Nam thiết lập ngoại giao với Nhật Bản, Ô-xtrây-li-a, Pháp, Hà Lan; Hội nghị TW lần 21"},
+  {time:"1975", event:"Chiến thắng Đường 14-Phước Long (1-1975); Tổng tiến công mùa Xuân 1975 — Đại thắng (3 chiến dịch: Tây Nguyên, Huế-Đà Nẵng, Hồ Chí Minh) — kết thúc kháng chiến chống Mỹ"},
+  {time:"1976", event:"Thống nhất đất nước về mặt Nhà nước; Việt Nam gia nhập Phong trào Không liên kết"},
+  {time:"1977", event:"Việt Nam gia nhập Liên hợp quốc; Việt Nam và Lào kí Hiệp ước hữu nghị và hợp tác"},
+  {time:"1978", event:"Việt Nam và Liên Xô kí Hiệp ước hữu nghị và hợp tác; Việt Nam gia nhập Hội đồng tương trợ kinh tế (SEV)"},
+  {time:"1979-1986", event:"Chiến tranh biên giới Tây Nam, chiến tranh biên giới phía Bắc (Bảo vệ Tổ quốc)"},
+  {time:"1986", event:"Đại hội đại biểu toàn quốc lần VI — Mở đầu công cuộc Đổi mới đất nước"},
+  {time:"1991", event:"Việt Nam bình thường hóa quan hệ ngoại giao với Trung Quốc; Đại hội lần VII — Công nghiệp hóa, hiện đại hóa đất nước"},
+  {time:"1995", event:"Việt Nam bình thường hóa quan hệ ngoại giao với Mỹ; Việt Nam gia nhập ASEAN, tham gia Hiệp định Thương mại tự do ASEAN"},
+  {time:"1996", event:"Việt Nam tham gia Diễn đàn Hợp tác Á-Âu (ASEM)"},
+  {time:"1998", event:"Việt Nam đảm nhiệm vai trò Chủ tịch ASEAN; Việt Nam tham gia APEC"},
+  {time:"2001", event:"Đại hội lần IX — chủ động hội nhập kinh tế quốc tế"},
+  {time:"2007", event:"Việt Nam gia nhập Tổ chức Thương mại Thế giới (WTO)"},
+  {time:"2008", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Trung Quốc"},
+  {time:"2010", event:"Việt Nam đảm nhiệm vai trò Chủ tịch ASEAN"},
+  {time:"2011", event:"Đại hội lần XI — chủ động và tích cực hội nhập quốc tế"},
+  {time:"2012", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Nga"},
+  {time:"2014", event:"Việt Nam bắt đầu tham gia hoạt động giữ gìn hòa bình của Liên hợp quốc"},
+  {time:"2016", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Ấn Độ"},
+  {time:"2020", event:"Việt Nam đảm nhiệm vai trò Chủ tịch ASEAN"},
+  {time:"2022", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Hàn Quốc"},
+  {time:"2023", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Mỹ và Nhật"},
+  {time:"2024", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Úc, Pháp, Ma-lai-xi-a"},
+  {time:"2025", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với In-đô-nê-xi-a, Xin-ga-po, Niu-di-lân"},
+],
+"Hồ Chí Minh": [
+  {time:"1911", event:"Nguyễn Ái Quốc sang phương Tây tìm đường cứu nước"},
+  {time:"1918", event:"Gia nhập Đảng xã hội Pháp"},
+  {time:"1919", event:"Gửi bản Yêu sách của nhân dân An Nam đến Hội nghị Véc-xai"},
+  {time:"1920", event:"Đọc Luận cương của Lê-nin, tìm ra con đường cứu nước; Sáng lập Đảng Cộng sản Pháp; Gia nhập Quốc tế Cộng sản"},
+  {time:"1921", event:"Tham gia sáng lập Hội Liên hiệp thuộc địa (Pa-ri)"},
+  {time:"1923", event:"Sang Liên Xô dự Hội nghị Quốc tế Nông dân"},
+  {time:"1925", event:"Sáng lập Hội Việt Nam Cách mạng Thanh niên; Viết Bản án chế độ thực dân Pháp; Sáng lập Báo Thanh niên; Thành lập Hội Liên hiệp các dân tộc bị áp bức ở Á Đông; Đào tạo, tuyên truyền lý luận cách mạng giải phóng dân tộc"},
+  {time:"1927", event:"Xuất bản tác phẩm Đường Kách mệnh"},
+  {time:"1930", event:"Thống nhất các tổ chức Cộng sản, thành lập Đảng Cộng sản Việt Nam; Soạn thảo Cương lĩnh chính trị (Chính cương vắn tắt, Sách lược vắn tắt)"},
+  {time:"1941", event:"Chủ trì Hội nghị lần 8 BCH TW ĐCS Đông Dương; Thành lập Mặt trận Việt Nam Độc lập Đồng minh (Việt Minh)"},
+  {time:"1944", event:"Thành lập Đội Việt Nam Tuyên truyền giải phóng quân; Thành lập Khu giải phóng Việt Bắc"},
+  {time:"1945", event:"Lãnh đạo Cách mạng tháng Tám thành công; Đọc Tuyên ngôn độc lập — Khai sinh nước Việt Nam DCCH"},
+  {time:"1946", event:"Lãnh đạo giải quyết khó khăn đói, dốt, tài chính; Kí Hiệp định Sơ bộ và Tạm ước; Ra Lời kêu gọi toàn quốc kháng chiến; Phát động kháng chiến chống Pháp"},
+  {time:"1947", event:"Lãnh đạo chiến dịch Việt Bắc"},
+  {time:"1950", event:"Lãnh đạo chiến dịch Biên giới"},
+  {time:"1951", event:"Chủ trì Đại hội đại biểu toàn quốc lần II của Đảng"},
+  {time:"1953-1954", event:"Lãnh đạo cuộc Tiến công chiến lược Đông-Xuân và chiến dịch Điện Biên Phủ"},
+  {time:"1959", event:"Chủ trì Hội nghị lần 15 BCH Trung ương"},
+  {time:"1960", event:"Chủ trì Đại hội đại biểu toàn quốc lần III của Đảng"},
+  {time:"VAI TRÒ", event:"Tìm ra con đường cứu nước (1920); Đào tạo bồi dưỡng lý luận cách mạng; Chuẩn bị tư tưởng, chính trị, tổ chức cho việc thành lập Đảng; Thống nhất các tổ chức Cộng sản, thành lập Đảng với Cương lĩnh đúng đắn; Xây dựng lực lượng (chính trị, vũ trang, căn cứ địa), lãnh đạo Cách mạng tháng Tám; Lãnh đạo nhân dân kháng chiến chống Pháp, chống Mỹ; Chỉ đạo xây dựng và hoàn chỉnh đường lối cách mạng đúng đắn, sáng tạo; Xây dựng mặt trận, đoàn kết toàn dân tộc, đoàn kết quốc tế"},
+],
 };
 
-// ═══════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════
-const S = {
-  mode: 'quiz',
-  topics: ['Lịch Sử Thế Giới','Lịch Sử Việt Nam','Hồ Chí Minh'],
-  count: 9999,
-  qs: [], cur: 0, ans: [],
-  t0: 0,
-  todayOk: +localStorage.getItem('todayOk')||0,
-  total: +localStorage.getItem('total')||0,
-  fc: [], fcIdx: 0, fcKn: new Set(), fcUn: new Set(), fcFlip: false,
+const S={
+  mode:'quiz', topics:['Lịch Sử Thế Giới','Lịch Sử Việt Nam','Hồ Chí Minh'],
+  count:9999, qs:[], cur:0, ans:[], t0:0,
+  todayOk:+localStorage.getItem('todayOk')||0,
+  total:+localStorage.getItem('total')||0,
+  fc:[],fcIdx:0,fcKn:new Set(),fcUn:new Set(),fcFlip:false
 };
 
-// ═══════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════
-function init() {
-  // topics
-  const box = document.getElementById('topicBox');
-  box.innerHTML = Object.keys(DATA).map(t =>
-    `<button class="tb on" data-t="${t}" onclick="toggleT(this,'${t}')">${t}</button>`
+function init(){
+  const box=document.getElementById('topicBox');
+  box.innerHTML=Object.keys(DATA).map(t=>
+    `<button class="tb on" onclick="toggleT(this,'${t}')">${t} <span style="opacity:.6;font-size:11px">(${DATA[t].length})</span></button>`
   ).join('');
-  upHStats();
+  upH();
 }
-
-function upHStats() {
-  document.getElementById('hTotal').textContent = S.total;
-  document.getElementById('hCorrect').textContent = S.todayOk;
+function upH(){
+  document.getElementById('hTotal').textContent=S.total;
+  document.getElementById('hCorrect').textContent=S.todayOk;
 }
-
-function toggleT(btn, t) {
-  if (S.topics.includes(t)) {
-    if (S.topics.length === 1) return;
-    S.topics = S.topics.filter(x => x !== t);
-    btn.classList.remove('on');
-  } else {
-    S.topics.push(t);
-    btn.classList.add('on');
-  }
+function toggleT(btn,t){
+  if(S.topics.includes(t)){if(S.topics.length===1)return;S.topics=S.topics.filter(x=>x!==t);btn.classList.remove('on')}
+  else{S.topics.push(t);btn.classList.add('on')}
 }
+function pickMode(m,el){S.mode=m;document.querySelectorAll('.mc').forEach(c=>c.classList.remove('sel'));el.classList.add('sel')}
+function pickCount(n,btn){S.count=n;document.querySelectorAll('.cb').forEach(b=>b.classList.remove('on'));btn.classList.add('on')}
 
-function pickMode(m, el) {
-  S.mode = m;
-  document.querySelectorAll('.mc').forEach(c => c.classList.remove('sel'));
-  el.classList.add('sel');
-}
+function pool(){return S.topics.flatMap(t=>DATA[t].map(d=>({...d,topic:t})))}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
-function pickCount(n, btn) {
-  S.count = n;
-  document.querySelectorAll('.cb').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
-}
-
-// ═══════════════════════════════════════
-// POOL & QUESTIONS
-// ═══════════════════════════════════════
-function pool() {
-  return S.topics.flatMap(t => DATA[t].map(d => ({...d, topic:t})));
-}
-
-function shuffle(a) {
-  for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
-  return a;
-}
-
-function buildQuiz(p) {
-  const all = pool();
-  return shuffle([...p]).slice(0, Math.min(S.count, p.length)).map(item => {
-    const byTime = Math.random() < 0.5;
-    if (byTime) {
-      const opts = shuffle([item.event,
-        ...shuffle(all.filter(x=>x.event!==item.event)).slice(0,3).map(x=>x.event)
-      ]);
-      return {
-        q:`Sự kiện nào xảy ra vào năm/giai đoạn <strong>${item.time}</strong>?`,
-        opts, correct:item.event, topic:item.topic,
-        expl:`Năm <strong>${item.time}</strong>: ${item.event}`
-      };
-    } else {
-      const opts = shuffle([item.time,
-        ...shuffle(all.filter(x=>x.time!==item.time)).slice(0,3).map(x=>x.time)
-      ]);
-      return {
-        q:`Sự kiện "<strong>${item.event}</strong>" xảy ra vào thời gian nào?`,
-        opts, correct:item.time, topic:item.topic,
-        expl:`Đáp án: <strong>${item.time}</strong>`
-      };
+function buildQuiz(p){
+  const all=pool();
+  return shuffle([...p]).slice(0,Math.min(S.count,p.length)).map(item=>{
+    const byTime=Math.random()<0.5;
+    if(byTime){
+      const wrongs=shuffle(all.filter(x=>x.event!==item.event)).slice(0,3).map(x=>x.event);
+      const opts=shuffle([item.event,...wrongs]);
+      return{q:`Sự kiện nào xảy ra vào năm/giai đoạn <strong>${item.time}</strong>?`,opts,correct:item.event,topic:item.topic,expl:`Năm <strong>${item.time}</strong>: ${item.event}`};
+    }else{
+      const wrongs=shuffle(all.filter(x=>x.time!==item.time)).slice(0,3).map(x=>x.time);
+      const opts=shuffle([item.time,...wrongs]);
+      return{q:`Sự kiện "<strong>${item.event}</strong>" xảy ra vào thời gian nào?`,opts,correct:item.time,topic:item.topic,expl:`Đáp án: <strong>${item.time}</strong> — ${item.event}`};
     }
   });
 }
-
-function buildType(p) {
-  return shuffle([...p]).slice(0, Math.min(S.count, p.length)).map(item => ({
+function buildType(p){
+  return shuffle([...p]).slice(0,Math.min(S.count,p.length)).map(item=>({
     q:`Sự kiện "<strong>${item.event}</strong>" xảy ra vào năm/giai đoạn nào?`,
-    correct:item.time, topic:item.topic,
-    expl:`Đáp án: <strong>${item.time}</strong> — ${item.event}`
+    correct:item.time,topic:item.topic,
+    expl:`Đáp án: <strong>${item.time}</strong>`
   }));
 }
 
-// ═══════════════════════════════════════
-// GO
-// ═══════════════════════════════════════
-function go() {
-  const p = pool();
-  if (p.length < 4) { alert('Vui lòng chọn ít nhất một chủ đề!'); return; }
-  S.t0 = Date.now(); S.cur = 0; S.ans = [];
-
-  if (S.mode === 'quiz') {
-    S.qs = buildQuiz(p);
-    document.getElementById('qBadge').textContent = '📝 Trắc Nghiệm';
-    show('sQuiz'); renderQ();
-  } else if (S.mode === 'type') {
-    S.qs = buildType(p);
-    show('sType'); renderType();
-  } else {
-    S.fc = shuffle([...p]).slice(0, Math.min(S.count, p.length));
-    S.fcIdx = 0; S.fcKn = new Set(); S.fcUn = new Set(); S.fcFlip = false;
-    show('sFlash'); renderFC();
-  }
+function go(){
+  const p=pool();
+  if(p.length<4){alert('Vui lòng chọn ít nhất một chủ đề!');return}
+  S.t0=Date.now();S.cur=0;S.ans=[];
+  if(S.mode==='quiz'){S.qs=buildQuiz(p);show('sQuiz');renderQ()}
+  else if(S.mode==='type'){S.qs=buildType(p);show('sType');renderType()}
+  else{S.fc=shuffle([...p]).slice(0,Math.min(S.count,p.length));S.fcIdx=0;S.fcKn=new Set();S.fcUn=new Set();S.fcFlip=false;show('sFlash');renderFC()}
 }
 
-// ═══════════════════════════════════════
-// QUIZ
-// ═══════════════════════════════════════
-function renderQ() {
-  const q = S.qs[S.cur], n = S.qs.length;
-  document.getElementById('qCur').textContent = S.cur+1;
-  document.getElementById('qTot').textContent = n;
-  document.getElementById('qPbar').style.width = (S.cur/n*100)+'%';
-  document.getElementById('qNo').textContent = 'Câu '+(S.cur+1);
-  document.getElementById('qTxt').innerHTML = q.q;
-  document.getElementById('qTag').textContent = q.topic;
-  document.getElementById('qNext').style.display = 'none';
-  document.getElementById('qExpl').className = 'expl';
-  renderDots('qDots', n);
-
-  const labels = ['A','B','C','D'];
-  document.getElementById('qOpts').innerHTML = q.opts.map((o,i) =>
-    `<button class="opt" onclick="pickAns(${i},this)">
-      <div class="olbl">${labels[i]}</div>
-      <div>${o}</div>
-    </button>`
+function renderQ(){
+  const q=S.qs[S.cur],n=S.qs.length;
+  document.getElementById('qCur').textContent=S.cur+1;
+  document.getElementById('qTot').textContent=n;
+  document.getElementById('qPbar').style.width=(S.cur/n*100)+'%';
+  document.getElementById('qNo').textContent='Câu '+(S.cur+1);
+  document.getElementById('qTxt').innerHTML=q.q;
+  document.getElementById('qTag').textContent=q.topic;
+  document.getElementById('qNext').style.display='none';
+  document.getElementById('qExpl').className='expl';
+  renderDots('qDots',n);
+  const L=['A','B','C','D'];
+  document.getElementById('qOpts').innerHTML=q.opts.map((o,i)=>
+    `<button class="opt" onclick="pickAns(${i},this)"><div class="olbl">${L[i]}</div><div>${o}</div></button>`
   ).join('');
 }
-
-function renderDots(id, n) {
-  document.getElementById(id).innerHTML = Array.from({length:n},(_,i)=>{
-    const a=S.ans[i]; let c='';
-    if(i===S.cur) c='cur';
-    else if(!a) c='';
-    else if(a.skip) c='sk';
-    else if(a.chose===a.correct) c='ok';
+function renderDots(id,n){
+  document.getElementById(id).innerHTML=Array.from({length:n},(_,i)=>{
+    const a=S.ans[i];let c='';
+    if(i===S.cur)c='cur';
+    else if(!a)c='';
+    else if(a.skip)c='sk';
+    else if(a.chose===a.correct)c='ok';
     else c='no';
-    return `<div class="dot ${c}"></div>`;
+    return`<div class="dot ${c}"></div>`;
   }).join('');
 }
-
-function pickAns(idx, btn) {
-  const q = S.qs[S.cur];
-  const chose = q.opts[idx];
-  const isOk = chose === q.correct;
-  rec(chose, q.correct, false);
-  if(isOk){S.todayOk++;localStorage.setItem('todayOk',S.todayOk);upHStats()}
-  const btns = document.querySelectorAll('.opt');
+function pickAns(idx,btn){
+  const q=S.qs[S.cur],chose=q.opts[idx],isOk=chose===q.correct;
+  rec(chose,q.correct,false);
+  if(isOk){S.todayOk++;localStorage.setItem('todayOk',S.todayOk);upH()}
+  const btns=document.querySelectorAll('.opt');
   btns.forEach(b=>b.classList.add('dis'));
-  btns.forEach((b,i)=>{
-    if(q.opts[i]===q.correct) b.classList.add('ok');
-    else if(i===idx) b.classList.add('no');
-  });
+  btns.forEach((b,i)=>{if(q.opts[i]===q.correct)b.classList.add('ok');else if(i===idx)b.classList.add('no')});
   showExpl(q.expl,'qExpl');
   document.getElementById('qNext').style.display='';
   renderDots('qDots',S.qs.length);
 }
-
-function skipQ() {
-  const q=S.qs[S.cur]; rec(null,q.correct,true);
+function skipQ(){
+  const q=S.qs[S.cur];rec(null,q.correct,true);
   const btns=document.querySelectorAll('.opt');
   btns.forEach(b=>b.classList.add('dis'));
   btns.forEach((b,i)=>{if(q.opts[i]===q.correct)b.classList.add('ok')});
@@ -715,16 +600,9 @@ function skipQ() {
   document.getElementById('qNext').style.display='';
   renderDots('qDots',S.qs.length);
 }
+function nextQ(){if(S.cur+1>=S.qs.length){showResult();return}S.cur++;renderQ()}
 
-function nextQ() {
-  if(S.cur+1>=S.qs.length){showResult();return}
-  S.cur++; renderQ();
-}
-
-// ═══════════════════════════════════════
-// TYPING
-// ═══════════════════════════════════════
-function renderType() {
+function renderType(){
   const q=S.qs[S.cur],n=S.qs.length;
   document.getElementById('tCur').textContent=S.cur+1;
   document.getElementById('tTot').textContent=n;
@@ -732,47 +610,31 @@ function renderType() {
   document.getElementById('tNo').textContent='Câu '+(S.cur+1);
   document.getElementById('tTxt').innerHTML=q.q;
   document.getElementById('tTag').textContent=q.topic;
-  document.getElementById('tInput').value='';
-  document.getElementById('tInput').disabled=false;
-  document.getElementById('tInput').style.borderColor='var(--border)';
-  document.getElementById('tInput').style.color='var(--text)';
+  const inp=document.getElementById('tInput');
+  inp.value='';inp.disabled=false;inp.style.borderColor='var(--border)';inp.style.color='var(--text)';
   document.getElementById('tExpl').className='expl';
   document.getElementById('tNext').style.display='none';
-  setTimeout(()=>document.getElementById('tInput').focus(),100);
+  setTimeout(()=>inp.focus(),100);
 }
-
-function checkType() {
-  const q=S.qs[S.cur];
-  const val=document.getElementById('tInput').value.trim();
+function checkType(){
+  const q=S.qs[S.cur],val=document.getElementById('tInput').value.trim();
   if(!val)return;
-  document.getElementById('tInput').disabled=true;
+  const inp=document.getElementById('tInput');inp.disabled=true;
   const norm=s=>s.replace(/\s/g,'').toLowerCase();
   const ok=norm(val)===norm(q.correct);
-  document.getElementById('tInput').style.borderColor=ok?'var(--green)':'var(--red)';
-  document.getElementById('tInput').style.color=ok?'var(--green)':'var(--red)';
+  inp.style.borderColor=ok?'var(--green)':'var(--red)';inp.style.color=ok?'var(--green)':'var(--red)';
   rec(val,q.correct,false);
-  if(ok){S.todayOk++;localStorage.setItem('todayOk',S.todayOk);upHStats()}
+  if(ok){S.todayOk++;localStorage.setItem('todayOk',S.todayOk);upH()}
   showExpl(q.expl,'tExpl');
   document.getElementById('tNext').style.display='';
 }
-
-function skipType() {
-  const q=S.qs[S.cur];
-  document.getElementById('tInput').disabled=true;
-  rec(null,q.correct,true);
-  showExpl(q.expl,'tExpl');
-  document.getElementById('tNext').style.display='';
+function skipType(){
+  const q=S.qs[S.cur];document.getElementById('tInput').disabled=true;
+  rec(null,q.correct,true);showExpl(q.expl,'tExpl');document.getElementById('tNext').style.display='';
 }
+function nextType(){if(S.cur+1>=S.qs.length){showResult();return}S.cur++;renderType()}
 
-function nextType() {
-  if(S.cur+1>=S.qs.length){showResult();return}
-  S.cur++; renderType();
-}
-
-// ═══════════════════════════════════════
-// FLASHCARD
-// ═══════════════════════════════════════
-function renderFC() {
+function renderFC(){
   const c=S.fc[S.fcIdx];
   document.getElementById('fcYr').textContent=c.time;
   document.getElementById('fcEvt').textContent=c.event;
@@ -780,8 +642,7 @@ function renderFC() {
   document.getElementById('fcCnt').textContent=(S.fcIdx+1)+' / '+S.fc.length;
   document.getElementById('fcKn').textContent=S.fcKn.size;
   document.getElementById('fcUn').textContent=S.fcUn.size;
-  S.fcFlip=false;
-  document.getElementById('fcCard').classList.remove('flip');
+  S.fcFlip=false;document.getElementById('fcCard').classList.remove('flip');
 }
 function flipFC(){S.fcFlip=!S.fcFlip;document.getElementById('fcCard').classList.toggle('flip',S.fcFlip)}
 function fcNext(){if(S.fcIdx+1<S.fc.length){S.fcIdx++;renderFC()}}
@@ -795,81 +656,41 @@ function fcMark(t){
   fcNext();
 }
 
-// ═══════════════════════════════════════
-// RESULT
-// ═══════════════════════════════════════
-function showResult() {
-  const secs=Math.round((Date.now()-S.t0)/1000);
-  const total=S.qs.length;
+function showResult(){
+  const secs=Math.round((Date.now()-S.t0)/1000),total=S.qs.length;
   const ok=S.ans.filter(a=>a&&!a.skip&&a.chose===a.correct).length;
   const no=S.ans.filter(a=>a&&!a.skip&&a.chose!==a.correct).length;
   const sk=S.ans.filter(a=>a&&a.skip).length;
   const pct=Math.round(ok/total*100);
-
   let ico='😔',ttl='Cần cố gắng hơn!';
-  if(pct>=90){ico='🏆';ttl='Xuất sắc!'}
-  else if(pct>=70){ico='🎉';ttl='Giỏi lắm!'}
-  else if(pct>=50){ico='💪';ttl='Khá tốt!'}
-
+  if(pct>=90){ico='🏆';ttl='Xuất sắc!'}else if(pct>=70){ico='🎉';ttl='Giỏi lắm!'}else if(pct>=50){ico='💪';ttl='Khá tốt!'}
   document.getElementById('resIco').textContent=ico;
   document.getElementById('resTtl').textContent=ttl;
   document.getElementById('resSub').textContent=`Bạn đạt ${ok}/${total} câu đúng`;
-  document.getElementById('rOk').textContent=ok;
-  document.getElementById('rNo').textContent=no;
-  document.getElementById('rSk').textContent=sk;
-  document.getElementById('rTm').textContent=secs+'s';
+  document.getElementById('rOk').textContent=ok;document.getElementById('rNo').textContent=no;
+  document.getElementById('rSk').textContent=sk;document.getElementById('rTm').textContent=secs+'s';
   document.getElementById('ringN').textContent=pct+'%';
   document.getElementById('ringN').style.color=pct>=70?'var(--green)':pct>=50?'var(--gold)':'var(--red)';
-
-  setTimeout(()=>{
-    const off=364-(pct/100*364);
-    document.getElementById('ringC').style.transition='stroke-dashoffset 1.2s ease';
-    document.getElementById('ringC').style.strokeDashoffset=off;
-  },100);
-
+  setTimeout(()=>{const off=364-(pct/100*364);document.getElementById('ringC').style.transition='stroke-dashoffset 1.2s ease';document.getElementById('ringC').style.strokeDashoffset=off},100);
   document.getElementById('revCnt').textContent='('+total+' câu)';
   document.getElementById('revList').innerHTML=S.qs.map((q,i)=>{
-    const a=S.ans[i]||{};
-    const cls=a.skip?'sk':a.chose===q.correct?'ok':'no';
-    const ico2=a.skip?'⏭':a.chose===q.correct?'✅':'❌';
-    return `<div class="rev-item ${cls}">
-      <div class="rev-q">${ico2} ${q.q.replace(/<[^>]+>/g,'')}</div>
+    const a=S.ans[i]||{};const cls=a.skip?'sk':a.chose===q.correct?'ok':'no';
+    const ic2=a.skip?'⏭':a.chose===q.correct?'✅':'❌';
+    return`<div class="rev-item ${cls}">
+      <div class="rev-q">${ic2} ${q.q.replace(/<[^>]+>/g,'')}</div>
       <div class="rev-row"><span class="rtag rt-ok">✓ Đúng</span><span>${q.correct}</span></div>
-      ${a.chose!==q.correct?`<div class="rev-row">
-        <span class="rtag ${a.skip?'rt-sk':'rt-no'}">${a.skip?'⏭ Bỏ':'✗ Bạn'}</span>
-        <span style="color:var(--muted)">${a.chose||'(Bỏ qua)'}</span>
-      </div>`:''}
+      ${a.chose!==q.correct?`<div class="rev-row"><span class="rtag ${a.skip?'rt-sk':'rt-no'}">${a.skip?'⏭':'✗ Bạn'}</span><span style="color:var(--muted)">${a.chose||'(Bỏ qua)'}</span></div>`:''}
     </div>`;
   }).join('');
   show('sResult');
 }
-
 function retryQ(){go()}
-
-// ═══════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════
-function rec(chose,correct,skip){
-  S.ans[S.cur]={chose,correct,skip};
-  S.total++;localStorage.setItem('total',S.total);upHStats();
-}
-function showExpl(txt,id){
-  const el=document.getElementById(id);
-  el.innerHTML='💡 '+txt; el.className='expl show';
-}
-function show(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function goHome(){
-  const a=document.querySelector('.screen.active');
-  if(a&&a.id!=='sHome'&&a.id!=='sResult') document.getElementById('modal').classList.add('show');
-  else show('sHome');
-}
+function rec(chose,correct,skip){S.ans[S.cur]={chose,correct,skip};S.total++;localStorage.setItem('total',S.total);upH()}
+function showExpl(txt,id){const el=document.getElementById(id);el.innerHTML='💡 '+txt;el.className='expl show'}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function goHome(){const a=document.querySelector('.screen.active');if(a&&a.id!=='sHome'&&a.id!=='sResult')document.getElementById('modal').classList.add('show');else show('sHome')}
 function closeModal(){document.getElementById('modal').classList.remove('show')}
 function confirmHome(){closeModal();show('sHome')}
-
 init();
 </script>
 </body>
