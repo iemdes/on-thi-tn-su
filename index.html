@@ -553,22 +553,21 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
         <button class="export-btn" onclick="exportCSV()">📥 Xuất CSV</button>
       </div>
     </div>
-    <div id="jsonbinSetup" style="background:var(--gold-s);border:1.5px solid var(--gold);border-radius:12px;padding:14px 16px;margin-bottom:20px;font-size:13px">
-      <b style="color:var(--gold)">⚙️ Cài đặt JSONBin để xem data từ tất cả thiết bị:</b>
+            <div id="ghSetup" style="background:var(--card2);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:20px;font-size:13px" id="ghSetupBox">
+      <b style="color:var(--gold)">🔗 Kết nối GitHub Gist để đồng bộ tất cả thiết bị:</b>
       <ol style="margin:8px 0 10px 18px;line-height:2;color:var(--text)">
-        <li>Vào <b>jsonbin.io</b> → Đăng ký miễn phí</li>
-        <li>Tạo New Bin (nội dung: <code style="background:var(--card2);padding:2px 6px;border-radius:4px">{"users":[]}</code>)</li>
-        <li>Copy <b>BIN ID</b> và vào Account → API Keys copy <b>Master Key</b></li>
-        <li>Nhập vào đây rồi nhấn Lưu:</li>
+        <li>Vào <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--blue)">github.com/settings/tokens/new</a></li>
+        <li>Tên token: <b>lichsu-app</b>, tick chọn <b>gist</b>, nhấn Generate</li>
+        <li>Copy token dán vào đây, nhấn Kết nối (tự tạo Gist)</li>
       </ol>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <input id="inputBinId" placeholder="BIN ID (VD: 6648a1e2acd3cb34a836f123)" class="finput" style="margin:0;font-size:12px;padding:8px 12px">
-        <input id="inputApiKey" placeholder="Master Key (VD: $2a$10$...)" class="finput" style="margin:0;font-size:12px;padding:8px 12px">
-        <button onclick="saveJsonbinConfig()" style="padding:9px;border:none;border-radius:8px;background:var(--gold);color:var(--dark);font-family:inherit;font-size:13px;font-weight:800;cursor:pointer">💾 Lưu cấu hình</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input id="inputGhToken" placeholder="GitHub Token (ghp_...)" class="finput" style="margin:0;font-size:12px;padding:8px 12px;flex:1;min-width:200px">
+        <button onclick="setupGist()" style="padding:9px 16px;border:none;border-radius:8px;background:var(--green);color:#fff;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">🔗 Kết nối</button>
       </div>
+      <div id="ghSetupMsg" style="margin-top:8px;font-size:12px"></div>
     </div>
     <div class="admin-section">
-      <h4>📊 Tổng quan</h4>
+    <h4>📊 Tổng quan</h4>
       <div class="admin-stat-grid">
         <div class="ast"><div class="ast-n" id="adTotalUsers">0</div><div class="ast-l">Người dùng</div></div>
         <div class="ast"><div class="ast-n" id="adTotalSessions">0</div><div class="ast-l">Lần chơi</div></div>
@@ -580,7 +579,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
       <div style="overflow-x:auto">
         <table class="user-table" id="userTable">
           <thead><tr>
-            <th>Tên</th><th>Điểm cao</th><th>Lần chơi</th><th>Thiết bị</th><th>IP / Vị trí</th><th>Lần cuối</th>
+            <th>Tên</th><th>Điểm cao</th><th>Lần chơi</th><th>Thiết bị</th><th>IP / Vị trí</th><th>Lần cuối</th><th>Xóa</th>
           </tr></thead>
           <tbody id="userTableBody"></tbody>
         </table>
@@ -641,190 +640,95 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 
 <script>
 // ══════════════════════════════════════════════
-// JSONBIN CONFIG - thay BIN_ID va API_KEY bang cua ban
-// Tao tai jsonbin.io -> New Bin -> copy ID
-// Account -> API Keys -> copy Master Key
+// GITHUB GIST DATABASE
+// Khong can setup - Admin chi can tao GitHub token 1 lan
 // ══════════════════════════════════════════════
-const JSONBIN = {
-  BIN_ID: 'REPLACE_BIN_ID',       // VD: 6648a1e2acd3cb34a836f123
-  API_KEY: 'REPLACE_API_KEY',     // VD: $2a$10$abc...
-  URL: 'https://api.jsonbin.io/v3/b/',
-};
+var GIST_ID   = localStorage.getItem('_gist_id')  || '';
+var GH_TOKEN  = localStorage.getItem('_gh_token')  || '';
+var GH_READY  = !!(GIST_ID && GH_TOKEN);
 
-// ══════════════════════════════════════════════
-// DATABASE FUNCTIONS
-// ══════════════════════════════════════════════
-async function dbGet() {
-  // Neu chua cau hinh, dung localStorage
-  if (JSONBIN.BIN_ID === 'REPLACE_BIN_ID') return getLocalScores();
+const GIST_API = 'https://api.github.com/gists/';
+const GIST_FILE = 'lichsu_users.json';
+
+// ==== CACHE LOCAL ====
+function getLocalUsers() {
+  try { return JSON.parse(localStorage.getItem('_users_cache')) || []; }
+  catch(e) { return []; }
+}
+function setLocalUsers(arr) {
+  localStorage.setItem('_users_cache', JSON.stringify(arr));
+}
+
+// ==== DOC TU GIST ====
+async function dbGetAll() {
+  if (!GH_READY) return getLocalUsers();
   try {
-    const r = await fetch(JSONBIN.URL + JSONBIN.BIN_ID + '/latest', {
-      headers: { 'X-Master-Key': JSONBIN.API_KEY },
-      signal: AbortSignal.timeout(8000),
+    const r = await fetch(GIST_API + GIST_ID, {
+      headers: { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3+json' },
+      signal: AbortSignal.timeout(10000),
     });
     const d = await r.json();
-    return d.record?.users || [];
-  } catch(e) { return getLocalScores(); }
+    const content = d.files?.[GIST_FILE]?.content;
+    if (!content) return getLocalUsers();
+    const users = JSON.parse(content);
+    setLocalUsers(users); // cap nhat cache
+    return users;
+  } catch(e) { return getLocalUsers(); }
 }
 
-async function dbSave(users) {
-  // Luu localStorage truoc (fast)
-  localStorage.setItem('ls_scores_v2', JSON.stringify(users));
-  // Neu chua cau hinh JSONBin, thoi
-  if (JSONBIN.BIN_ID === 'REPLACE_BIN_ID') return;
+// ==== GHI LEN GIST ====
+async function dbSaveAll(users) {
+  setLocalUsers(users); // luu cache truoc
+  if (!GH_READY) return;
   try {
-    await fetch(JSONBIN.URL + JSONBIN.BIN_ID, {
-      method: 'PUT',
+    await fetch(GIST_API + GIST_ID, {
+      method: 'PATCH',
       headers: {
+        'Authorization': 'token ' + GH_TOKEN,
         'Content-Type': 'application/json',
-        'X-Master-Key': JSONBIN.API_KEY,
+        'Accept': 'application/vnd.github.v3+json',
       },
-      body: JSON.stringify({ users }),
-      signal: AbortSignal.timeout(8000),
+      body: JSON.stringify({ files: { [GIST_FILE]: { content: JSON.stringify(users) } } }),
+      signal: AbortSignal.timeout(10000),
     });
-  } catch(e) { /* giu localStorage lam backup */ }
+  } catch(e) {}
 }
 
-async function dbGetUser(userId) {
-  const users = await dbGet();
-  return users.find(u => u.userId === userId) || null;
-}
-
+// ==== UPSERT 1 USER ====
 async function dbUpsertUser(userData) {
-  const users = await dbGet();
+  const users = await dbGetAll();
   const idx = users.findIndex(u => u.userId === userData.userId);
-  if (idx === -1) users.push(userData);
-  else users[idx] = { ...users[idx], ...userData };
-  await dbSave(users);
+  if (idx === -1) users.push(userData); else users[idx] = userData;
+  await dbSaveAll(users);
 }
 
-function getLocalScores() {
-  try { return JSON.parse(localStorage.getItem('ls_scores_v2')) || []; } catch(e) { return []; }
+// ==== XOA 1 USER ====
+async function dbDeleteUser(userId) {
+  const users = (await dbGetAll()).filter(u => u.userId !== userId);
+  await dbSaveAll(users);
 }
 
-// ══════════════════════════════════════════════
-// DATA
-// ══════════════════════════════════════════════
-const DATA = {
-"Lịch Sử Thế Giới": [
-  {time:"1914-1918", event:"Chiến tranh thế giới thứ nhất"},
-  {time:"1917", event:"Cách mạng tháng Hai và Cách mạng tháng Mười ở Nga"},
-  {time:"1922", event:"Liên bang Cộng hòa xã hội chủ nghĩa Xô Viết (Liên Xô) ra đời"},
-  {time:"1939-1945", event:"Chiến tranh thế giới thứ hai"},
-  {time:"1940 đến nay", event:"Cách mạng Khoa học-kĩ thuật / Cách mạng khoa học công nghệ"},
-  {time:"1945", event:"Liên hợp quốc được thành lập"},
-  {time:"1945-1991", event:"Trật tự hai cực I-an-ta"},
-  {time:"1947-1989", event:"Cuộc Chiến tranh lạnh"},
-  {time:"1947", event:"Kế hoạch Mác-san ra đời"},
-  {time:"1949", event:"NATO thành lập; Hội đồng tương trợ kinh tế (SEV) ra đời"},
-  {time:"1950-1953", event:"Cuộc chiến tranh Triều Tiên"},
-  {time:"1955", event:"Tổ chức Hiệp ước Vác-sa-va được thành lập"},
-  {time:"1957", event:"Liên minh châu Âu ra đời (tiền thân)"},
-  {time:"1961", event:"Hiệp hội Đông Nam Á (ASA) ra đời"},
-  {time:"1967", event:"Hiệp hội các quốc gia Đông Nam Á (ASEAN) ra đời — Tuyên bố Băng Cốc 1967"},
-  {time:"1971", event:"ASEAN ra Tuyên bố khu vực hòa bình, tự do và trung lập (ZOPFAN)"},
-  {time:"1976", event:"Hiệp ước Thân thiện và Hợp tác ở ĐNA (TAC) / Hiệp ước Ba-li kí kết"},
-  {time:"1980", event:"Xu thế toàn cầu hóa xuất hiện"},
-  {time:"1989", event:"Diễn đàn Hợp tác Kinh tế châu Á-Thái Bình Dương (APEC) thành lập"},
-  {time:"1991", event:"Chế độ XHCN ở Liên Xô và Đông Âu tan rã"},
-  {time:"1996", event:"Diễn đàn hợp tác Á-Âu (ASEM) thành lập"},
-  {time:"1997", event:"Tầm nhìn ASEAN 2020 thông qua tại HNCC ASEAN lần 2 (Ma-lai-xi-a)"},
-  {time:"2003", event:"Tuyên bố về sự hoà hợp ASEAN II (Ba-li II) tại HNCC ASEAN lần 9 (Inđônêxia)"},
-  {time:"2007", event:"Hiến chương ASEAN được thông qua, có hiệu lực năm 2008"},
-  {time:"2009", event:"Lộ trình xây dựng Cộng đồng ASEAN (2009-2015) được thông qua"},
-  {time:"2015", event:"Cộng đồng ASEAN được thành lập (3 trụ cột) tại HNCC ASEAN lần 27; ASEAN thông qua Tầm nhìn ASEAN 2025 và Lộ trình giai đoạn 2 (2015-2020)"},
-  {time:"2020", event:"Tuyên bố Hà Nội về Tầm nhìn Cộng đồng ASEAN sau năm 2025 tại HNCC ASEAN lần 37 (Hà Nội)"},
-],
-"Lịch Sử Việt Nam": [
-  {time:"938 (thế kỷ X)", event:"Kháng chiến chống quân Nam Hán của Ngô Quyền — trận Bạch Đằng"},
-  {time:"1075-1077 (thế kỷ XI)", event:"Kháng chiến chống Tống thời Lý — trận Sông Như Nguyệt (Lý Thường Kiệt lãnh đạo)"},
-  {time:"1258-1288 (thế kỷ XIII)", event:"Kháng chiến chống Mông-Nguyên thời Trần — trận Tây Kết, Chương Dương, Hàm Tử, Bạch Đằng (Trần Hưng Đạo)"},
-  {time:"1418-1427 (thế kỷ XV)", event:"Kháng chiến chống quân Minh (Lê Lợi lãnh đạo) — trận Chi Lăng, Xương Giang"},
-  {time:"1771-1789 (thế kỷ XVIII)", event:"Phong trào Tây Sơn (Nguyễn Huệ, Nguyễn Nhạc, Nguyễn Lữ) — lật đổ Chúa Nguyễn, tập đoàn Lê-Trịnh, kháng chiến chống Xiêm (1785), chống Thanh (1789)"},
-  {time:"1858-1884 (thế kỷ XIX)", event:"Kháng chiến chống Pháp thời Nguyễn: trận Đà Nẵng (1858), Gia Định (1859), Cầu Giấy (1874, 1883); Các Hiệp ước: Nhâm Tuất (1862), Giáp Tuất (1874), Hác-măng (1883), Pa-tơ-nốt (1884)"},
-  {time:"1905-1908", event:"Phan Bội Châu phát động phong trào Đông Du (Nhật Bản)"},
-  {time:"1908", event:"Phan Bội Châu tham gia thành lập Đông Á Đồng minh hội và Điền-Quế-Việt liên minh"},
-  {time:"1912", event:"Phan Bội Châu thành lập Việt Nam Quang phục hội, tham gia thành lập Hội Chấn Hoa Hưng Á"},
-  {time:"1925", event:"Hội Việt Nam Cách mạng Thanh niên thành lập"},
-  {time:"1929", event:"Ba tổ chức cộng sản ra đời: An Nam Cộng sản Đảng, Đông Dương Cộng sản Đảng, Đông Dương Cộng sản liên đoàn"},
-  {time:"1930", event:"Đảng Cộng sản Việt Nam ra đời"},
-  {time:"1941", event:"Hội nghị lần 8 BCH TW ĐCS Đông Dương; Mặt trận Việt Nam Độc lập đồng minh (Việt Minh) thành lập"},
-  {time:"1944", event:"Đội Việt Nam Tuyên truyền giải phóng quân thành lập"},
-  {time:"1945", event:"Cách mạng tháng Tám thành công, nước Việt Nam DCCH ra đời; Nhân dân Nam Bộ kháng chiến chống Pháp (23/9/1945)"},
-  {time:"1946", event:"Hiệp định Sơ bộ (Việt-Pháp) và bản Tạm ước kí kết; Cuộc kháng chiến toàn quốc bùng nổ"},
-  {time:"1946-1947", event:"Cuộc chiến đấu ở đô thị Bắc vĩ tuyến 16, bước đầu đánh bại kế hoạch ĐNTN"},
-  {time:"1947", event:"Chiến dịch Việt Bắc thu-đông, đánh bại kế hoạch ĐNTN"},
-  {time:"1950", event:"Chiến dịch Biên giới thu-đông, đánh bại kế hoạch Rơ-ve, giành thế chủ động; Pháp đề ra Kế hoạch Đờ Lát đơ Tát-xi-nhi; Việt Nam thiết lập ngoại giao với TQ, LX và XHCN"},
-  {time:"1951", event:"Đại hội Đại biểu toàn quốc lần II; Đảng Lao động Việt Nam; Mặt trận Liên Việt; Liên minh nhân dân Việt-Miên-Lào thành lập"},
-  {time:"1951-1953", event:"Chiến dịch Hòa Bình, chiến dịch Tây Bắc, chiến dịch Thượng Lào"},
-  {time:"1953-1954", event:"Pháp-Mỹ đề ra Kế hoạch Na-va (1953); Cuộc Tiến công chiến lược Đông Xuân (1953-1954); Chiến dịch Điện Biên Phủ (1954); Hiệp định Giơ-ne-vơ kí kết (1954)"},
-  {time:"1945-1954", event:"Kháng chiến chống Pháp xâm lược"},
-  {time:"1954-1975", event:"Kháng chiến chống Mỹ, cứu nước"},
-  {time:"1959", event:"Hội nghị BCH TW lần thứ 15 (Hà Nội)"},
-  {time:"1959-1960", event:"Phong trào Đồng khởi"},
-  {time:"1960", event:"Đại hội đại biểu toàn quốc lần III (Hà Nội); Mặt trận Dân tộc Giải phóng MNVN; Việt Nam thiết lập quan hệ ngoại giao với Cu-ba"},
-  {time:"1961", event:"Quân Giải phóng miền Nam ra đời"},
-  {time:"1961-1965", event:"Chiến tranh đặc biệt"},
-  {time:"1962", event:"Việt Nam thiết lập quan hệ ngoại giao với Lào"},
-  {time:"1963", event:"Chiến thắng Ấp Bắc (Mỹ Tho)"},
-  {time:"1964", event:"Chiến thắng Bình Giã, An Lão"},
-  {time:"1965", event:"Chiến thắng Ba Gia, Đồng Xoài; Chiến thắng Vạn Tường, Núi Thành; Hội nghị nhân dân ba nước Đông Dương triệu tập"},
-  {time:"1965-1968", event:"Chiến tranh cục bộ, quân Mỹ và đồng minh vào Việt Nam"},
-  {time:"1967", event:"Việt Nam thiết lập quan hệ ngoại giao với Cam-pu-chia"},
-  {time:"1968", event:"Cuộc Tổng tiến công và nổi dậy Xuân Mậu Thân; Mỹ tuyên bố 'Phi Mỹ hóa', xuống thang chiến tranh, chấp nhận đàm phán ở Pa-ri"},
-  {time:"1969-1973", event:"Chiến lược Việt Nam hóa chiến tranh, Đông Dương hóa chiến tranh"},
-  {time:"1969", event:"Chính phủ lâm thời Cộng hòa miền Nam Việt Nam ra đời"},
-  {time:"1970", event:"Hội nghị cấp cao 3 nước Đông Dương; Đánh bại cuộc hành quân xâm lược Cam-pu-chia của Mỹ"},
-  {time:"1971", event:"Đánh bại cuộc hành quân Lam Sơn ở Đường 9-Nam Lào"},
-  {time:"1972", event:"Cuộc Tiến công chiến lược miền Nam — buộc Mỹ tuyên bố 'Mỹ hóa'; Trận 'Điện Biên Phủ trên không' (miền Bắc); Mỹ kí Hiệp định Pa-ri; Việt Nam thiết lập quan hệ ngoại giao với Ấn Độ"},
-  {time:"1973", event:"Hiệp định Pa-ri về chấm dứt chiến tranh Việt Nam kí kết; Mỹ và đồng minh rút hết quân; Việt Nam thiết lập ngoại giao với Nhật Bản, Ô-xtrây-li-a, Pháp, Hà Lan"},
-  {time:"1975", event:"Chiến thắng Đường 14-Phước Long (1-1975); Tổng tiến công mùa Xuân 1975 — Đại thắng (3 chiến dịch: Tây Nguyên, Huế-Đà Nẵng, Hồ Chí Minh) — kết thúc kháng chiến chống Mỹ"},
-  {time:"1976", event:"Thống nhất đất nước về mặt Nhà nước; Việt Nam gia nhập Phong trào Không liên kết"},
-  {time:"1977", event:"Việt Nam gia nhập Liên hợp quốc; Việt Nam và Lào kí Hiệp ước hữu nghị và hợp tác"},
-  {time:"1978", event:"Việt Nam và Liên Xô kí Hiệp ước hữu nghị và hợp tác; Việt Nam gia nhập Hội đồng tương trợ kinh tế (SEV)"},
-  {time:"1979-1986", event:"Chiến tranh biên giới Tây Nam, chiến tranh biên giới phía Bắc (Bảo vệ Tổ quốc)"},
-  {time:"1986", event:"Đại hội đại biểu toàn quốc lần VI — Mở đầu công cuộc Đổi mới đất nước"},
-  {time:"1991", event:"Việt Nam bình thường hóa quan hệ ngoại giao với Trung Quốc; Đại hội lần VII — Công nghiệp hóa, hiện đại hóa đất nước"},
-  {time:"1995", event:"Việt Nam bình thường hóa quan hệ ngoại giao với Mỹ; Việt Nam gia nhập ASEAN, tham gia Hiệp định Thương mại tự do ASEAN"},
-  {time:"1996", event:"Việt Nam tham gia Diễn đàn Hợp tác Á-Âu (ASEM)"},
-  {time:"1998", event:"Việt Nam đảm nhiệm vai trò Chủ tịch ASEAN; Việt Nam tham gia APEC"},
-  {time:"2001", event:"Đại hội lần IX — chủ động hội nhập kinh tế quốc tế"},
-  {time:"2007", event:"Việt Nam gia nhập Tổ chức Thương mại Thế giới (WTO)"},
-  {time:"2008", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Trung Quốc"},
-  {time:"2010", event:"Việt Nam đảm nhiệm vai trò Chủ tịch ASEAN"},
-  {time:"2011", event:"Đại hội lần XI — chủ động và tích cực hội nhập quốc tế"},
-  {time:"2012", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Nga"},
-  {time:"2014", event:"Việt Nam bắt đầu tham gia hoạt động giữ gìn hòa bình của Liên hợp quốc"},
-  {time:"2016", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Ấn Độ"},
-  {time:"2020", event:"Việt Nam đảm nhiệm vai trò Chủ tịch ASEAN"},
-  {time:"2022", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Hàn Quốc"},
-  {time:"2023", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Mỹ và Nhật"},
-  {time:"2024", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Úc, Pháp, Ma-lai-xi-a"},
-  {time:"2025", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với In-đô-nê-xi-a, Xin-ga-po, Niu-di-lân"},
-],
-"Hồ Chí Minh": [
-  {time:"1911", event:"Nguyễn Ái Quốc sang phương Tây tìm đường cứu nước"},
-  {time:"1918", event:"Gia nhập Đảng xã hội Pháp"},
-  {time:"1919", event:"Gửi bản Yêu sách của nhân dân An Nam đến Hội nghị Véc-xai"},
-  {time:"1920", event:"Đọc Luận cương của Lê-nin, tìm ra con đường cứu nước; Sáng lập Đảng Cộng sản Pháp; Gia nhập Quốc tế Cộng sản"},
-  {time:"1921", event:"Tham gia sáng lập Hội Liên hiệp thuộc địa (Pa-ri)"},
-  {time:"1923", event:"Sang Liên Xô dự Hội nghị Quốc tế Nông dân"},
-  {time:"1925", event:"Sáng lập Hội Việt Nam Cách mạng Thanh niên; Viết Bản án chế độ thực dân Pháp; Sáng lập Báo Thanh niên; Thành lập Hội Liên hiệp các dân tộc bị áp bức ở Á Đông"},
-  {time:"1927", event:"Xuất bản tác phẩm Đường Kách mệnh"},
-  {time:"1930", event:"Thống nhất các tổ chức Cộng sản, thành lập Đảng Cộng sản Việt Nam; Soạn thảo Cương lĩnh chính trị (Chính cương vắn tắt, Sách lược vắn tắt)"},
-  {time:"1941", event:"Chủ trì Hội nghị lần 8 BCH TW ĐCS Đông Dương; Thành lập Mặt trận Việt Nam Độc lập Đồng minh (Việt Minh)"},
-  {time:"1944", event:"Thành lập Đội Việt Nam Tuyên truyền giải phóng quân; Thành lập Khu giải phóng Việt Bắc"},
-  {time:"1945", event:"Lãnh đạo Cách mạng tháng Tám thành công; Đọc Tuyên ngôn độc lập — Khai sinh nước Việt Nam DCCH"},
-  {time:"1946", event:"Lãnh đạo giải quyết khó khăn đói, dốt, tài chính; Kí Hiệp định Sơ bộ và Tạm ước; Ra Lời kêu gọi toàn quốc kháng chiến chống Pháp"},
-  {time:"1947", event:"Lãnh đạo chiến dịch Việt Bắc"},
-  {time:"1950", event:"Lãnh đạo chiến dịch Biên giới"},
-  {time:"1951", event:"Chủ trì Đại hội đại biểu toàn quốc lần II của Đảng"},
-  {time:"1953-1954", event:"Lãnh đạo cuộc Tiến công chiến lược Đông-Xuân và chiến dịch Điện Biên Phủ"},
-  {time:"1959", event:"Chủ trì Hội nghị lần 15 BCH Trung ương"},
-  {time:"1960", event:"Chủ trì Đại hội đại biểu toàn quốc lần III của Đảng"},
-  {time:"VAI TRÒ & VINH DANH", event:"Tìm ra con đường cứu nước (1920); Đào tạo bồi dưỡng lý luận cách mạng; Thống nhất các tổ chức Cộng sản, thành lập Đảng với Cương lĩnh đúng đắn; Lãnh đạo Cách mạng tháng Tám, kháng chiến chống Pháp, chống Mỹ; Cống hiến cả cuộc đời cho sự nghiệp đấu tranh giải phóng dân tộc và xây dựng CNXH"},
-],
-};
+// ==== TAO GIST MOI (lan dau setup) ====
+async function createGist(token) {
+  const r = await fetch(GIST_API, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'token ' + token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      description: 'Lich Su - Student Data',
+      public: false,
+      files: { [GIST_FILE]: { content: '[]' } },
+    }),
+    signal: AbortSignal.timeout(10000),
+  });
+  const d = await r.json();
+  return d.id || null;
+}
+
+function getScores() { return getLocalUsers(); }
+async function getScoresAsync() { return await dbGetAll(); };
 
 // ══════════════════════════════════════════════
 // STORAGE KEY
@@ -1082,28 +986,41 @@ function doAdminLogin() {
   }
 }
 
-function saveJsonbinConfig() {
-  const binId = document.getElementById('inputBinId').value.trim();
-  const apiKey = document.getElementById('inputApiKey').value.trim();
-  if (!binId || !apiKey) { alert('Vui lòng nhập đủ BIN ID và API Key!'); return; }
-  JSONBIN.BIN_ID = binId;
-  JSONBIN.API_KEY = apiKey;
-  localStorage.setItem('jsonbin_config', JSON.stringify({binId, apiKey}));
-  document.getElementById('jsonbinSetup').style.display = 'none';
-  alert('✅ Đã lưu! Đang tải lại dữ liệu...');
-  renderAdmin();
+async function setupGist() {
+  const token = document.getElementById('inputGhToken').value.trim();
+  if (!token) { alert('Nhập GitHub Token!'); return; }
+  const msg = document.getElementById('ghSetupMsg');
+  msg.style.color = 'var(--gold)';
+  msg.textContent = '⏳ Đang tạo Gist...';
+  try {
+    const gistId = await createGist(token);
+    if (!gistId) throw 'Tạo Gist thất bại';
+    localStorage.setItem('_gist_id', gistId);
+    localStorage.setItem('_gh_token', token);
+    GIST_ID = gistId; GH_TOKEN = token; GH_READY = true;
+    msg.style.color = 'var(--green)';
+    msg.textContent = '✅ Kết nối thành công! Gist ID: ' + gistId;
+    document.getElementById('ghSetup').style.display = 'none';
+    setTimeout(() => renderAdmin(), 500);
+  } catch(e) {
+    msg.style.color = 'var(--red)';
+    msg.textContent = '❌ Lỗi: ' + e;
+  }
 }
 
 // Load JSONBin config da luu
-(function loadJsonbinConfig() {
-  try {
-    const cfg = JSON.parse(localStorage.getItem('jsonbin_config'));
-    if (cfg?.binId && cfg?.apiKey) {
-      JSONBIN.BIN_ID = cfg.binId;
-      JSONBIN.API_KEY = cfg.apiKey;
-    }
-  } catch(e) {}
-})();
+// Config da duoc load o dau file (GIST_ID, GH_TOKEN)
+// Hien/an setup box trong admin
+function checkGhSetup() {
+  const box = document.getElementById('ghSetup');
+  if (box) box.style.display = GH_READY ? 'none' : 'block';
+}
+
+async function deleteDevice(userId) {
+  if (!confirm('Xóa thiết bị này khỏi hệ thống?')) return;
+  await dbDeleteUser(userId);
+  renderAdmin();
+}
 
 function adminLogout() {
   S.adminLogged = false;
@@ -1117,6 +1034,7 @@ function adminLogout() {
 
 async function renderAdmin() {
   if (!S.adminLogged) return;
+  checkGhSetup();
   // Hien loading
   document.getElementById('userTableBody').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--muted)">⏳ Đang tải dữ liệu...</td></tr>';
   const scores = await getScoresAsync();
@@ -1157,6 +1075,7 @@ async function renderAdmin() {
         ${d.gps?`<div><b>GPS:</b> ${d.gps}</div>`:""}
       </td>
       <td style="font-size:11px">${lastTime}</td>
+      <td><button onclick="deleteDevice('${u.userId}')" style="padding:5px 12px;border:1px solid var(--red);border-radius:6px;background:var(--red-s);color:var(--red);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer">🗑️ Xóa</button></td>
     </tr>`;
   }).join('');
 }
