@@ -781,9 +781,11 @@ async function collectInfo() {
     tz: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
     time: new Date().toLocaleString('vi-VN'),
     ip: '',
+    hostname: '',
     city: '',
     region: '',
     country: '',
+    continent: '',
     isp: '',
     org: '',
     as: '',
@@ -803,46 +805,83 @@ async function collectInfo() {
   else if (/edg/.test(ua)) info.browser = 'Edge';
   else info.browser = 'Khác';
 
-  // Try get IP + location - thu nhieu API
+  // Thu nhieu API HTTPS de lay IP
   const ipApis = [
     async () => {
-      const r = await fetch('http://ip-api.com/json/?fields=status,query,country,regionName,city,isp,org,as,timezone', {signal: AbortSignal.timeout(5000)});
+      // ipwho.is - HTTPS, free, khong can key
+      const r = await fetch('https://ipwho.is/', {signal: AbortSignal.timeout(6000)});
       const d = await r.json();
-      if (d.status === 'success') {
-        info.ip = d.query || '';
-        info.city = d.city || '';
-        info.region = d.regionName || '';
-        info.country = d.country || '';
-        info.isp = d.isp || '';
-        info.org = d.org || '';
-        info.as = d.as || '';
-        info.tz = d.timezone || info.tz;
+      if (d.success && d.ip) {
+        info.ip       = d.ip;
+        info.city     = d.city || '';
+        info.region   = d.region || '';
+        info.country  = d.country || '';
+        info.isp      = d.connection?.isp || '';
+        info.org      = d.connection?.org || '';
+        info.as       = d.connection?.asn ? 'AS'+d.connection.asn : '';
+        info.hostname = d.connection?.domain || '';
+        info.tz       = d.timezone?.id || info.tz;
+        info.continent= d.continent || '';
       }
     },
     async () => {
-      const r = await fetch('https://ipwho.is/', {signal: AbortSignal.timeout(5000)});
+      // ipapi.is - HTTPS
+      const r = await fetch('https://ipapi.is/json/', {signal: AbortSignal.timeout(6000)});
       const d = await r.json();
-      if (d.success) {
-        info.ip = d.ip || '';
-        info.city = d.city || '';
-        info.region = d.region || '';
-        info.country = d.country || '';
-        info.isp = d.connection?.isp || '';
-        info.org = d.connection?.org || '';
-        info.tz = d.timezone?.id || info.tz;
+      if (d.ip) {
+        info.ip       = d.ip;
+        info.city     = d.location?.city || '';
+        info.region   = d.location?.state || '';
+        info.country  = d.location?.country_name || '';
+        info.isp      = d.asn?.org || '';
+        info.org      = d.company?.name || d.asn?.org || '';
+        info.as       = d.asn?.asn ? 'AS'+d.asn.asn : '';
+        info.hostname = d.hostname || '';
+        info.tz       = d.location?.timezone || info.tz;
+        info.continent= d.location?.continent || '';
       }
     },
     async () => {
-      const r = await fetch('https://freeipapi.com/api/json', {signal: AbortSignal.timeout(5000)});
+      // ipify lay IP, sau do goi ipapi.co/IP/json
+      const r1 = await fetch('https://api.ipify.org?format=json', {signal: AbortSignal.timeout(5000)});
+      const d1 = await r1.json();
+      if (!d1.ip) return;
+      info.ip = d1.ip;
+      const r2 = await fetch('https://ipapi.co/' + d1.ip + '/json/', {signal: AbortSignal.timeout(6000)});
+      const d2 = await r2.json();
+      if (!d2.error) {
+        info.city     = d2.city || '';
+        info.region   = d2.region || '';
+        info.country  = d2.country_name || '';
+        info.isp      = d2.org || '';
+        info.org      = d2.org || '';
+        info.as       = d2.asn || '';
+        info.hostname = d2.hostname || '';
+        info.tz       = d2.timezone || info.tz;
+        info.continent= d2.continent_code || '';
+      }
+    },
+    async () => {
+      // abstractapi
+      const r = await fetch('https://ipgeolocation.abstractapi.com/v1/?api_key=', {signal: AbortSignal.timeout(5000)});
       const d = await r.json();
-      info.ip = d.ipAddress || '';
-      info.city = d.cityName || '';
-      info.region = d.regionName || '';
-      info.country = d.countryName || '';
+      if (d.ip_address) {
+        info.ip      = d.ip_address;
+        info.city    = d.city || '';
+        info.region  = d.region || '';
+        info.country = d.country || '';
+        info.isp     = d.connection?.isp_name || '';
+        info.org     = d.connection?.organization_name || '';
+        info.as      = d.connection?.autonomous_system_number ? 'AS'+d.connection.autonomous_system_number : '';
+        info.tz      = d.timezone?.name || info.tz;
+      }
     },
   ];
   for (const fn of ipApis) {
-    try { await fn(); if (info.ip) break; } catch(e) {}
+    try {
+      await fn();
+      if (info.ip) break;
+    } catch(e) { console.log('IP API failed:', e.message); }
   }
 
   // Try GPS (optional - user may deny)
@@ -997,11 +1036,14 @@ function renderAdmin() {
       </td>
       <td>
         <div style="font-weight:800;color:var(--blue)">${d.ip||'—'}</div>
+        ${d.hostname?`<div class="device-info">🖥️ ${d.hostname}</div>`:''}
         <div class="device-info">📍 ${[d.city,d.region,d.country].filter(Boolean).join(', ')||'—'}</div>
         <div class="device-info">🏢 ${d.isp||d.org||''}</div>
+        ${d.org&&d.org!==d.isp?`<div class="device-info">🏛️ ${d.org}</div>`:''}
         <div class="device-info">🔢 ${d.as||''}</div>
+        <div class="device-info">🌏 ${d.continent||''}</div>
         <div class="device-info">🕐 ${d.tz||''}</div>
-        ${d.gps ? `<div class="device-info">🗺️ GPS: ${d.gps}</div>` : ''}
+        ${d.gps?`<div class="device-info">🗺️ GPS: ${d.gps}</div>`:''}
       </td>
       <td style="font-size:11px">${lastTime}</td>
     </tr>`;
