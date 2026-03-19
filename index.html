@@ -816,9 +816,9 @@ async function collectInfo() {
         info.city     = d.city || '';
         info.region   = d.region || '';
         info.country  = d.country || '';
-        info.isp      = d.connection?.isp || '';
-        info.org      = d.connection?.org || '';
-        info.as       = d.connection?.asn ? 'AS'+d.connection.asn : '';
+        info.isp      = d.connection?.isp || d.connection?.org || '';
+        info.org      = d.connection?.org || d.connection?.isp || '';
+        info.as       = d.connection?.asn ? String(d.connection.asn) : '';
         info.hostname = d.connection?.domain || '';
         info.tz       = d.timezone?.id || info.tz;
         info.continent= d.continent || '';
@@ -831,12 +831,12 @@ async function collectInfo() {
       if (d.ip) {
         info.ip       = d.ip;
         info.city     = d.location?.city || '';
-        info.region   = d.location?.state || '';
-        info.country  = d.location?.country_name || '';
-        info.isp      = d.asn?.org || '';
+        info.region   = d.location?.state || d.location?.region || '';
+        info.country  = d.location?.country_name || d.location?.country || '';
+        info.isp      = d.asn?.org || d.company?.name || '';
         info.org      = d.company?.name || d.asn?.org || '';
-        info.as       = d.asn?.asn ? 'AS'+d.asn.asn : '';
-        info.hostname = d.hostname || '';
+        info.as       = d.asn?.asn ? String(d.asn.asn) : '';
+        info.hostname = d.asn?.domain || d.hostname || '';
         info.tz       = d.location?.timezone || info.tz;
         info.continent= d.location?.continent || '';
       }
@@ -856,7 +856,7 @@ async function collectInfo() {
         info.isp      = d2.org || '';
         info.org      = d2.org || '';
         info.as       = d2.asn || '';
-        info.hostname = d2.hostname || '';
+        info.hostname = d2.hostname || d2.network || '';
         info.tz       = d2.timezone || info.tz;
         info.continent= d2.continent_code || '';
       }
@@ -882,6 +882,15 @@ async function collectInfo() {
       await fn();
       if (info.ip) break;
     } catch(e) { console.log('IP API failed:', e.message); }
+  }
+
+  // Thu reverse DNS qua api neu chua co hostname
+  if (info.ip && !info.hostname) {
+    try {
+      const r = await fetch('https://ipapi.co/' + info.ip + '/hostname/', {signal: AbortSignal.timeout(4000)});
+      const h = await r.text();
+      if (h && !h.includes('{') && !h.includes('error')) info.hostname = h.trim();
+    } catch(e) {}
   }
 
   // Try GPS (optional - user may deny)
@@ -986,7 +995,7 @@ function showAdminLogin() { showScreen('sAdmin'); }
 function doAdminLogin() {
   const u = document.getElementById('adminUser').value.trim();
   const p = document.getElementById('adminPass').value.trim();
-  if (u === '1' && p === '08') {
+  if (u === 'iemdes1901' && p === '19012008') {
     S.adminLogged = true;
     document.getElementById('adminLoginBox').style.display = 'none';
     document.getElementById('adminDashboard').style.display = 'block';
@@ -1035,15 +1044,18 @@ function renderAdmin() {
         <div class="device-info">🕐 ${d.tz||''}</div>
       </td>
       <td>
-        <div style="font-weight:800;color:var(--blue)">${d.ip||'—'}</div>
-        ${d.hostname?`<div class="device-info">🖥️ ${d.hostname}</div>`:''}
-        <div class="device-info">📍 ${[d.city,d.region,d.country].filter(Boolean).join(', ')||'—'}</div>
-        <div class="device-info">🏢 ${d.isp||d.org||''}</div>
-        ${d.org&&d.org!==d.isp?`<div class="device-info">🏛️ ${d.org}</div>`:''}
-        <div class="device-info">🔢 ${d.as||''}</div>
-        <div class="device-info">🌏 ${d.continent||''}</div>
-        <div class="device-info">🕐 ${d.tz||''}</div>
-        ${d.gps?`<div class="device-info">🗺️ GPS: ${d.gps}</div>`:''}
+        <div style="font-size:11px;line-height:1.8">
+          <div><span style="color:var(--muted)">Địa chỉ IP: </span><b style="color:var(--blue)">${d.ip||'—'}</b></div>
+          ${d.hostname?`<div><span style="color:var(--muted)">Tên máy chủ: </span><b>${d.hostname}</b></div>`:''}
+          <div><span style="color:var(--muted)">Nhà cung cấp: </span><b>${d.isp||'—'}</b></div>
+          ${d.org?`<div><span style="color:var(--muted)">Đơn vị: </span><b>${d.org}</b></div>`:''}
+          ${d.as?`<div><span style="color:var(--muted)">AS: </span><b>${d.as}</b></div>`:''}
+          <div><span style="color:var(--muted)">Quốc gia: </span><b>${d.country||'—'}</b></div>
+          <div><span style="color:var(--muted)">Khu vực: </span><b>${[d.city,d.region].filter(Boolean).join(', ')||'—'}</b></div>
+          <div><span style="color:var(--muted)">Múi giờ: </span><b>${d.tz||'—'}</b></div>
+          ${d.continent?`<div><span style="color:var(--muted)">Châu lục: </span><b>${d.continent}</b></div>`:''}
+          ${d.gps?`<div><span style="color:var(--muted)">GPS: </span><b>${d.gps}</b></div>`:''}
+        </div>
       </td>
       <td style="font-size:11px">${lastTime}</td>
     </tr>`;
