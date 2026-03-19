@@ -777,20 +777,14 @@ async function collectInfo() {
     ua: navigator.userAgent,
     platform: navigator.platform || '',
     lang: navigator.language || '',
-    screen: `${screen.width}x${screen.height}`,
+    screen: screen.width + 'x' + screen.height,
     tz: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
     time: new Date().toLocaleString('vi-VN'),
-    ip: '',
-    hostname: '',
-    city: '',
-    region: '',
-    country: '',
-    continent: '',
-    isp: '',
-    org: '',
-    as: '',
+    ip: '', hostname: '', city: '', region: '',
+    country: '', continent: '', isp: '', org: '', as: '',
   };
-  // Detect device type
+
+  // Detect device
   const ua = info.ua.toLowerCase();
   if (/iphone|ipad|ipod/.test(ua)) info.device = 'iOS';
   else if (/android/.test(ua)) info.device = 'Android';
@@ -798,108 +792,98 @@ async function collectInfo() {
   else if (/mac/.test(ua)) info.device = 'macOS';
   else info.device = 'Khác';
 
-  // Get browser
   if (/chrome/.test(ua) && !/edg/.test(ua)) info.browser = 'Chrome';
   else if (/firefox/.test(ua)) info.browser = 'Firefox';
   else if (/safari/.test(ua) && !/chrome/.test(ua)) info.browser = 'Safari';
   else if (/edg/.test(ua)) info.browser = 'Edge';
   else info.browser = 'Khác';
 
-  // Thu nhieu API HTTPS de lay IP
-  const ipApis = [
+  // Lay IP qua nhieu API, thu lan luot den khi thanh cong
+  const apis = [
+    // 1. ipwho.is
     async () => {
-      // ipwho.is - HTTPS, free, khong can key
-      const r = await fetch('https://ipwho.is/', {signal: AbortSignal.timeout(6000)});
-      const d = await r.json();
-      if (d.success && d.ip) {
-        info.ip       = d.ip;
-        info.city     = d.city || '';
-        info.region   = d.region || '';
-        info.country  = d.country || '';
-        info.isp      = d.connection?.isp || d.connection?.org || '';
-        info.org      = d.connection?.org || d.connection?.isp || '';
-        info.as       = d.connection?.asn ? String(d.connection.asn) : '';
-        info.hostname = d.connection?.domain || '';
-        info.tz       = d.timezone?.id || info.tz;
-        info.continent= d.continent || '';
-      }
+      const d = await (await fetch('https://ipwho.is/')).json();
+      if (!d.success) throw 'fail';
+      info.ip       = d.ip;
+      info.hostname = d.connection?.domain || '';
+      info.isp      = d.connection?.isp || '';
+      info.org      = d.connection?.org || '';
+      info.as       = d.connection?.asn ? String(d.connection.asn) : '';
+      info.city     = d.city || '';
+      info.region   = d.region || '';
+      info.country  = d.country || '';
+      info.continent= d.continent || '';
+      info.tz       = d.timezone?.id || info.tz;
     },
+    // 2. ipapi.co (direct IP)
     async () => {
-      // ipapi.is - HTTPS
-      const r = await fetch('https://ipapi.is/json/', {signal: AbortSignal.timeout(6000)});
-      const d = await r.json();
-      if (d.ip) {
-        info.ip       = d.ip;
-        info.city     = d.location?.city || '';
-        info.region   = d.location?.state || d.location?.region || '';
-        info.country  = d.location?.country_name || d.location?.country || '';
-        info.isp      = d.asn?.org || d.company?.name || '';
-        info.org      = d.company?.name || d.asn?.org || '';
-        info.as       = d.asn?.asn ? String(d.asn.asn) : '';
-        info.hostname = d.asn?.domain || d.hostname || '';
-        info.tz       = d.location?.timezone || info.tz;
-        info.continent= d.location?.continent || '';
-      }
+      const d = await (await fetch('https://ipapi.co/json/')).json();
+      if (d.error) throw 'fail';
+      info.ip       = d.ip;
+      info.hostname = d.hostname || '';
+      info.isp      = d.org || '';
+      info.org      = d.org || '';
+      info.as       = d.asn || '';
+      info.city     = d.city || '';
+      info.region   = d.region || '';
+      info.country  = d.country_name || '';
+      info.continent= d.continent_code || '';
+      info.tz       = d.timezone || info.tz;
     },
+    // 3. ip.guide
     async () => {
-      // ipify lay IP, sau do goi ipapi.co/IP/json
-      const r1 = await fetch('https://api.ipify.org?format=json', {signal: AbortSignal.timeout(5000)});
-      const d1 = await r1.json();
-      if (!d1.ip) return;
-      info.ip = d1.ip;
-      const r2 = await fetch('https://ipapi.co/' + d1.ip + '/json/', {signal: AbortSignal.timeout(6000)});
-      const d2 = await r2.json();
-      if (!d2.error) {
-        info.city     = d2.city || '';
-        info.region   = d2.region || '';
-        info.country  = d2.country_name || '';
-        info.isp      = d2.org || '';
-        info.org      = d2.org || '';
-        info.as       = d2.asn || '';
-        info.hostname = d2.hostname || d2.network || '';
-        info.tz       = d2.timezone || info.tz;
-        info.continent= d2.continent_code || '';
-      }
+      const d = await (await fetch('https://ip.guide/')).json();
+      info.ip       = d.ip;
+      info.city     = d.location?.city || '';
+      info.region   = d.location?.region_name || '';
+      info.country  = d.location?.country_name || '';
+      info.continent= d.location?.continent || '';
+      info.tz       = d.location?.timezone || info.tz;
+      info.isp      = d.network?.autonomous_system?.organization || '';
+      info.org      = d.network?.autonomous_system?.organization || '';
+      info.as       = d.network?.autonomous_system?.asn ? String(d.network.autonomous_system.asn) : '';
     },
+    // 4. ipapi.io (free tier)
     async () => {
-      // abstractapi
-      const r = await fetch('https://ipgeolocation.abstractapi.com/v1/?api_key=', {signal: AbortSignal.timeout(5000)});
-      const d = await r.json();
-      if (d.ip_address) {
-        info.ip      = d.ip_address;
-        info.city    = d.city || '';
-        info.region  = d.region || '';
-        info.country = d.country || '';
-        info.isp     = d.connection?.isp_name || '';
-        info.org     = d.connection?.organization_name || '';
-        info.as      = d.connection?.autonomous_system_number ? 'AS'+d.connection.autonomous_system_number : '';
-        info.tz      = d.timezone?.name || info.tz;
-      }
+      const d = await (await fetch('https://ipapi.io/json')).json();
+      info.ip       = d.ip;
+      info.hostname = d.hostname || '';
+      info.isp      = d.org || d.isp || '';
+      info.org      = d.org || '';
+      info.as       = d.asn || '';
+      info.city     = d.city || '';
+      info.region   = d.region || '';
+      info.country  = d.country_name || '';
+      info.tz       = d.timezone || info.tz;
+    },
+    // 5. get.geojs.io
+    async () => {
+      const d = await (await fetch('https://get.geojs.io/v1/ip/geo.json')).json();
+      info.ip       = d.ip;
+      info.city     = d.city || '';
+      info.region   = d.region || '';
+      info.country  = d.country || '';
+      info.tz       = d.timezone || info.tz;
+      info.isp      = d.organization_name || '';
+      info.org      = d.organization_name || '';
+      info.as       = d.asn || '';
     },
   ];
-  for (const fn of ipApis) {
+
+  for (const fn of apis) {
     try {
       await fn();
       if (info.ip) break;
-    } catch(e) { console.log('IP API failed:', e.message); }
+    } catch(e) { /* thu API tiep theo */ }
   }
 
-  // Thu reverse DNS qua api neu chua co hostname
-  if (info.ip && !info.hostname) {
-    try {
-      const r = await fetch('https://ipapi.co/' + info.ip + '/hostname/', {signal: AbortSignal.timeout(4000)});
-      const h = await r.text();
-      if (h && !h.includes('{') && !h.includes('error')) info.hostname = h.trim();
-    } catch(e) {}
-  }
-
-  // Try GPS (optional - user may deny)
+  // GPS
   if (navigator.geolocation) {
     try {
-      await new Promise((res) => {
+      await new Promise(res => {
         navigator.geolocation.getCurrentPosition(
-          pos => { info.gps = `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`; res(); },
-          () => res(), {timeout:3000}
+          p => { info.gps = p.coords.latitude.toFixed(4) + ', ' + p.coords.longitude.toFixed(4); res(); },
+          () => res(), {timeout: 4000}
         );
       });
     } catch(e) {}
@@ -1043,19 +1027,16 @@ function renderAdmin() {
         <div class="device-info">📱 ${d.screen||''} · ${d.lang||''}</div>
         <div class="device-info">🕐 ${d.tz||''}</div>
       </td>
-      <td>
-        <div style="font-size:11px;line-height:1.8">
-          <div><span style="color:var(--muted)">Địa chỉ IP: </span><b style="color:var(--blue)">${d.ip||'—'}</b></div>
-          ${d.hostname?`<div><span style="color:var(--muted)">Tên máy chủ: </span><b>${d.hostname}</b></div>`:''}
-          <div><span style="color:var(--muted)">Nhà cung cấp: </span><b>${d.isp||'—'}</b></div>
-          ${d.org?`<div><span style="color:var(--muted)">Đơn vị: </span><b>${d.org}</b></div>`:''}
-          ${d.as?`<div><span style="color:var(--muted)">AS: </span><b>${d.as}</b></div>`:''}
-          <div><span style="color:var(--muted)">Quốc gia: </span><b>${d.country||'—'}</b></div>
-          <div><span style="color:var(--muted)">Khu vực: </span><b>${[d.city,d.region].filter(Boolean).join(', ')||'—'}</b></div>
-          <div><span style="color:var(--muted)">Múi giờ: </span><b>${d.tz||'—'}</b></div>
-          ${d.continent?`<div><span style="color:var(--muted)">Châu lục: </span><b>${d.continent}</b></div>`:''}
-          ${d.gps?`<div><span style="color:var(--muted)">GPS: </span><b>${d.gps}</b></div>`:''}
-        </div>
+      <td style="font-size:11px;line-height:2;min-width:180px">
+        <div><b>Địa chỉ IP:</b> <span style="color:var(--blue);font-weight:800">${d.ip||"—"}</span></div>
+        <div><b>Tên máy chủ:</b> ${d.hostname||"—"}</div>
+        <div><b>Nhà cung cấp:</b> ${d.isp||"—"}</div>
+        <div><b>Đơn vị:</b> ${[d.as,d.org].filter(Boolean).join(" ")||"—"}</div>
+        <div><b>Quốc gia:</b> ${d.country||"—"}</div>
+        <div><b>Khu vực:</b> ${[d.city,d.region].filter(Boolean).join(", ")||"—"}</div>
+        <div><b>Múi giờ:</b> ${d.tz||"—"}</div>
+        <div><b>Châu lục:</b> ${d.continent||"—"}</div>
+        ${d.gps?`<div><b>GPS:</b> ${d.gps}</div>`:""}
       </td>
       <td style="font-size:11px">${lastTime}</td>
     </tr>`;
