@@ -553,18 +553,22 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
         <button class="export-btn" onclick="exportCSV()">📥 Xuất CSV</button>
       </div>
     </div>
-            <div id="ghSetup" style="background:var(--card2);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:20px;font-size:13px" id="ghSetupBox">
-      <b style="color:var(--gold)">🔗 Kết nối GitHub Gist để đồng bộ tất cả thiết bị:</b>
-      <ol style="margin:8px 0 10px 18px;line-height:2;color:var(--text)">
-        <li>Vào <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--blue)">github.com/settings/tokens/new</a></li>
-        <li>Tên token: <b>lichsu-app</b>, tick chọn <b>gist</b>, nhấn Generate</li>
-        <li>Copy token dán vào đây, nhấn Kết nối (tự tạo Gist)</li>
-      </ol>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <input id="inputGhToken" placeholder="GitHub Token (ghp_...)" class="finput" style="margin:0;font-size:12px;padding:8px 12px;flex:1;min-width:200px">
-        <button onclick="setupGist()" style="padding:9px 16px;border:none;border-radius:8px;background:var(--green);color:#fff;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">🔗 Kết nối</button>
+                <div id="ghSetup" style="background:var(--card2);border:1.5px solid var(--green);border-radius:12px;padding:16px;margin-bottom:20px;font-size:13px">
+      <b style="color:var(--green)">🔗 Kết nối GitHub để đồng bộ tất cả thiết bị:</b>
+      <div style="margin:10px 0 12px;color:var(--text);line-height:2;font-size:12px">
+        1. Vào <a href="https://github.com/settings/tokens/new?scopes=repo&description=lichsu-app" target="_blank" style="color:var(--blue)"><b>github.com/settings/tokens/new</b></a><br>
+        2. Tick chọn <b>repo</b> (full access) → Generate → copy token<br>
+        3. Nhập token + tên GitHub + tên repo rồi nhấn Kết nối
       </div>
-      <div id="ghSetupMsg" style="margin-top:8px;font-size:12px"></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <input id="inputGhToken" placeholder="Token (ghp_...)" class="finput" style="margin:0;font-size:12px;padding:9px 12px">
+        <div style="display:flex;gap:8px">
+          <input id="inputGhOwner" placeholder="Tên GitHub (VD: iemdes)" class="finput" style="margin:0;font-size:12px;padding:9px 12px;flex:1">
+          <input id="inputGhRepo" placeholder="Tên repo (VD: lich-su-thpt-2025)" class="finput" style="margin:0;font-size:12px;padding:9px 12px;flex:1">
+        </div>
+        <button onclick="setupGH()" style="padding:10px;border:none;border-radius:8px;background:var(--green);color:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer">🔗 Kết nối</button>
+      </div>
+      <div id="ghSetupMsg" style="margin-top:8px;font-size:12px;font-weight:700"></div>
     </div>
     <div class="admin-section">
     <h4>📊 Tổng quan</h4>
@@ -640,61 +644,72 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 
 <script>
 // ══════════════════════════════════════════════
-// GITHUB GIST DATABASE
-// Khong can setup - Admin chi can tao GitHub token 1 lan
+// DATABASE - GitHub Contents API (CORS OK)
+// Luu file JSON vao repo GitHub cua ban
 // ══════════════════════════════════════════════
-var GIST_ID   = localStorage.getItem('_gist_id')  || '';
-var GH_TOKEN  = localStorage.getItem('_gh_token')  || '';
-var GH_READY  = !!(GIST_ID && GH_TOKEN);
+var GH_TOKEN  = localStorage.getItem('_gh_token') || '';
+var GH_OWNER  = localStorage.getItem('_gh_owner') || '';   // ten github cua ban, vd: iemdes
+var GH_REPO   = localStorage.getItem('_gh_repo')  || '';   // ten repo, vd: lich-su-thpt-2025
+var GH_FILE   = 'students.json';
+var GH_READY  = !!(GH_TOKEN && GH_OWNER && GH_REPO);
+var GH_SHA    = ''; // sha cua file, can khi update
 
-const GIST_API = 'https://api.github.com/gists/';
-const GIST_FILE = 'lichsu_users.json';
+const GH_API  = 'https://api.github.com';
 
-// ==== CACHE LOCAL ====
+function ghHeaders() {
+  return {
+    'Authorization': 'token ' + GH_TOKEN,
+    'Content-Type': 'application/json',
+    'Accept': 'application/vnd.github.v3+json',
+    'User-Agent': 'lichsu-app',
+  };
+}
+
+// Cache local
 function getLocalUsers() {
-  try { return JSON.parse(localStorage.getItem('_users_cache')) || []; }
-  catch(e) { return []; }
+  try { return JSON.parse(localStorage.getItem('_users_cache')) || []; } catch(e) { return []; }
 }
 function setLocalUsers(arr) {
   localStorage.setItem('_users_cache', JSON.stringify(arr));
 }
 
-// ==== DOC TU GIST ====
+// Doc file tu GitHub
 async function dbGetAll() {
   if (!GH_READY) return getLocalUsers();
   try {
-    const r = await fetch(GIST_API + GIST_ID, {
-      headers: { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3+json' },
-      signal: AbortSignal.timeout(10000),
-    });
+    const url = `${GH_API}/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`;
+    const r = await fetch(url, { headers: ghHeaders(), signal: AbortSignal.timeout(10000) });
+    if (r.status === 404) return []; // file chua ton tai
     const d = await r.json();
-    const content = d.files?.[GIST_FILE]?.content;
-    if (!content) return getLocalUsers();
+    GH_SHA = d.sha || '';
+    const content = atob(d.content.replace(/
+/g,''));
     const users = JSON.parse(content);
-    setLocalUsers(users); // cap nhat cache
+    setLocalUsers(users);
     return users;
   } catch(e) { return getLocalUsers(); }
 }
 
-// ==== GHI LEN GIST ====
+// Ghi file len GitHub
 async function dbSaveAll(users) {
-  setLocalUsers(users); // luu cache truoc
+  setLocalUsers(users);
   if (!GH_READY) return;
   try {
-    await fetch(GIST_API + GIST_ID, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': 'token ' + GH_TOKEN,
-        'Content-Type': 'application/json',
-        'Accept': 'application/vnd.github.v3+json',
-      },
-      body: JSON.stringify({ files: { [GIST_FILE]: { content: JSON.stringify(users) } } }),
-      signal: AbortSignal.timeout(10000),
+    const url = `${GH_API}/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`;
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(users, null, 2))));
+    const body = { message: 'update students', content };
+    if (GH_SHA) body.sha = GH_SHA;
+    const r = await fetch(url, {
+      method: 'PUT', headers: ghHeaders(),
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(12000),
     });
-  } catch(e) {}
+    const d = await r.json();
+    GH_SHA = d.content?.sha || GH_SHA;
+  } catch(e) { console.log('dbSaveAll error:', e); }
 }
 
-// ==== UPSERT 1 USER ====
+// Upsert 1 user
 async function dbUpsertUser(userData) {
   const users = await dbGetAll();
   const idx = users.findIndex(u => u.userId === userData.userId);
@@ -702,42 +717,14 @@ async function dbUpsertUser(userData) {
   await dbSaveAll(users);
 }
 
-// ==== XOA 1 USER ====
+// Xoa 1 user
 async function dbDeleteUser(userId) {
   const users = (await dbGetAll()).filter(u => u.userId !== userId);
   await dbSaveAll(users);
 }
 
-// ==== TAO GIST MOI (lan dau setup) ====
-async function createGist(token) {
-  const r = await fetch(GIST_API, {
-    method: 'POST',
-    headers: {
-      'Authorization': 'token ' + token,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      description: 'Lich Su - Student Data',
-      public: false,
-      files: { [GIST_FILE]: { content: '[]' } },
-    }),
-    signal: AbortSignal.timeout(10000),
-  });
-  const d = await r.json();
-  return d.id || null;
-}
-
 function getScores() { return getLocalUsers(); }
 async function getScoresAsync() { return await dbGetAll(); };
-
-// ══════════════════════════════════════════════
-// STORAGE KEY
-// ══════════════════════════════════════════════
-const LS = {
-  user: 'ls_user',
-  scores: 'ls_scores',
-  settings: 'ls_settings',
-};
 
 // ══════════════════════════════════════════════
 // STATE
@@ -986,22 +973,30 @@ function doAdminLogin() {
   }
 }
 
-async function setupGist() {
+async function setupGH() {
   const token = document.getElementById('inputGhToken').value.trim();
-  if (!token) { alert('Nhập GitHub Token!'); return; }
-  const msg = document.getElementById('ghSetupMsg');
+  const owner = document.getElementById('inputGhOwner').value.trim();
+  const repo  = document.getElementById('inputGhRepo').value.trim();
+  const msg   = document.getElementById('ghSetupMsg');
+  if (!token || !owner || !repo) { alert('Nhập đủ Token, tên GitHub và tên repo!'); return; }
   msg.style.color = 'var(--gold)';
-  msg.textContent = '⏳ Đang tạo Gist...';
+  msg.textContent = '⏳ Đang kiểm tra kết nối...';
   try {
-    const gistId = await createGist(token);
-    if (!gistId) throw 'Tạo Gist thất bại';
-    localStorage.setItem('_gist_id', gistId);
+    // Test xem repo co ton tai khong
+    const r = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+      headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!r.ok) throw 'Không tìm thấy repo. Kiểm tra lại tên!';
+    // Luu config
     localStorage.setItem('_gh_token', token);
-    GIST_ID = gistId; GH_TOKEN = token; GH_READY = true;
+    localStorage.setItem('_gh_owner', owner);
+    localStorage.setItem('_gh_repo',  repo);
+    GH_TOKEN = token; GH_OWNER = owner; GH_REPO = repo; GH_READY = true;
     msg.style.color = 'var(--green)';
-    msg.textContent = '✅ Kết nối thành công! Gist ID: ' + gistId;
+    msg.textContent = '✅ Kết nối thành công! Đang tải dữ liệu...';
     document.getElementById('ghSetup').style.display = 'none';
-    setTimeout(() => renderAdmin(), 500);
+    setTimeout(() => renderAdmin(), 800);
   } catch(e) {
     msg.style.color = 'var(--red)';
     msg.textContent = '❌ Lỗi: ' + e;
@@ -1013,7 +1008,17 @@ async function setupGist() {
 // Hien/an setup box trong admin
 function checkGhSetup() {
   const box = document.getElementById('ghSetup');
-  if (box) box.style.display = GH_READY ? 'none' : 'block';
+  if (!box) return;
+  if (GH_READY) {
+    box.style.display = 'none';
+  } else {
+    box.style.display = 'block';
+    // Pre-fill owner neu biet
+    const ownerEl = document.getElementById('inputGhOwner');
+    if (ownerEl && !ownerEl.value) ownerEl.value = 'iemdes';
+    const repoEl = document.getElementById('inputGhRepo');
+    if (repoEl && !repoEl.value) repoEl.value = 'lich-su-thpt-2025';
+  }
 }
 
 async function deleteDevice(userId) {
