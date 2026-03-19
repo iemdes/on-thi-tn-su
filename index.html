@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ôn Thi Lịch Sử</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
 :root{
   --bg:#0f1117;--card:#1a1d27;--card2:#22263a;--border:#2c3050;
@@ -552,6 +553,20 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
         <button class="export-btn" onclick="exportCSV()">📥 Xuất CSV</button>
       </div>
     </div>
+    <div id="jsonbinSetup" style="background:var(--gold-s);border:1.5px solid var(--gold);border-radius:12px;padding:14px 16px;margin-bottom:20px;font-size:13px">
+      <b style="color:var(--gold)">⚙️ Cài đặt JSONBin để xem data từ tất cả thiết bị:</b>
+      <ol style="margin:8px 0 10px 18px;line-height:2;color:var(--text)">
+        <li>Vào <b>jsonbin.io</b> → Đăng ký miễn phí</li>
+        <li>Tạo New Bin (nội dung: <code style="background:var(--card2);padding:2px 6px;border-radius:4px">{"users":[]}</code>)</li>
+        <li>Copy <b>BIN ID</b> và vào Account → API Keys copy <b>Master Key</b></li>
+        <li>Nhập vào đây rồi nhấn Lưu:</li>
+      </ol>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <input id="inputBinId" placeholder="BIN ID (VD: 6648a1e2acd3cb34a836f123)" class="finput" style="margin:0;font-size:12px;padding:8px 12px">
+        <input id="inputApiKey" placeholder="Master Key (VD: $2a$10$...)" class="finput" style="margin:0;font-size:12px;padding:8px 12px">
+        <button onclick="saveJsonbinConfig()" style="padding:9px;border:none;border-radius:8px;background:var(--gold);color:var(--dark);font-family:inherit;font-size:13px;font-weight:800;cursor:pointer">💾 Lưu cấu hình</button>
+      </div>
+    </div>
     <div class="admin-section">
       <h4>📊 Tổng quan</h4>
       <div class="admin-stat-grid">
@@ -625,6 +640,68 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 </div>
 
 <script>
+// ══════════════════════════════════════════════
+// JSONBIN CONFIG - thay BIN_ID va API_KEY bang cua ban
+// Tao tai jsonbin.io -> New Bin -> copy ID
+// Account -> API Keys -> copy Master Key
+// ══════════════════════════════════════════════
+const JSONBIN = {
+  BIN_ID: 'REPLACE_BIN_ID',       // VD: 6648a1e2acd3cb34a836f123
+  API_KEY: 'REPLACE_API_KEY',     // VD: $2a$10$abc...
+  URL: 'https://api.jsonbin.io/v3/b/',
+};
+
+// ══════════════════════════════════════════════
+// DATABASE FUNCTIONS
+// ══════════════════════════════════════════════
+async function dbGet() {
+  // Neu chua cau hinh, dung localStorage
+  if (JSONBIN.BIN_ID === 'REPLACE_BIN_ID') return getLocalScores();
+  try {
+    const r = await fetch(JSONBIN.URL + JSONBIN.BIN_ID + '/latest', {
+      headers: { 'X-Master-Key': JSONBIN.API_KEY },
+      signal: AbortSignal.timeout(8000),
+    });
+    const d = await r.json();
+    return d.record?.users || [];
+  } catch(e) { return getLocalScores(); }
+}
+
+async function dbSave(users) {
+  // Luu localStorage truoc (fast)
+  localStorage.setItem('ls_scores_v2', JSON.stringify(users));
+  // Neu chua cau hinh JSONBin, thoi
+  if (JSONBIN.BIN_ID === 'REPLACE_BIN_ID') return;
+  try {
+    await fetch(JSONBIN.URL + JSONBIN.BIN_ID, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JSONBIN.API_KEY,
+      },
+      body: JSON.stringify({ users }),
+      signal: AbortSignal.timeout(8000),
+    });
+  } catch(e) { /* giu localStorage lam backup */ }
+}
+
+async function dbGetUser(userId) {
+  const users = await dbGet();
+  return users.find(u => u.userId === userId) || null;
+}
+
+async function dbUpsertUser(userData) {
+  const users = await dbGet();
+  const idx = users.findIndex(u => u.userId === userData.userId);
+  if (idx === -1) users.push(userData);
+  else users[idx] = { ...users[idx], ...userData };
+  await dbSave(users);
+}
+
+function getLocalScores() {
+  try { return JSON.parse(localStorage.getItem('ls_scores_v2')) || []; } catch(e) { return []; }
+}
+
 // ══════════════════════════════════════════════
 // DATA
 // ══════════════════════════════════════════════
@@ -914,15 +991,14 @@ async function collectInfo() {
 }
 
 // ══════════════════════════════════════════════
-// SCORES DB (localStorage)
+// SCORES DB - dung JSONBin (online) + localStorage (fallback)
 // ══════════════════════════════════════════════
 function getScores() {
-  try { return JSON.parse(localStorage.getItem(LS.scores)) || []; } catch(e) { return []; }
+  // Sync version - doc tu localStorage cache
+  return getLocalScores();
 }
-function saveScore(entry) {
-  const scores = getScores();
-  scores.push(entry);
-  localStorage.setItem(LS.scores, JSON.stringify(scores));
+async function getScoresAsync() {
+  return await dbGet();
 }
 function getSettings() {
   try { return JSON.parse(localStorage.getItem(LS.settings)) || {}; } catch(e) { return {}; }
@@ -946,23 +1022,19 @@ async function doLogin() {
   localStorage.setItem(LS.user, JSON.stringify(S.user));
 
   // Collect info in background
-  collectInfo().then(info => {
-    const scores = getScores();
-    const existing = scores.find(s => s.userId === id);
-    const existingIdx = scores.findIndex(s => s.userId === id);
-    if (existingIdx === -1) {
-      const entry = {
-        userId: id, name,
-        deviceInfo: info, loginTime: new Date().toISOString(),
-        sessions: [], bestScore: 0, totalGames: 0,
-      };
-      scores.push(entry);
-    } else {
-      // Cap nhat deviceInfo moi nhat khi dang nhap lai
-      scores[existingIdx].deviceInfo = info;
-      scores[existingIdx].lastLogin = new Date().toISOString();
-    }
-    localStorage.setItem(LS.scores, JSON.stringify(scores));
+  collectInfo().then(async info => {
+    const existing = getLocalScores().find(u => u.userId === id);
+    const entry = existing ? {
+      ...existing, name, deviceInfo: info,
+      lastLogin: new Date().toISOString(),
+    } : {
+      userId: id, name,
+      deviceInfo: info,
+      loginTime: new Date().toISOString(),
+      lastLogin: new Date().toISOString(),
+      sessions: [], bestScore: 0, totalGames: 0,
+    };
+    await dbUpsertUser(entry);
   });
 
   showMainApp();
@@ -1010,6 +1082,29 @@ function doAdminLogin() {
   }
 }
 
+function saveJsonbinConfig() {
+  const binId = document.getElementById('inputBinId').value.trim();
+  const apiKey = document.getElementById('inputApiKey').value.trim();
+  if (!binId || !apiKey) { alert('Vui lòng nhập đủ BIN ID và API Key!'); return; }
+  JSONBIN.BIN_ID = binId;
+  JSONBIN.API_KEY = apiKey;
+  localStorage.setItem('jsonbin_config', JSON.stringify({binId, apiKey}));
+  document.getElementById('jsonbinSetup').style.display = 'none';
+  alert('✅ Đã lưu! Đang tải lại dữ liệu...');
+  renderAdmin();
+}
+
+// Load JSONBin config da luu
+(function loadJsonbinConfig() {
+  try {
+    const cfg = JSON.parse(localStorage.getItem('jsonbin_config'));
+    if (cfg?.binId && cfg?.apiKey) {
+      JSONBIN.BIN_ID = cfg.binId;
+      JSONBIN.API_KEY = cfg.apiKey;
+    }
+  } catch(e) {}
+})();
+
 function adminLogout() {
   S.adminLogged = false;
   document.getElementById('adminLoginBox').style.display = 'block';
@@ -1020,9 +1115,11 @@ function adminLogout() {
   showScreen('sLogin');
 }
 
-function renderAdmin() {
+async function renderAdmin() {
   if (!S.adminLogged) return;
-  const scores = getScores();
+  // Hien loading
+  document.getElementById('userTableBody').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--muted)">⏳ Đang tải dữ liệu...</td></tr>';
+  const scores = await getScoresAsync();
   document.getElementById('adTotalUsers').textContent = scores.length;
   const totalSessions = scores.reduce((a,s) => a + (s.sessions||[]).length, 0);
   document.getElementById('adTotalSessions').textContent = totalSessions;
@@ -1139,8 +1236,9 @@ function setTheme(t, btn) {
 function clearMyData() {
   if (!confirm('Xóa toàn bộ dữ liệu của bạn? Không thể khôi phục!')) return;
   if (S.user) {
-    const scores = getScores().filter(s => s.userId !== S.user.id);
-    localStorage.setItem(LS.scores, JSON.stringify(scores));
+    const scores = getLocalScores().filter(s => s.userId !== S.user.id);
+    localStorage.setItem('ls_scores_v2', JSON.stringify(scores));
+    dbSave(scores); // dong bo len cloud
   }
   localStorage.removeItem('todayOk');
   localStorage.removeItem('total');
@@ -1328,21 +1426,18 @@ function showResult(){
     </div>`;
   }).join('');
 
-  // Save score
+  // Save score len cloud
   if (S.user) {
-    const scores = getScores();
-    let me = scores.find(s => s.userId === S.user.id);
-    if (!me) {
-      me = { userId: S.user.id, name: S.user.name, sessions: [], bestScore: 0 };
-      scores.push(me);
-    }
-    me.name = S.user.name;
     const session = { pct, ok, total, secs, mode: S.mode, time: new Date().toISOString() };
-    if (!me.sessions) me.sessions = [];
-    me.sessions.push(session);
-    if (pct > (me.bestScore||0)) me.bestScore = pct;
-    me.totalGames = me.sessions.length;
-    localStorage.setItem(LS.scores, JSON.stringify(scores));
+    const existing = getLocalScores().find(u => u.userId === S.user.id) || {
+      userId: S.user.id, name: S.user.name, sessions: [], bestScore: 0, totalGames: 0,
+    };
+    existing.name = S.user.name;
+    if (!existing.sessions) existing.sessions = [];
+    existing.sessions.push(session);
+    if (pct > (existing.bestScore||0)) existing.bestScore = pct;
+    existing.totalGames = existing.sessions.length;
+    dbUpsertUser(existing); // async, khong can await
   }
 
   showScreen('sResult');
