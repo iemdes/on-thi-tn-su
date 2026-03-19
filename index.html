@@ -368,7 +368,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
       <input class="finput" id="loginName" placeholder="Họ và tên của bạn..." maxlength="40"
         onkeydown="if(event.key==='Enter')doLogin()">
       <button class="login-btn" onclick="doLogin()">🚀 Vào học ngay</button>
-      <div class="login-admin-link" onclick="showAdminLogin()">🔐 Admin</div>
+      <div class="login-admin-link" onclick="showAdminLogin()">🔐 Đăng nhập Admin</div>
     </div>
   </div>
 </div>
@@ -534,8 +534,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 <div class="screen" id="sAdmin">
   <div id="adminLoginBox">
     <div class="admin-login">
-      <h3>🔐 Admin</h3>
-      <p></p>
+      <h3>🔐 Đăng nhập Admin</h3>
+      <p>Chỉ giáo viên có quyền truy cập</p>
       <input class="finput" id="adminUser" placeholder="Tài khoản" autocomplete="off">
       <input class="finput" id="adminPass" placeholder="Mật khẩu" type="password" autocomplete="off"
         onkeydown="if(event.key==='Enter')doAdminLogin()">
@@ -600,7 +600,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
             <div class="setting-row-txt" id="settingUserName">-</div>
       
           </div>
-          <button class="btn btn-g" onclick="doLogout()" style="font-size:12px;padding:6px 12px">Đăng xuất</button>
+          <button class="danger-btn" onclick="doLogout()" style="padding:8px 16px;font-size:13px;width:auto">🚪 Đăng xuất</button>
         </div>
       </div>
       <div class="setting-item">
@@ -781,8 +781,11 @@ async function collectInfo() {
     time: new Date().toLocaleString('vi-VN'),
     ip: '',
     city: '',
+    region: '',
     country: '',
     isp: '',
+    org: '',
+    as: '',
   };
   // Detect device type
   const ua = info.ua.toLowerCase();
@@ -799,21 +802,46 @@ async function collectInfo() {
   else if (/edg/.test(ua)) info.browser = 'Edge';
   else info.browser = 'Khác';
 
-  // Try get IP + location
-  try {
-    const r = await fetch('https://ipapi.co/json/', {signal: AbortSignal.timeout(4000)});
-    const d = await r.json();
-    info.ip = d.ip || '';
-    info.city = d.city || '';
-    info.country = d.country_name || '';
-    info.isp = d.org || '';
-    info.region = d.region || '';
-  } catch(e) {
-    try {
-      const r2 = await fetch('https://api.ipify.org?format=json', {signal: AbortSignal.timeout(3000)});
-      const d2 = await r2.json();
-      info.ip = d2.ip || '';
-    } catch(e2) {}
+  // Try get IP + location - thu nhieu API
+  const ipApis = [
+    async () => {
+      const r = await fetch('http://ip-api.com/json/?fields=status,query,country,regionName,city,isp,org,as,timezone', {signal: AbortSignal.timeout(5000)});
+      const d = await r.json();
+      if (d.status === 'success') {
+        info.ip = d.query || '';
+        info.city = d.city || '';
+        info.region = d.regionName || '';
+        info.country = d.country || '';
+        info.isp = d.isp || '';
+        info.org = d.org || '';
+        info.as = d.as || '';
+        info.tz = d.timezone || info.tz;
+      }
+    },
+    async () => {
+      const r = await fetch('https://ipwho.is/', {signal: AbortSignal.timeout(5000)});
+      const d = await r.json();
+      if (d.success) {
+        info.ip = d.ip || '';
+        info.city = d.city || '';
+        info.region = d.region || '';
+        info.country = d.country || '';
+        info.isp = d.connection?.isp || '';
+        info.org = d.connection?.org || '';
+        info.tz = d.timezone?.id || info.tz;
+      }
+    },
+    async () => {
+      const r = await fetch('https://freeipapi.com/api/json', {signal: AbortSignal.timeout(5000)});
+      const d = await r.json();
+      info.ip = d.ipAddress || '';
+      info.city = d.cityName || '';
+      info.region = d.regionName || '';
+      info.country = d.countryName || '';
+    },
+  ];
+  for (const fn of ipApis) {
+    try { await fn(); if (info.ip) break; } catch(e) {}
   }
 
   // Try GPS (optional - user may deny)
@@ -867,16 +895,20 @@ async function doLogin() {
   collectInfo().then(info => {
     const scores = getScores();
     const existing = scores.find(s => s.userId === id);
-    if (!existing) {
-      // Save initial entry with device info
+    const existingIdx = scores.findIndex(s => s.userId === id);
+    if (existingIdx === -1) {
       const entry = {
         userId: id, name,
         deviceInfo: info, loginTime: new Date().toISOString(),
         sessions: [], bestScore: 0, totalGames: 0,
       };
       scores.push(entry);
-      localStorage.setItem(LS.scores, JSON.stringify(scores));
+    } else {
+      // Cap nhat deviceInfo moi nhat khi dang nhap lai
+      scores[existingIdx].deviceInfo = info;
+      scores[existingIdx].lastLogin = new Date().toISOString();
     }
+    localStorage.setItem(LS.scores, JSON.stringify(scores));
   });
 
   showMainApp();
@@ -963,10 +995,12 @@ function renderAdmin() {
         <div class="device-info">🕐 ${d.tz||''}</div>
       </td>
       <td>
-        <div>${d.ip||'—'}</div>
-        <div class="device-info">${[d.city,d.region,d.country].filter(Boolean).join(', ')||'—'}</div>
-        <div class="device-info">${d.isp||''}</div>
-        ${d.gps ? `<div class="device-info">📍 ${d.gps}</div>` : ''}
+        <div style="font-weight:800;color:var(--blue)">${d.ip||'—'}</div>
+        <div class="device-info">📍 ${[d.city,d.region,d.country].filter(Boolean).join(', ')||'—'}</div>
+        <div class="device-info">🏢 ${d.isp||d.org||''}</div>
+        <div class="device-info">🔢 ${d.as||''}</div>
+        <div class="device-info">🕐 ${d.tz||''}</div>
+        ${d.gps ? `<div class="device-info">🗺️ GPS: ${d.gps}</div>` : ''}
       </td>
       <td style="font-size:11px">${lastTime}</td>
     </tr>`;
