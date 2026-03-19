@@ -784,7 +784,6 @@ async function collectInfo() {
     country: '', continent: '', isp: '', org: '', as: '',
   };
 
-  // Detect device
   const ua = info.ua.toLowerCase();
   if (/iphone|ipad|ipod/.test(ua)) info.device = 'iOS';
   else if (/android/.test(ua)) info.device = 'Android';
@@ -798,83 +797,105 @@ async function collectInfo() {
   else if (/edg/.test(ua)) info.browser = 'Edge';
   else info.browser = 'Khác';
 
-  // Lay IP qua nhieu API, thu lan luot den khi thanh cong
+  // JSONP - tranh bi CORS block tren mobile/safari
+  function jsonp(url, cbParam) {
+    return new Promise((resolve, reject) => {
+      const cbName = '_ipcb_' + Math.random().toString(36).slice(2);
+      const timer = setTimeout(() => { cleanup(); reject('timeout'); }, 7000);
+      function cleanup() { try { delete window[cbName]; script.remove(); } catch(e){} }
+      window[cbName] = (d) => { clearTimeout(timer); cleanup(); resolve(d); };
+      const script = document.createElement('script');
+      script.onerror = () => { clearTimeout(timer); cleanup(); reject('err'); };
+      script.src = url + (url.includes('?') ? '&' : '?') + cbParam + '=' + cbName;
+      document.head.appendChild(script);
+    });
+  }
+
+  async function getJ(url) {
+    const r = await fetch(url, {
+      signal: AbortSignal.timeout(7000),
+      mode: 'cors',
+      headers: {'Accept': 'application/json'}
+    });
+    return r.json();
+  }
+
   const apis = [
-    // 1. ipwho.is
+    // 1. ip-api.com qua JSONP (HTTP nhung JSONP khong bi block)
     async () => {
-      const d = await (await fetch('https://ipwho.is/')).json();
-      if (!d.success) throw 'fail';
-      info.ip       = d.ip;
-      info.hostname = d.connection?.domain || '';
-      info.isp      = d.connection?.isp || '';
-      info.org      = d.connection?.org || '';
-      info.as       = d.connection?.asn ? String(d.connection.asn) : '';
+      const d = await jsonp('http://ip-api.com/json/?fields=status,query,reverse,country,regionName,city,isp,org,as,timezone,continentCode', 'callback');
+      if (d.status !== 'success') throw 'fail';
+      info.ip        = d.query || '';
+      info.hostname  = d.reverse || '';
+      info.isp       = d.isp || '';
+      info.org       = d.org || '';
+      info.as        = d.as || '';
+      info.city      = d.city || '';
+      info.region    = d.regionName || '';
+      info.country   = d.country || '';
+      info.continent = d.continentCode || '';
+      info.tz        = d.timezone || info.tz;
+    },
+    // 2. ipinfo.io JSONP
+    async () => {
+      const d = await jsonp('https://ipinfo.io', 'callback');
+      if (!d.ip) throw 'fail';
+      info.ip       = d.ip || '';
+      info.hostname = d.hostname || '';
       info.city     = d.city || '';
       info.region   = d.region || '';
       info.country  = d.country || '';
-      info.continent= d.continent || '';
-      info.tz       = d.timezone?.id || info.tz;
-    },
-    // 2. ipapi.co (direct IP)
-    async () => {
-      const d = await (await fetch('https://ipapi.co/json/')).json();
-      if (d.error) throw 'fail';
-      info.ip       = d.ip;
-      info.hostname = d.hostname || '';
       info.isp      = d.org || '';
       info.org      = d.org || '';
-      info.as       = d.asn || '';
-      info.city     = d.city || '';
-      info.region   = d.region || '';
-      info.country  = d.country_name || '';
-      info.continent= d.continent_code || '';
       info.tz       = d.timezone || info.tz;
     },
-    // 3. ip.guide
+    // 3. ipwho.is fetch HTTPS
     async () => {
-      const d = await (await fetch('https://ip.guide/')).json();
-      info.ip       = d.ip;
-      info.city     = d.location?.city || '';
-      info.region   = d.location?.region_name || '';
-      info.country  = d.location?.country_name || '';
-      info.continent= d.location?.continent || '';
-      info.tz       = d.location?.timezone || info.tz;
-      info.isp      = d.network?.autonomous_system?.organization || '';
-      info.org      = d.network?.autonomous_system?.organization || '';
-      info.as       = d.network?.autonomous_system?.asn ? String(d.network.autonomous_system.asn) : '';
+      const d = await getJ('https://ipwho.is/');
+      if (!d.success) throw 'fail';
+      info.ip        = d.ip || '';
+      info.hostname  = d.connection?.domain || '';
+      info.isp       = d.connection?.isp || '';
+      info.org       = d.connection?.org || '';
+      info.as        = d.connection?.asn ? String(d.connection.asn) : '';
+      info.city      = d.city || '';
+      info.region    = d.region || '';
+      info.country   = d.country || '';
+      info.continent = d.continent || '';
+      info.tz        = d.timezone?.id || info.tz;
     },
-    // 4. ipapi.io (free tier)
+    // 4. ipapi.co fetch HTTPS
     async () => {
-      const d = await (await fetch('https://ipapi.io/json')).json();
-      info.ip       = d.ip;
-      info.hostname = d.hostname || '';
-      info.isp      = d.org || d.isp || '';
-      info.org      = d.org || '';
-      info.as       = d.asn || '';
-      info.city     = d.city || '';
-      info.region   = d.region || '';
-      info.country  = d.country_name || '';
-      info.tz       = d.timezone || info.tz;
+      const d = await getJ('https://ipapi.co/json/');
+      if (d.error) throw 'fail';
+      info.ip        = d.ip || '';
+      info.hostname  = d.hostname || '';
+      info.isp       = d.org || '';
+      info.org       = d.org || '';
+      info.as        = d.asn || '';
+      info.city      = d.city || '';
+      info.region    = d.region || '';
+      info.country   = d.country_name || '';
+      info.continent = d.continent_code || '';
+      info.tz        = d.timezone || info.tz;
     },
-    // 5. get.geojs.io
+    // 5. geojs fetch HTTPS
     async () => {
-      const d = await (await fetch('https://get.geojs.io/v1/ip/geo.json')).json();
-      info.ip       = d.ip;
-      info.city     = d.city || '';
-      info.region   = d.region || '';
-      info.country  = d.country || '';
-      info.tz       = d.timezone || info.tz;
-      info.isp      = d.organization_name || '';
-      info.org      = d.organization_name || '';
-      info.as       = d.asn || '';
+      const d = await getJ('https://get.geojs.io/v1/ip/geo.json');
+      if (!d.ip) throw 'fail';
+      info.ip      = d.ip || '';
+      info.city    = d.city || '';
+      info.region  = d.region || '';
+      info.country = d.country || '';
+      info.tz      = d.timezone || info.tz;
+      info.isp     = d.organization_name || '';
+      info.org     = d.organization_name || '';
+      info.as      = d.asn || '';
     },
   ];
 
   for (const fn of apis) {
-    try {
-      await fn();
-      if (info.ip) break;
-    } catch(e) { /* thu API tiep theo */ }
+    try { await fn(); if (info.ip) break; } catch(e) {}
   }
 
   // GPS
