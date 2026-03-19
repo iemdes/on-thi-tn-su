@@ -367,13 +367,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
       <div class="login-sub">Nhập tên của bạn để bắt đầu.<br>Kết quả sẽ được lưu vào bảng xếp hạng.</div>
       <input class="finput" id="loginName" placeholder="Họ và tên của bạn..." maxlength="40"
         onkeydown="if(event.key==='Enter')doLogin()">
-      <div class="anon-row" onclick="toggleAnon()">
-        <div class="anon-check" id="anonCheck">✓</div>
-        <div>
-          <div class="anon-label">Chơi ẩn danh</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px"></div>
-        </div>
-      </div>
       <button class="login-btn" onclick="doLogin()">🚀 Vào học ngay</button>
       <div class="login-admin-link" onclick="showAdminLogin()">🔐 Đăng nhập Admin</div>
     </div>
@@ -497,15 +490,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <button class="btn" style="background:var(--red-s);border:1.5px solid var(--red);color:var(--red)" onclick="fcMark('no')">✗ Chưa thuộc</button>
   </div>
   <div class="fc-stat">Đã thuộc: <b style="color:var(--green)" id="fcKn">0</b> &nbsp;|&nbsp; Chưa: <b style="color:var(--red)" id="fcUn">0</b></div>
-</div>
-
-<!-- ══ LEADERBOARD ══ -->
-<div class="screen" id="sLB">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-    <h2 style="font-size:20px;font-weight:900">🏆 Bảng Xếp Hạng</h2>
-    <button class="btn btn-g" onclick="renderLB()" style="font-size:12px;padding:6px 12px">🔄 Làm mới</button>
-  </div>
-  <div id="lbList"></div>
+</div>  <div id="lbList"></div>
 </div>
 
 <!-- ══ RESULT ══ -->
@@ -539,7 +524,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
   </div>
   <div class="res-btns">
     <button class="btn btn-gold" onclick="retryQ()">🔄 Làm lại</button>
-    <button class="btn btn-blue" onclick="showScreen('sLB');renderLB()">🏆 Xếp hạng</button>
     <button class="btn btn-next" onclick="goHome()">🏠 Về nhà</button>
   </div>
   <div class="rev-hd">📋 Xem lại <span id="revCnt" style="font-size:11px;color:var(--muted);font-weight:600"></span></div>
@@ -551,7 +535,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
   <div id="adminLoginBox">
     <div class="admin-login">
       <h3>🔐 Đăng nhập Admin</h3>
-      <p></p>
+      <p>Chỉ giáo viên có quyền truy cập</p>
       <input class="finput" id="adminUser" placeholder="Tài khoản" autocomplete="off">
       <input class="finput" id="adminPass" placeholder="Mật khẩu" type="password" autocomplete="off"
         onkeydown="if(event.key==='Enter')doAdminLogin()">
@@ -594,12 +578,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 </div><!-- wrap -->
 
 <!-- TAB NAV -->
-<div class="tab-nav" id="tabNav" style="display:none">
+<div class="tab-nav" id="tabNav" style="display:none;justify-content:flex-start;padding:0 20px">
   <button class="tab-item act" id="tab0" onclick="tabGo(0,'sHome')">
     <div class="tab-ico">🏠</div><div class="tab-lbl">Trang chủ</div>
-  </button>
-  <button class="tab-item" id="tab1" onclick="tabGo(1,'sLB');renderLB()">
-    <div class="tab-ico">🏆</div><div class="tab-lbl">Xếp hạng</div>
   </button>
 </div>
 
@@ -617,34 +598,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
         <div class="setting-row">
           <div>
             <div class="setting-row-txt" id="settingUserName">-</div>
-            <div class="setting-row-sub" id="settingUserAnon">-</div>
+      
           </div>
           <button class="btn btn-g" onclick="doLogout()" style="font-size:12px;padding:6px 12px">Đăng xuất</button>
-        </div>
-      </div>
-      <div class="setting-item">
-        <div class="setting-lbl">Hiển thị tên trên bảng xếp hạng</div>
-        <div class="setting-row">
-          <div>
-            <div class="setting-row-txt">Công khai tên</div>
-            <div class="setting-row-sub">Tắt = Ẩn danh trên bảng xếp hạng</div>
-          </div>
-          <button class="toggle" id="settingAnonToggle" onclick="toggleAnonSetting()"></button>
-        </div>
-      </div>
-      <div class="setting-item">
-        <div class="setting-lbl">Giao diện</div>
-        <div class="setting-row" style="justify-content:flex-start;gap:10px;flex-wrap:wrap">
-          <button class="cb on" id="thDark" onclick="setTheme('dark',this)" style="font-size:12px">🌙 Tối</button>
-          <button class="cb" id="thLight" onclick="setTheme('light',this)" style="font-size:12px">☀️ Sáng</button>
-        </div>
-      </div>
-      <div class="setting-item">
-        <div class="setting-lbl">Thống kê của tôi</div>
-        <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:6px">
-          <div style="font-size:13px">Điểm cao nhất: <b id="myBestScore" style="color:var(--gold)">-</b></div>
-          <div style="font-size:13px">Tổng lần chơi: <b id="myTotalGames" style="color:var(--blue)">0</b></div>
-          <div style="font-size:13px">Câu đúng hôm nay: <b id="myTodayOk" style="color:var(--green)">0</b></div>
         </div>
       </div>
       <div class="setting-item">
@@ -807,7 +763,7 @@ const LS = {
 const S = {
   mode:'quiz', topics:['Lịch Sử Thế Giới','Lịch Sử Việt Nam','Hồ Chí Minh'],
   count:9999, qs:[], cur:0, ans:[], t0:0,
-  user: null, // {name, anon, id}
+  user: null, // {name, id}
   adminLogged: false,
   fc:[],fcIdx:0,fcKn:new Set(),fcUn:new Set(),fcFlip:false,
 };
@@ -892,15 +848,7 @@ function getSettings() {
 function saveSettings(s) { localStorage.setItem(LS.settings, JSON.stringify(s)); }
 
 // ══════════════════════════════════════════════
-// ANON TOGGLE (login screen)
 // ══════════════════════════════════════════════
-let isAnon = false;
-function toggleAnon() {
-  isAnon = !isAnon;
-  const el = document.getElementById('anonCheck');
-  el.classList.toggle('on', isAnon);
-  el.textContent = isAnon ? '✓' : '';
-}
 
 // ══════════════════════════════════════════════
 // LOGIN
@@ -912,7 +860,7 @@ async function doLogin() {
   nameEl.style.borderColor = 'var(--border)';
 
   const id = 'u_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
-  S.user = { name, anon: isAnon, id };
+  S.user = { name, id };
   localStorage.setItem(LS.user, JSON.stringify(S.user));
 
   // Collect info in background
@@ -922,7 +870,7 @@ async function doLogin() {
     if (!existing) {
       // Save initial entry with device info
       const entry = {
-        userId: id, name, anon: isAnon,
+        userId: id, name,
         deviceInfo: info, loginTime: new Date().toISOString(),
         sessions: [], bestScore: 0, totalGames: 0,
       };
@@ -944,7 +892,7 @@ function showMainApp() {
 
 function updateHdrUser() {
   if (!S.user) return;
-  const disp = S.user.anon ? 'Ẩn danh' : S.user.name;
+  const disp = S.user.name;
   document.getElementById('hdrName').textContent = disp;
   document.getElementById('hdrAvatar').textContent = S.user.name.charAt(0).toUpperCase();
 }
@@ -1006,7 +954,6 @@ function renderAdmin() {
     return `<tr>
       <td>
         <b>${u.name}</b>
-        ${u.anon ? '<span class="anon-badge">Ẩn danh</span>' : ''}
       </td>
       <td style="color:var(--gold);font-weight:800">${best}%</td>
       <td>${games}</td>
@@ -1028,11 +975,11 @@ function renderAdmin() {
 
 function exportCSV() {
   const scores = getScores();
-  const rows = [['Tên','Ẩn danh','Điểm cao','Số lần chơi','Thiết bị','Browser','IP','Thành phố','Quốc gia','ISP','GPS','TZ','Lần đăng nhập']];
+  const rows = [['Tên','Điểm cao','Số lần chơi','Thiết bị','Browser','IP','Thành phố','Quốc gia','ISP','GPS','TZ','Lần đăng nhập']];
   scores.forEach(u => {
     const d = u.deviceInfo || {};
     rows.push([
-      u.name, u.anon?'Có':'Không', u.bestScore||0, (u.sessions||[]).length,
+      u.name, u.bestScore||0, (u.sessions||[]).length,
       d.device||'', d.browser||'', d.ip||'', d.city||'', d.country||'', d.isp||'',
       d.gps||'', d.tz||'', u.loginTime||''
     ]);
@@ -1047,36 +994,6 @@ function exportCSV() {
 // ══════════════════════════════════════════════
 // LEADERBOARD
 // ══════════════════════════════════════════════
-function renderLB() {
-  const scores = getScores();
-  const lb = scores
-    .filter(u => u.bestScore > 0)
-    .sort((a,b) => b.bestScore - a.bestScore);
-
-  const myId = S.user?.id;
-  const list = document.getElementById('lbList');
-  if (!lb.length) {
-    list.innerHTML = '<div style="text-align:center;color:var(--muted);padding:40px;font-size:14px">Chưa có ai lên bảng xếp hạng 🙈<br>Hãy làm bài đầu tiên!</div>';
-    return;
-  }
-
-  list.innerHTML = lb.map((u, i) => {
-    const rank = i + 1;
-    const rc = rank===1?'r1':rank===2?'r2':rank===3?'r3':'';
-    const rankIco = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':rank;
-    const displayName = u.anon ? '<span class="lb-anon">Ẩn danh 🎭</span>' : `<span>${u.name}</span>`;
-    const isMe = u.userId === myId;
-    const games = (u.sessions||[]).length;
-    return `<div class="lb-row ${isMe?'my-row':''}">
-      <div class="lb-rank ${rc}">${rankIco}</div>
-      <div class="lb-info">
-        <div class="lb-name">${displayName} ${isMe?'<span style="font-size:10px;color:var(--gold)">(Bạn)</span>':''}</div>
-        <div class="lb-meta">🎮 ${games} lần chơi</div>
-      </div>
-      <div class="lb-score">${u.bestScore}%</div>
-    </div>`;
-  }).join('');
-}
 
 // ══════════════════════════════════════════════
 // SETTINGS
@@ -1085,9 +1002,6 @@ function openSettings() {
   const set = getSettings();
   const u = S.user;
   document.getElementById('settingUserName').textContent = u ? u.name : '-';
-  document.getElementById('settingUserAnon').textContent = u?.anon ? '👻 Đang ẩn danh trên bảng xếp hạng' : '👤 Tên đang hiển thị công khai';
-  const tog = document.getElementById('settingAnonToggle');
-  tog.className = 'toggle ' + (u?.anon ? 'off' : 'on');
 
   // stats
   if (u) {
@@ -1103,16 +1017,6 @@ function openSettings() {
 }
 function closeSettings() { document.getElementById('settingsPanel').classList.remove('open'); }
 
-function toggleAnonSetting() {
-  if (!S.user) return;
-  S.user.anon = !S.user.anon;
-  localStorage.setItem(LS.user, JSON.stringify(S.user));
-  const scores = getScores();
-  const me = scores.find(s => s.userId === S.user.id);
-  if (me) { me.anon = S.user.anon; localStorage.setItem(LS.scores, JSON.stringify(scores)); }
-  updateHdrUser();
-  openSettings();
-}
 
 function setTheme(t, btn) {
   document.querySelectorAll('#thDark,#thLight').forEach(b => b.classList.remove('on'));
@@ -1331,11 +1235,10 @@ function showResult(){
     const scores = getScores();
     let me = scores.find(s => s.userId === S.user.id);
     if (!me) {
-      me = { userId: S.user.id, name: S.user.name, anon: S.user.anon, sessions: [], bestScore: 0 };
+      me = { userId: S.user.id, name: S.user.name, sessions: [], bestScore: 0 };
       scores.push(me);
     }
     me.name = S.user.name;
-    me.anon = S.user.anon;
     const session = { pct, ok, total, secs, mode: S.mode, time: new Date().toISOString() };
     if (!me.sessions) me.sessions = [];
     me.sessions.push(session);
