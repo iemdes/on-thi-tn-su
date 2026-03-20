@@ -332,14 +332,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .modal p{color:var(--muted);font-size:13px;margin-bottom:20px;line-height:1.6}
 .modal-btns{display:flex;gap:8px;justify-content:center}
 /* ── BOTTOM SHEET ── */
-.sheet-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);
-  z-index:500;align-items:flex-end;justify-content:center}
+.sheet-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);
+  z-index:500;align-items:flex-end;justify-content:center;touch-action:none}
 .sheet-overlay.show{display:flex;animation:fadeIn .2s}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .sheet{background:var(--card);border-radius:22px 22px 0 0;
   border-top:1px solid var(--border);width:100%;max-width:800px;
   padding:16px 20px 36px;animation:slideUp .3s cubic-bezier(.25,.8,.25,1);
-  max-height:85vh;overflow-y:auto}
+  max-height:85vh;overflow-y:auto;touch-action:pan-y}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .sheet-handle{width:40px;height:4px;border-radius:100px;background:var(--border);
   margin:0 auto 16px}
@@ -347,22 +347,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .sheet-lbl{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
   color:var(--muted);margin-bottom:10px;margin-top:16px;display:flex;align-items:center;gap:8px}
 .sheet-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
-/* ── BOTTOM SHEET ── */
-.sheet-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);
-  z-index:998;align-items:flex-end;justify-content:center}
-.sheet-overlay.show{display:flex;animation:fadeIn .2s ease}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.sheet{background:var(--card);border-radius:22px 22px 0 0;
-  width:100%;max-width:840px;padding:16px 18px 32px;
-  animation:slideUp .28s cubic-bezier(.4,0,.2,1)}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.sheet-handle{width:40px;height:4px;border-radius:100px;
-  background:var(--border);margin:0 auto 18px}
-.sheet-title{font-size:16px;font-weight:900;margin-bottom:16px}
-.sheet-sec{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.sheet-sec::after{content:'';flex:1;height:1px;background:var(--border)}
-.sheet-go{margin-top:18px}
 </style>
 </head>
 <body>
@@ -388,9 +372,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <div class="login-card">
       <span class="login-emoji">📚</span>
       <h2>Ôn Thi Lịch Sử</h2>
-      <p>Nhập tên để bắt đầu. Điểm số được tính theo thang <strong>10</strong> và lưu lại sau mỗi bài.</p>
+      <p> <strong></strong></p>
       <label class="field-label">Tên học sinh</label>
-      <input class="inp" id="loginName" placeholder="Ví dụ: Nguyễn Văn A" maxlength="40"
+      <input class="inp" id="loginName" placeholder="" maxlength="40"
         onkeydown="if(event.key==='Enter')doLogin()">
       <div class="err-msg" id="loginErr">Vui lòng nhập tên của bạn!</div>
       <button class="login-btn" onclick="doLogin()">🚀 Bắt đầu học</button>
@@ -654,25 +638,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
   </div>
 </div>
 
-<!-- BOTTOM SHEET: chủ đề & số câu -->
-<div class="sheet-overlay" id="startSheet" onclick="closeStartSheet(event)">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">⚙️ Cài đặt bài học</div>
-    <div class="sheet-sec">📚 Chủ đề</div>
-    <div class="topics" id="topicBox"></div>
-    <div class="sheet-sec">🔢 Số câu</div>
-    <div class="cnts">
-      <button class="cb" onclick="pickCount(10,this)">10 câu</button>
-      <button class="cb" onclick="pickCount(20,this)">20 câu</button>
-      <button class="cb" onclick="pickCount(30,this)">30 câu</button>
-      <button class="cb" onclick="pickCount(50,this)">50 câu</button>
-      <button class="cb on" onclick="pickCount(9999,this)">Tất cả</button>
-    </div>
-    <button class="go sheet-go" onclick="go()">🚀 Bắt đầu ngay</button>
-  </div>
-</div>
-
 <!-- MODAL: logout -->
 <div class="overlay" id="logoutModal">
   <div class="modal">
@@ -911,18 +876,19 @@ function closeStartSheet(e){
 }
 function init(){
   const box=document.getElementById('topicBox');
-  box.innerHTML=Object.keys(DATA).map(t=>
-    `<button class="tb on" data-topic="${t}" onclick="toggleT('${t}')">${t} <span style="opacity:.55;font-size:10px">(${DATA[t].length})</span></button>`
+  box.innerHTML=Object.keys(DATA).map((t,i)=>
+    `<button class="tb on" id="tb_${i}" onclick="toggleT('${t}')">${t} <span style="opacity:.55;font-size:10px">(${DATA[t].length})</span></button>`
   ).join('');
 }
 function toggleT(t){
-  const btn=document.querySelector(`.tb[data-topic="${t}"]`);
+  const i = Object.keys(DATA).indexOf(t);
+  const btn = document.getElementById('tb_'+i);
   if(S.topics.includes(t)){
-    S.topics=S.topics.filter(x=>x!==t);
-    btn.classList.remove('on');
+    S.topics = S.topics.filter(x=>x!==t);
+    if(btn) btn.classList.remove('on');
   } else {
     S.topics.push(t);
-    btn.classList.add('on');
+    if(btn) btn.classList.add('on');
   }
 }
 function pickMode(m,el){
@@ -1501,6 +1467,11 @@ function enterApp(name){
 
 init();
 
+// Đóng sheet khi nhấn vùng tối bên ngoài
+document.getElementById('startSheet').addEventListener('click', function(e){
+  if(e.target === this) this.classList.remove('show');
+});
+
 // Tự động đăng nhập nếu đã có session
 const saved = getSavedSession();
 if(saved){
@@ -1513,21 +1484,17 @@ function openStartSheet(){
   document.getElementById('startSheet').classList.add('show');
 }
 function closeStartSheet(e){
-  // close only if clicking the dark overlay (not the sheet itself)
-  if(e.target===document.getElementById('startSheet')){
+  if(e.target===document.getElementById('startSheet'))
     document.getElementById('startSheet').classList.remove('show');
-  }
 }
 </script>
 <!-- BOTTOM SHEET: start settings -->
-<div class="sheet-overlay" id="startSheet" onclick="closeStartSheet(event)">
+<div class="sheet-overlay" id="startSheet">
   <div class="sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-title">⚙️ Cài đặt bài thi</div>
-
     <div class="sheet-lbl">📚 Chủ đề</div>
     <div class="topics" id="topicBox"></div>
-
     <div class="sheet-lbl">🔢 Số câu</div>
     <div class="cnts">
       <button class="cb" onclick="pickCount(10,this)">10 câu</button>
@@ -1536,8 +1503,7 @@ function closeStartSheet(e){
       <button class="cb" onclick="pickCount(50,this)">50 câu</button>
       <button class="cb on" onclick="pickCount(9999,this)">Tất cả</button>
     </div>
-
-    <button class="go" onclick="go()" style="margin-top:4px">🚀 Bắt đầu ngay</button>
+    <button class="go" onclick="go()" style="margin-top:18px">🚀 Bắt đầu ngay</button>
   </div>
 </div>
 
