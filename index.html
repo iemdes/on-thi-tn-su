@@ -922,8 +922,13 @@ function init(){
   ).join('');
 }
 function toggleT(btn,t){
-  if(S.topics.includes(t)){if(S.topics.length===1)return;S.topics=S.topics.filter(x=>x!==t);btn.classList.remove('on');}
-  else{S.topics.push(t);btn.classList.add('on');}
+  if(S.topics.includes(t)){
+    S.topics=S.topics.filter(x=>x!==t);
+    btn.classList.remove('on');
+  } else {
+    S.topics.push(t);
+    btn.classList.add('on');
+  }
 }
 function pickMode(m,el){
   S.mode=m;
@@ -1042,7 +1047,7 @@ function buildType(p){
 function go(){
   document.getElementById('startSheet').classList.remove('show');
   const p=pool();
-  if(p.length<4){alert('Vui lòng chọn ít nhất một chủ đề!');return;}
+  if(S.topics.length===0){alert('Vui lòng chọn ít nhất một chủ đề!');return;}
   S.t0=Date.now(); S.cur=0; S.ans=[];
   S.liveOk=0; S.liveNo=0; S.liveSk=0;
   if(S.mode==='quiz'){
