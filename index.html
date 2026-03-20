@@ -344,10 +344,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
   <div class="hdr-right">
     <div class="user-chip">
       <div class="user-av" id="hdrAv">?</div>
-      <div class="user-info">
-        <div class="user-nm" id="hdrName">—</div>
-        <div class="user-pts" id="hdrPts">0 điểm</div>
-      </div>
+      <div class="user-nm" id="hdrName">—</div>
     </div>
     <button class="btn-logout" onclick="logout()">⬅ Đăng xuất</button>
   </div>
@@ -380,8 +377,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
       <h3 id="greetName">Xin chào!</h3>
       <p id="greetSub">Hãy chọn chế độ và bắt đầu</p>
       <div class="score-chips">
-        <div class="sc sc-gold">⭐ <span id="greetPts">0.0</span> điểm TB</div>
-        <div class="sc sc-green">✅ <span id="greetOkTotal">0</span> câu đúng</div>
         <div class="sc sc-blue">📝 <span id="greetSessions">0</span> lần làm</div>
       </div>
     </div>
@@ -608,7 +603,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 
   <div style="text-align:center;font-size:13px;color:var(--muted);margin-bottom:6px">
     ⏱ Thời gian: <b id="rTm" style="color:var(--text)">0s</b>
-    &nbsp;|&nbsp; Tổng điểm tích lũy: <b id="rTotalPts" style="color:var(--gold)">0</b>
   </div>
 
   <div class="res-btns">
@@ -859,8 +853,6 @@ function updateHdr(){
   if(!currentUser) return;
   document.getElementById('hdrAv').textContent=currentUser.name[0].toUpperCase();
   document.getElementById('hdrName').textContent=currentUser.name;
-  const avg = currentUser.avgScore||0;
-  document.getElementById('hdrPts').textContent=avg.toFixed(1)+' điểm TB';
 }
 function renderGreeting(){
   if(!currentUser) return;
@@ -869,8 +861,6 @@ function renderGreeting(){
   document.getElementById('greetSub').textContent = currentUser.sessions>0
     ? `Bạn đã làm ${currentUser.sessions} lần. Tiếp tục cố gắng nhé!`
     : 'Lần đầu học? Chọn chế độ và bắt đầu nào!';
-  document.getElementById('greetPts').textContent=(currentUser.avgScore||0).toFixed(1);
-  document.getElementById('greetOkTotal').textContent=currentUser.totalOk;
   document.getElementById('greetSessions').textContent=currentUser.sessions;
 }
 
@@ -1408,7 +1398,6 @@ function showResult(mode){
   const rec={name:currentUser.name,mode,score10,ok,wrong:no,skip:sk,total,pct,time:secs,ts:new Date().toLocaleString('vi-VN')};
   saveRecord(rec);
   refreshUser();
-  document.getElementById('rTotalPts').textContent=currentUser.avgScore.toFixed(1)+' (TB)';
 
   // Review list
   document.getElementById('revCnt').textContent='('+total+' câu)';
