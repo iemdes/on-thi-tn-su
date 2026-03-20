@@ -6,227 +6,451 @@
 <title>Ôn Thi Lịch Sử</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#0f1117; --card:#1a1d27; --card2:#22263a; --border:#2c3050;
-  --text:#eef0f8; --muted:#7b82a8;
-  --red:#e05555; --red-s:rgba(224,85,85,.13);
-  --gold:#f5a623; --gold-s:rgba(245,166,35,.13);
-  --green:#3dba7a; --green-s:rgba(61,186,122,.13);
-  --blue:#5b9cf6; --blue-s:rgba(91,156,246,.13);
-  --r:14px; --r2:10px;
+:root{
+  --bg:#0f1117;--card:#1a1d27;--card2:#22263a;--border:#2c3050;
+  --text:#eef0f8;--muted:#7b82a8;
+  --red:#e05555;--red-s:rgba(224,85,85,.13);--red-b:rgba(224,85,85,.3);
+  --gold:#f5a623;--gold-s:rgba(245,166,35,.13);
+  --green:#3dba7a;--green-s:rgba(61,186,122,.13);--green-b:rgba(61,186,122,.3);
+  --blue:#5b9cf6;--blue-s:rgba(91,156,246,.13);
+  --purple:#a78bfa;--purple-s:rgba(167,139,250,.13);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse 55% 45% at 10% 5%,rgba(224,85,85,.07) 0%,transparent 60%),
-             radial-gradient(ellipse 50% 50% at 90% 95%,rgba(91,156,246,.06) 0%,transparent 60%)}
-.hdr{position:sticky;top:0;z-index:99;background:rgba(15,17,23,.93);backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--border);padding:0 20px;height:58px;
-  display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:10px}
-.logo-box{width:34px;height:34px;border-radius:9px;
+  background:radial-gradient(ellipse 60% 50% at 10% 5%,rgba(224,85,85,.08) 0%,transparent 60%),
+             radial-gradient(ellipse 50% 50% at 90% 95%,rgba(91,156,246,.07) 0%,transparent 60%)}
+
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:99;background:rgba(15,17,23,.95);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);padding:0 20px;height:60px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-box{width:36px;height:36px;border-radius:10px;
   background:linear-gradient(135deg,var(--red),var(--gold));
-  display:flex;align-items:center;justify-content:center;font-size:17px}
-.logo-txt{font-size:16px;font-weight:900}
-.logo-txt b{color:var(--gold)}
-.hstats{display:flex;gap:18px}
-.hs{font-size:12px;color:var(--muted)}
-.hs strong{color:var(--text)}
-.wrap{position:relative;max-width:820px;margin:0 auto;padding:28px 16px 80px}
-.screen{display:none}
-.screen.active{display:block;animation:up .35s ease}
-@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.hero{text-align:center;padding:44px 0 36px}
-.pill{display:inline-block;background:var(--gold-s);border:1px solid rgba(245,166,35,.3);
-  color:var(--gold);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
-  padding:5px 16px;border-radius:100px;margin-bottom:18px}
-.hero h1{font-size:clamp(26px,6vw,46px);font-weight:900;line-height:1.15;margin-bottom:12px}
-.hero h1 span{color:var(--gold)}
-.hero p{color:var(--muted);font-size:14px;max-width:440px;margin:0 auto 36px;line-height:1.65}
+  display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-txt{font-size:16px;font-weight:900}.logo-txt b{color:var(--gold)}
+.hdr-right{display:flex;align-items:center;gap:10px}
+.user-chip{display:flex;align-items:center;gap:8px;background:var(--card2);
+  border:1px solid var(--border);border-radius:100px;padding:5px 14px 5px 7px}
+.user-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900}
+.user-info{display:flex;flex-direction:column;line-height:1.2}
+.user-nm{font-size:12px;font-weight:800;max-width:110px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.user-pts{font-size:11px;color:var(--gold);font-weight:800}
+.btn-logout{background:none;border:1.5px solid var(--border);border-radius:8px;
+  padding:6px 12px;color:var(--muted);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:.2s}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
+
+/* SCREENS */
+.wrap{max-width:840px;margin:0 auto;padding:28px 16px 80px}
+.screen{display:none}.screen.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── LOGIN SCREEN ── */
+.login-page{min-height:calc(100vh - 60px);display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{background:var(--card);border:1px solid var(--border);border-radius:24px;
+  padding:44px 40px;max-width:440px;width:100%;text-align:center}
+.login-emoji{font-size:56px;margin-bottom:16px;display:block}
+.login-card h2{font-size:28px;font-weight:900;margin-bottom:8px}
+.login-card p{color:var(--muted);font-size:14px;margin-bottom:32px;line-height:1.65}
+.field-label{text-align:left;font-size:11px;font-weight:800;color:var(--muted);
+  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;display:block}
+.inp{width:100%;background:var(--card2);border:2px solid var(--border);
+  border-radius:12px;padding:13px 16px;color:var(--text);font-family:inherit;
+  font-size:15px;font-weight:700;outline:none;transition:.2s;margin-bottom:16px;display:block}
+.inp:focus{border-color:var(--gold)}
+.inp::placeholder{color:var(--muted);font-weight:600}
+.inp-err{border-color:var(--red)!important}
+.err-msg{font-size:12px;color:var(--red);font-weight:700;margin-top:-10px;margin-bottom:12px;text-align:left}
+.login-btn{width:100%;padding:14px;border:none;border-radius:13px;
+  background:linear-gradient(135deg,#e05555,#f5a623);
+  color:#fff;font-family:inherit;font-size:15px;font-weight:800;
+  cursor:pointer;box-shadow:0 6px 22px rgba(224,85,85,.3);transition:.2s;margin-bottom:14px}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(224,85,85,.4)}
+.divider{display:flex;align-items:center;gap:12px;margin:8px 0 14px;color:var(--muted);font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.admin-link{background:var(--card2);border:1.5px solid var(--border);border-radius:12px;
+  padding:11px;width:100%;font-family:inherit;font-size:13px;font-weight:700;color:var(--muted);
+  cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:7px}
+.admin-link:hover{border-color:var(--purple);color:var(--purple)}
+
+/* ── HOME ── */
+.home-greeting{display:flex;align-items:center;gap:16px;background:var(--card);
+  border:1px solid var(--border);border-radius:18px;padding:20px 22px;margin-bottom:24px}
+.greeting-av{width:52px;height:52px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900}
+.greeting-info h3{font-size:18px;font-weight:900;margin-bottom:3px}
+.greeting-info p{font-size:13px;color:var(--muted)}
+.score-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.sc{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:100px;
+  font-size:12px;font-weight:800}
+.sc-gold{background:var(--gold-s);color:var(--gold);border:1px solid rgba(245,166,35,.3)}
+.sc-green{background:var(--green-s);color:var(--green);border:1px solid rgba(61,186,122,.3)}
+.sc-blue{background:var(--blue-s);color:var(--blue);border:1px solid rgba(91,156,246,.3)}
+
 .sec-lbl{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
   color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
-.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
-@media(max-width:560px){.modes{grid-template-columns:1fr}}
-.mc{background:var(--card);border:2px solid var(--border);border-radius:var(--r);
-  padding:20px 16px;cursor:pointer;transition:.2s;text-align:left;user-select:none}
-.mc:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.modes{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px}
+@media(max-width:540px){.modes{grid-template-columns:1fr}}
+.mc{background:var(--card);border:2px solid var(--border);border-radius:16px;
+  padding:18px 16px;cursor:pointer;transition:.2s;text-align:left;user-select:none;position:relative}
+.mc:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.35)}
 .mc.sel{border-color:var(--gold);background:var(--gold-s)}
-.mc-ico{font-size:26px;margin-bottom:10px}
+.mc-ico{font-size:28px;margin-bottom:8px}
 .mc-name{font-size:14px;font-weight:800;margin-bottom:4px}
 .mc-desc{font-size:12px;color:var(--muted);line-height:1.5}
-.topics{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.mc-pts{position:absolute;top:14px;right:14px;font-size:10px;font-weight:800;
+  padding:3px 9px;border-radius:100px;background:var(--gold-s);color:var(--gold);
+  border:1px solid rgba(245,166,35,.3)}
+.topics{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
 .tb{background:var(--card);border:2px solid var(--border);border-radius:100px;
   padding:7px 18px;cursor:pointer;color:var(--muted);font-family:inherit;
   font-size:13px;font-weight:700;transition:.2s}
 .tb:hover{border-color:var(--gold);color:var(--gold)}
 .tb.on{background:var(--gold-s);border-color:var(--gold);color:var(--gold)}
-.cnts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
-.cb{background:var(--card);border:2px solid var(--border);border-radius:var(--r2);
+.cnts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.cb{background:var(--card);border:2px solid var(--border);border-radius:10px;
   padding:8px 20px;cursor:pointer;color:var(--muted);font-family:inherit;
   font-size:13px;font-weight:700;transition:.2s}
 .cb:hover{border-color:var(--blue);color:var(--blue)}
 .cb.on{background:var(--blue-s);border-color:var(--blue);color:var(--blue)}
-.go{display:block;width:100%;max-width:280px;margin:0 auto;padding:14px;
-  border:none;border-radius:12px;
-  background:linear-gradient(135deg,#e05555,#f5a623);
-  color:#fff;font-family:inherit;font-size:15px;font-weight:800;
+.go{display:block;width:100%;max-width:300px;margin:0 auto;padding:15px;
+  border:none;border-radius:14px;background:linear-gradient(135deg,#e05555,#f5a623);
+  color:#fff;font-family:inherit;font-size:16px;font-weight:800;
   cursor:pointer;box-shadow:0 6px 22px rgba(224,85,85,.3);transition:.2s}
 .go:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(224,85,85,.4)}
-.qhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+
+/* ── QUIZ / REPEAT ── */
+.qhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .badge{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
   padding:5px 14px;border-radius:100px;background:var(--gold-s);
   color:var(--gold);border:1px solid rgba(245,166,35,.3)}
-.qinfo{font-size:13px;color:var(--muted)}
-.qinfo b{color:var(--text)}
-.pbar{height:4px;background:var(--card2);border-radius:100px;overflow:hidden;margin-bottom:18px}
+.badge-purple{background:var(--purple-s);color:var(--purple);border-color:rgba(167,139,250,.3)}
+.badge-blue{background:var(--blue-s);color:var(--blue);border-color:rgba(91,156,246,.3)}
+.qinfo{font-size:13px;color:var(--muted)}.qinfo b{color:var(--text)}
+.pts-live{font-size:13px;font-weight:800;color:var(--gold);display:flex;align-items:center;gap:4px}
+.pbar{height:5px;background:var(--card2);border-radius:100px;overflow:hidden;margin-bottom:14px}
 .pbar-f{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:100px;transition:width .4s}
-.dots{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:18px}
+.pbar-purple .pbar-f{background:linear-gradient(90deg,var(--purple),var(--blue))}
+
+/* Dots */
+.dots{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--card2);
-  border:1.5px solid var(--border);cursor:pointer;transition:.2s}
-.dot.cur{border-color:var(--blue);background:var(--blue-s);transform:scale(1.3)}
+  border:1.5px solid var(--border);transition:.2s}
+.dot.cur{border-color:var(--blue);background:var(--blue-s);transform:scale(1.4)}
 .dot.ok{background:var(--green);border-color:var(--green)}
 .dot.no{background:var(--red);border-color:var(--red)}
 .dot.sk{background:var(--gold);border-color:var(--gold)}
-.qcard{background:var(--card);border:1px solid var(--border);
-  border-radius:18px;padding:26px 22px;margin-bottom:14px}
-.qno{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
-  color:var(--muted);margin-bottom:8px}
-.qtxt{font-size:clamp(14px,2vw,17px);font-weight:700;line-height:1.65}
-.qtag{display:inline-block;margin-top:10px;font-size:10px;font-weight:800;
-  padding:3px 12px;border-radius:100px;background:var(--blue-s);
-  color:var(--blue);border:1px solid rgba(91,156,246,.2)}
-.opts{display:grid;gap:9px;margin-bottom:14px}
-.opt{background:var(--card);border:2px solid var(--border);border-radius:12px;
+.dot.rep{background:var(--purple);border-color:var(--purple)}
+
+/* Repeat queue info */
+.rep-info-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.ri-chip{font-size:11px;font-weight:800;padding:3px 10px;border-radius:100px;display:inline-flex;align-items:center;gap:4px}
+.ri-new{background:var(--blue-s);color:var(--blue);border:1px solid rgba(91,156,246,.3)}
+.ri-review{background:var(--purple-s);color:var(--purple);border:1px solid rgba(167,139,250,.3)}
+.ri-done{background:var(--green-s);color:var(--green);border:1px solid rgba(61,186,122,.3)}
+
+/* Question card */
+.qcard{background:var(--card);border:2px solid var(--border);
+  border-radius:18px;padding:24px 22px;margin-bottom:14px;transition:.3s}
+.qcard.glow-ok{border-color:var(--green);box-shadow:0 0 22px rgba(61,186,122,.18)}
+.qcard.glow-no{border-color:var(--red);box-shadow:0 0 22px rgba(224,85,85,.18);animation:shake .35s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.qno{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.qtxt{font-size:clamp(14px,2vw,17px);font-weight:700;line-height:1.7}
+.tags-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.qtag{font-size:10px;font-weight:800;padding:3px 12px;border-radius:100px;
+  background:var(--blue-s);color:var(--blue);border:1px solid rgba(91,156,246,.2)}
+.rep-indicator{font-size:10px;font-weight:800;padding:3px 10px;border-radius:100px;
+  background:var(--purple-s);color:var(--purple);border:1px solid rgba(167,139,250,.3)}
+
+/* Options */
+.opts{display:grid;gap:9px;margin-bottom:12px}
+.opt{background:var(--card);border:2px solid var(--border);border-radius:13px;
   padding:13px 16px;cursor:pointer;display:flex;align-items:flex-start;gap:11px;
   text-align:left;font-family:inherit;color:var(--text);font-size:13px;font-weight:700;
   line-height:1.5;transition:.18s;width:100%}
 .opt:not(.dis):hover{border-color:var(--gold);background:var(--gold-s);transform:translateX(3px)}
-.olbl{min-width:28px;height:28px;border-radius:7px;background:var(--card2);
+.olbl{min-width:30px;height:30px;border-radius:8px;background:var(--card2);
   border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:800;flex-shrink:0;transition:.18s}
-.opt.ok{border-color:var(--green);background:var(--green-s)}
-.opt.ok .olbl{background:var(--green);color:#fff;border-color:var(--green)}
-.opt.no{border-color:var(--red);background:var(--red-s)}
-.opt.no .olbl{background:var(--red);color:#fff;border-color:var(--red)}
+  font-size:12px;font-weight:900;flex-shrink:0;transition:.2s}
+.opt-body{flex:1}
+.opt-sub{font-size:11px;font-weight:700;margin-top:3px;display:none}
+
+/* Correct / Wrong / Missed states */
+.opt.st-correct{border-color:var(--green);background:rgba(61,186,122,.1)}
+.opt.st-correct .olbl{background:var(--green);color:#fff;border-color:var(--green)}
+.opt.st-correct .opt-sub{display:block;color:var(--green)}
+.opt.st-wrong{border-color:var(--red);background:rgba(224,85,85,.1)}
+.opt.st-wrong .olbl{background:var(--red);color:#fff;border-color:var(--red)}
+.opt.st-wrong .opt-sub{display:block;color:var(--red)}
+.opt.st-correct-hl{border-color:var(--green);background:rgba(61,186,122,.06);border-style:dashed}
+.opt.st-correct-hl .olbl{background:rgba(61,186,122,.25);color:var(--green);border-color:var(--green)}
+.opt.st-correct-hl .opt-sub{display:block;color:var(--green)}
 .opt.dis{cursor:default}
-.expl{background:var(--card2);border-left:3px solid var(--gold);border-radius:9px;
+
+/* Answer feedback banner */
+.ans-banner{border-radius:14px;padding:14px 18px;margin-bottom:12px;
+  display:flex;align-items:flex-start;gap:14px;animation:fadeUp .25s}
+.ab-ok{background:rgba(61,186,122,.1);border:2px solid var(--green-b)}
+.ab-no{background:rgba(224,85,85,.1);border:2px solid var(--red-b)}
+.ab-skip{background:rgba(245,166,35,.08);border:2px solid rgba(245,166,35,.3)}
+.ab-ico{font-size:28px;flex-shrink:0;line-height:1}
+.ab-body{flex:1}
+.ab-label{font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.ab-ok .ab-label{color:var(--green)}
+.ab-no .ab-label{color:var(--red)}
+.ab-skip .ab-label{color:var(--gold)}
+.ab-main{font-size:14px;font-weight:800;margin-bottom:4px}
+.ab-correct-ans{font-size:13px;color:var(--muted);font-weight:600}
+.ab-correct-ans strong{color:var(--text)}
+.ab-pts{font-size:13px;font-weight:800;margin-top:4px}
+.pts-gain{color:var(--gold)}
+.pts-zero{color:var(--muted)}
+
+/* Repeat comeback notice */
+.comeback-notice{background:rgba(167,139,250,.08);border:1.5px solid rgba(167,139,250,.3);
+  border-radius:10px;padding:9px 14px;margin-bottom:10px;font-size:12px;
+  color:var(--purple);font-weight:700;display:flex;align-items:center;gap:8px}
+
+.expl{background:var(--card2);border-left:3px solid var(--gold);border-radius:10px;
   padding:12px 16px;font-size:13px;color:var(--muted);line-height:1.6;
   margin-bottom:14px;display:none}
-.expl.show{display:block;animation:up .25s}
-.acts{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-.btn{padding:10px 20px;border-radius:9px;border:none;cursor:pointer;
+.expl.show{display:block;animation:fadeUp .25s}
+.acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.btn{padding:10px 20px;border-radius:10px;border:none;cursor:pointer;
   font-family:inherit;font-size:13px;font-weight:700;transition:.18s;
   display:inline-flex;align-items:center;gap:6px}
 .btn-g{background:var(--card2);border:1.5px solid var(--border);color:var(--muted)}
 .btn-g:hover{border-color:var(--text);color:var(--text)}
-.btn-next{background:linear-gradient(135deg,var(--red),#f06040);color:#fff;
-  box-shadow:0 4px 14px rgba(224,85,85,.25)}
+.btn-next{background:linear-gradient(135deg,var(--red),#f06040);color:#fff;box-shadow:0 4px 14px rgba(224,85,85,.25)}
 .btn-next:hover{transform:translateY(-1px)}
 .btn-gold{background:linear-gradient(135deg,var(--gold),#f0c040);color:#1a1d27;font-weight:800}
+.btn-purple{background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;font-weight:800}
+
+/* Typing mode */
 .tinput{width:100%;background:var(--card);border:2px solid var(--border);
-  border-radius:12px;padding:14px 18px;color:var(--text);font-family:inherit;
+  border-radius:13px;padding:14px 18px;color:var(--text);font-family:inherit;
   font-size:17px;font-weight:800;outline:none;transition:.2s;margin-bottom:12px}
 .tinput:focus{border-color:var(--gold)}
-.fc-wrap{perspective:1200px;margin:28px auto;max-width:520px;cursor:pointer}
-.fc{width:100%;aspect-ratio:16/9;position:relative;
-  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+
+/* Flashcard */
+.fc-wrap{perspective:1200px;margin:24px auto;max-width:520px;cursor:pointer}
+.fc{width:100%;aspect-ratio:16/9;position:relative;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1)}
 .fc.flip{transform:rotateY(180deg)}
-.fc-f{position:absolute;inset:0;border-radius:18px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:26px;text-align:center;backface-visibility:hidden}
+.fc-f{position:absolute;inset:0;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px;text-align:center;backface-visibility:hidden}
 .fc-front{background:var(--card);border:1px solid var(--border)}
-.fc-back{background:linear-gradient(135deg,rgba(224,85,85,.1),rgba(245,166,35,.07));
-  border:1px solid rgba(245,166,35,.25);transform:rotateY(180deg)}
-.fc-yr{font-size:38px;font-weight:900;color:var(--gold)}
+.fc-back{background:linear-gradient(135deg,rgba(224,85,85,.1),rgba(245,166,35,.07));border:1px solid rgba(245,166,35,.25);transform:rotateY(180deg)}
+.fc-yr{font-size:36px;font-weight:900;color:var(--gold)}
 .fc-hint{font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:1px}
-.fc-evt{font-size:15px;font-weight:700;line-height:1.55}
+.fc-evt{font-size:14px;font-weight:700;line-height:1.55}
 .fc-tp{font-size:11px;color:var(--blue);margin-top:10px;font-weight:700}
 .fc-cnt{text-align:center;font-size:13px;color:var(--muted);margin-bottom:4px}
 .fc-nav{display:flex;gap:10px;justify-content:center;margin-top:10px}
-.fc-marks{display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.fc-marks{display:flex;gap:10px;justify-content:center;margin-top:12px}
 .fc-stat{text-align:center;font-size:12px;color:var(--muted);margin-top:10px}
-.res-hero{text-align:center;padding:36px 0 24px}
-.res-ico{font-size:56px;margin-bottom:10px}
-.res-ttl{font-size:30px;font-weight:900;margin-bottom:6px}
-.res-sub{color:var(--muted);font-size:14px;margin-bottom:28px}
-.ring-w{display:flex;justify-content:center;margin-bottom:24px}
+
+/* RESULT */
+.res-hero{text-align:center;padding:32px 0 20px}
+.res-ico{font-size:52px;margin-bottom:10px}
+.res-ttl{font-size:30px;font-weight:900;margin-bottom:5px}
+.res-sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+.ring-w{display:flex;justify-content:center;margin-bottom:20px}
 .ring{width:140px;height:140px;position:relative}
 .ring svg{transform:rotate(-90deg)}
 .ring-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .ring-n{font-size:30px;font-weight:900}
 .ring-l{font-size:10px;color:var(--muted);font-weight:800;letter-spacing:1px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:20px}
+/* Score earned banner */
+.pts-earned-banner{background:linear-gradient(135deg,rgba(245,166,35,.15),rgba(224,85,85,.1));
+  border:2px solid rgba(245,166,35,.35);border-radius:16px;
+  padding:18px 22px;margin-bottom:20px;text-align:center}
+.pts-earned-big{font-size:38px;font-weight:900;color:var(--gold);margin-bottom:4px}
+.pts-earned-lbl{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.pts-breakdown{display:flex;justify-content:center;gap:16px;margin-top:12px;flex-wrap:wrap}
+.pb-item{font-size:12px;color:var(--muted);font-weight:700;text-align:center}
+.pb-item b{display:block;font-size:16px;font-weight:900;margin-bottom:2px}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
 @media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}}
-.st{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
-.st-n{font-size:24px;font-weight:900;margin-bottom:2px}
+.st{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;text-align:center}
+.st-n{font-size:22px;font-weight:900;margin-bottom:2px}
 .st-l{font-size:10px;color:var(--muted);font-weight:800}
-.sg .st-n{color:var(--green)} .sr .st-n{color:var(--red)}
-.sy .st-n{color:var(--gold)} .sb .st-n{color:var(--blue)}
-.res-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+.sg .st-n{color:var(--green)}.sr .st-n{color:var(--red)}.sy .st-n{color:var(--gold)}.sb .st-n{color:var(--blue)}
+.res-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
 .rev-hd{font-size:14px;font-weight:800;margin-bottom:12px}
-.rev-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);
+.rev-item{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--border);
   border-radius:12px;padding:14px 16px;margin-bottom:9px}
-.rev-item.ok{border-left-color:var(--green)}
-.rev-item.no{border-left-color:var(--red)}
-.rev-item.sk{border-left-color:var(--gold)}
-.rev-q{font-size:13px;font-weight:700;margin-bottom:6px}
-.rev-row{display:flex;align-items:flex-start;gap:7px;margin-top:4px;font-size:12px}
-.rtag{font-size:10px;font-weight:800;padding:2px 8px;border-radius:4px;flex-shrink:0;margin-top:1px}
+.rev-item.ok{border-left-color:var(--green)}.rev-item.no{border-left-color:var(--red)}.rev-item.sk{border-left-color:var(--gold)}
+.rev-q{font-size:13px;font-weight:700;margin-bottom:8px}
+.rev-ans-row{display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border-radius:8px;margin-top:5px}
+.rev-ans-row.row-ok{background:rgba(61,186,122,.09);border:1px solid rgba(61,186,122,.2)}
+.rev-ans-row.row-no{background:rgba(224,85,85,.09);border:1px solid rgba(224,85,85,.2)}
+.rev-ans-row.row-sk{background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.18)}
+.rtag{font-size:10px;font-weight:800;padding:2px 8px;border-radius:5px;flex-shrink:0;margin-top:1px}
 .rt-ok{background:var(--green-s);color:var(--green)}
 .rt-no{background:var(--red-s);color:var(--red)}
 .rt-sk{background:var(--gold-s);color:var(--gold)}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);
+.rev-ans-txt{font-size:12px;font-weight:700;color:var(--text)}
+.rev-ans-txt.muted{color:var(--muted)}
+
+/* ADMIN PANEL */
+.admin-topbar{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.admin-title{font-size:22px;font-weight:900}
+.admin-subtitle{font-size:13px;color:var(--muted);margin-top:2px}
+.admin-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+@media(max-width:480px){.admin-stats-row{grid-template-columns:1fr}}
+.admin-stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center}
+.asc-n{font-size:28px;font-weight:900;margin-bottom:3px}
+.asc-l{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:1px}
+.leaderboard{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px}
+.lb-header{padding:14px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between}
+.lb-header h3{font-size:15px;font-weight:800}
+.lb-row{padding:12px 20px;border-bottom:1px solid rgba(44,48,80,.5);
+  display:flex;align-items:center;gap:14px;transition:.2s}
+.lb-row:last-child{border-bottom:none}
+.lb-row:hover{background:rgba(255,255,255,.02)}
+.lb-rank{font-size:16px;font-weight:900;width:28px;text-align:center;flex-shrink:0}
+.lb-rank.r1{color:var(--gold)}.lb-rank.r2{color:#c0c0c0}.lb-rank.r3{color:#cd7f32}
+.lb-av{width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900}
+.lb-info{flex:1;min-width:0}
+.lb-name{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.lb-score{text-align:right;flex-shrink:0}
+.lb-pts{font-size:18px;font-weight:900;color:var(--gold)}
+.lb-pct{font-size:11px;color:var(--muted);margin-top:1px}
+.lb-empty{padding:32px;text-align:center;color:var(--muted);font-size:14px}
+.detail-table{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px}
+.dt-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.dt-row{padding:11px 20px;border-bottom:1px solid rgba(44,48,80,.5);font-size:13px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dt-row:last-child{border-bottom:none}
+.dt-row:hover{background:rgba(255,255,255,.02)}
+.dt-name{font-weight:800;min-width:120px}
+.dt-mode{font-size:10px;font-weight:800;padding:2px 8px;border-radius:100px}
+.dm-quiz{background:var(--gold-s);color:var(--gold)}
+.dm-repeat{background:var(--purple-s);color:var(--purple)}
+.dm-type{background:var(--blue-s);color:var(--blue)}
+.dt-pts{font-weight:900;color:var(--gold);margin-left:auto}
+.dt-time{font-size:11px;color:var(--muted)}
+.admin-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.af-btn{background:var(--card2);border:1.5px solid var(--border);border-radius:8px;
+  padding:6px 14px;font-family:inherit;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:.2s}
+.af-btn:hover,.af-btn.on{border-color:var(--gold);color:var(--gold);background:var(--gold-s)}
+.clear-btn{background:var(--red-s);border:1.5px solid var(--red-b);color:var(--red);
+  border-radius:8px;padding:6px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:.2s}
+.clear-btn:hover{background:var(--red);color:#fff}
+.btn-refresh{background:var(--card2);border:1.5px solid var(--border);border-radius:8px;
+  padding:6px 14px;font-family:inherit;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:.2s}
+.btn-refresh:hover{border-color:var(--green);color:var(--green)}
+
+/* OVERLAY & MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);
   z-index:999;align-items:center;justify-content:center;padding:20px}
 .overlay.show{display:flex}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:18px;
-  padding:30px;max-width:380px;width:100%;text-align:center;animation:up .3s}
-.modal h3{font-size:18px;font-weight:800;margin-bottom:8px}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:32px 28px;max-width:400px;width:100%;text-align:center;animation:fadeUp .3s}
+.modal h3{font-size:19px;font-weight:800;margin-bottom:8px}
 .modal p{color:var(--muted);font-size:13px;margin-bottom:22px;line-height:1.6}
 .modal-btns{display:flex;gap:9px;justify-content:center}
+.admin-modal{max-width:440px}
+.admin-modal h3{margin-bottom:4px}
 </style>
 </head>
 <body>
-<div class="hdr">
+
+<!-- HEADER -->
+<div class="hdr" id="mainHdr" style="display:none">
   <div class="logo">
     <div class="logo-box">📚</div>
     <div class="logo-txt">Ôn Thi <b>Lịch Sử</b></div>
   </div>
-  <div class="hstats">
-    <div class="hs">Đã làm: <strong id="hTotal">0</strong></div>
-    <div class="hs">Đúng hôm nay: <strong id="hCorrect">0</strong></div>
+  <div class="hdr-right">
+    <div id="hdrUserChip" class="user-chip">
+      <div class="user-av" id="hdrAv">?</div>
+      <div class="user-info">
+        <div class="user-nm" id="hdrName">—</div>
+        <div class="user-pts" id="hdrPts">0 điểm</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="logout()">⬅ Đăng xuất</button>
   </div>
 </div>
-<div class="wrap">
+
+<!-- LOGIN PAGE -->
+<div id="loginPage">
+  <div class="login-page">
+    <div class="login-card">
+      <span class="login-emoji">📚</span>
+      <h2>Ôn Thi Lịch Sử</h2>
+      <p>Nhập tên của bạn để bắt đầu ôn tập. Điểm số sẽ được lưu lại sau mỗi bài làm.</p>
+      <label class="field-label">Tên học sinh</label>
+      <input class="inp" id="loginName" placeholder="Ví dụ: Nguyễn Văn A" maxlength="40"
+        onkeydown="if(event.key==='Enter')doLogin()">
+      <div class="err-msg" id="loginErr" style="display:none">Vui lòng nhập tên của bạn!</div>
+      <button class="login-btn" onclick="doLogin()">🚀 Bắt đầu học</button>
+      <div class="divider">hoặc</div>
+      <button class="admin-link" onclick="showAdminLogin()">🔐 Đăng nhập giáo viên (Admin)</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="wrap" id="appWrap" style="display:none">
 
 <!-- HOME -->
 <div class="screen active" id="sHome">
-  <div class="hero">
-    <div class="pill">🎓 Luyện thi hiệu quả</div>
-    <h1>Ôn Thi<br><span>Lịch Sử</span></h1>
-    <p>Đầy đủ kiến thức Lịch Sử Thế Giới, Việt Nam và hoạt động Nguyễn Ái Quốc – Hồ Chí Minh.</p>
+  <div class="home-greeting" id="homeGreeting">
+    <div class="greeting-av" id="greetAv">?</div>
+    <div class="greeting-info">
+      <h3 id="greetName">Xin chào!</h3>
+      <p id="greetSub">Hãy chọn chế độ và bắt đầu ôn tập</p>
+      <div class="score-chips">
+        <div class="sc sc-gold">⭐ <span id="greetPts">0</span> điểm</div>
+        <div class="sc sc-green">✅ <span id="greetOkTotal">0</span> câu đúng</div>
+        <div class="sc sc-blue">📝 <span id="greetSessions">0</span> lần làm</div>
+      </div>
+    </div>
   </div>
+
   <div class="sec-lbl">🎮 Chế độ</div>
   <div class="modes">
     <div class="mc sel" id="mQuiz" onclick="pickMode('quiz',this)">
       <div class="mc-ico">📝</div>
       <div class="mc-name">Trắc Nghiệm</div>
-      <div class="mc-desc">4 đáp án ABCD thật, trộn ngẫu nhiên, có giải thích</div>
+      <div class="mc-desc">4 đáp án ABCD, trộn ngẫu nhiên, có giải thích chi tiết</div>
+      <div class="mc-pts">+10 / câu đúng</div>
+    </div>
+    <div class="mc" id="mRepeat" onclick="pickMode('repeat',this)">
+      <div class="mc-ico">🔁</div>
+      <div class="mc-name">Lặp Lại Thông Minh</div>
+      <div class="mc-desc">Câu sai sẽ xuất hiện lại sau 2–3 câu cho đến khi thuộc!</div>
+      <div class="mc-pts">+15 / câu đúng</div>
     </div>
     <div class="mc" id="mFlash" onclick="pickMode('flash',this)">
       <div class="mc-ico">🃏</div>
       <div class="mc-name">Thẻ Ghi Nhớ</div>
       <div class="mc-desc">Lật thẻ xem đáp án, đánh dấu thuộc / chưa thuộc</div>
+      <div class="mc-pts">+5 / thẻ thuộc</div>
     </div>
     <div class="mc" id="mType" onclick="pickMode('type',this)">
       <div class="mc-ico">⌨️</div>
       <div class="mc-name">Nhập Năm</div>
-      <div class="mc-desc">Đọc sự kiện, nhập đúng năm xảy ra</div>
+      <div class="mc-desc">Đọc sự kiện, nhập đúng năm — khó hơn, nhiều điểm hơn!</div>
+      <div class="mc-pts">+20 / câu đúng</div>
     </div>
   </div>
+
   <div class="sec-lbl">📚 Chủ đề</div>
   <div class="topics" id="topicBox"></div>
-  <div class="sec-lbl">🔢 Số câu</div>
+  <div class="sec-lbl">🔢 Số câu gốc</div>
   <div class="cnts">
     <button class="cb" onclick="pickCount(10,this)">10 câu</button>
     <button class="cb" onclick="pickCount(20,this)">20 câu</button>
@@ -241,23 +465,59 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 <div class="screen" id="sQuiz">
   <div class="qhdr">
     <div style="display:flex;align-items:center;gap:10px">
-      <div class="badge" id="qBadge">📝 Trắc Nghiệm</div>
-      <div class="qinfo">Câu <b id="qCur">1</b> / <b id="qTot">?</b></div>
+      <div class="badge">📝 Trắc Nghiệm</div>
+      <div class="qinfo">Câu <b id="qCur">1</b>/<b id="qTot">?</b></div>
     </div>
-    <button class="btn btn-g" onclick="goHome()" style="padding:7px 14px;font-size:12px">🏠 Thoát</button>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="pts-live">⭐ <span id="qPtsLive">0</span></div>
+      <button class="btn btn-g" onclick="goHome()" style="padding:6px 12px;font-size:12px">🏠 Thoát</button>
+    </div>
   </div>
   <div class="pbar"><div class="pbar-f" id="qPbar" style="width:0"></div></div>
   <div class="dots" id="qDots"></div>
-  <div class="qcard">
+  <div class="qcard" id="qCard">
     <div class="qno" id="qNo">Câu 1</div>
     <div class="qtxt" id="qTxt"></div>
-    <div class="qtag" id="qTag"></div>
+    <div class="tags-row"><div class="qtag" id="qTag"></div></div>
   </div>
   <div class="opts" id="qOpts"></div>
+  <div id="qBanner"></div>
   <div class="expl" id="qExpl"></div>
   <div class="acts">
-    <button class="btn btn-g" onclick="skipQ()">⏭ Bỏ qua</button>
+    <button class="btn btn-g" id="qSkipBtn" onclick="skipQ()">⏭ Bỏ qua</button>
     <button class="btn btn-next" id="qNext" onclick="nextQ()" style="display:none">Tiếp theo →</button>
+  </div>
+</div>
+
+<!-- REPEAT -->
+<div class="screen" id="sRepeat">
+  <div class="qhdr">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="badge badge-purple">🔁 Lặp Lại</div>
+      <div class="qinfo">Câu <b id="rpCur">1</b> trong hàng đợi <b id="rpQ">?</b></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="pts-live">⭐ <span id="rpPtsLive">0</span></div>
+      <button class="btn btn-g" onclick="goHome()" style="padding:6px 12px;font-size:12px">🏠 Thoát</button>
+    </div>
+  </div>
+  <div class="pbar pbar-purple"><div class="pbar-f" id="rpPbar" style="width:0"></div></div>
+  <div class="rep-info-bar" id="repInfoBar"></div>
+  <div id="rpComebackNotice"></div>
+  <div class="qcard" id="rpCard">
+    <div class="qno" id="rpNo">Câu 1</div>
+    <div class="qtxt" id="rpTxt"></div>
+    <div class="tags-row">
+      <div class="qtag" id="rpTag"></div>
+      <div class="rep-indicator" id="rpRepTag" style="display:none"></div>
+    </div>
+  </div>
+  <div class="opts" id="rpOpts"></div>
+  <div id="rpBanner"></div>
+  <div class="expl" id="rpExpl"></div>
+  <div class="acts">
+    <div style="font-size:12px;color:var(--muted);font-weight:700" id="rpProgress"></div>
+    <button class="btn btn-next" id="rpNext" onclick="nextRepeat()" style="display:none">Tiếp theo →</button>
   </div>
 </div>
 
@@ -265,23 +525,28 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 <div class="screen" id="sType">
   <div class="qhdr">
     <div style="display:flex;align-items:center;gap:10px">
-      <div class="badge" style="background:var(--blue-s);color:var(--blue);border-color:rgba(91,156,246,.3)">⌨️ Nhập Năm</div>
-      <div class="qinfo">Câu <b id="tCur">1</b> / <b id="tTot">?</b></div>
+      <div class="badge badge-blue">⌨️ Nhập Năm</div>
+      <div class="qinfo">Câu <b id="tCur">1</b>/<b id="tTot">?</b></div>
     </div>
-    <button class="btn btn-g" onclick="goHome()" style="padding:7px 14px;font-size:12px">🏠 Thoát</button>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="pts-live">⭐ <span id="tPtsLive">0</span></div>
+      <button class="btn btn-g" onclick="goHome()" style="padding:6px 12px;font-size:12px">🏠 Thoát</button>
+    </div>
   </div>
   <div class="pbar"><div class="pbar-f" id="tPbar" style="width:0"></div></div>
-  <div class="qcard">
+  <div class="dots" id="tDots"></div>
+  <div class="qcard" id="tCard">
     <div class="qno" id="tNo">Câu 1</div>
     <div class="qtxt" id="tTxt"></div>
-    <div class="qtag" id="tTag"></div>
+    <div class="tags-row"><div class="qtag" id="tTag"></div></div>
   </div>
   <input class="tinput" id="tInput" placeholder="Nhập năm / giai đoạn..." autocomplete="off"
     onkeydown="if(event.key==='Enter')checkType()">
+  <div id="tBanner"></div>
   <div class="expl" id="tExpl"></div>
   <div class="acts">
     <button class="btn btn-g" onclick="skipType()">⏭ Bỏ qua</button>
-    <button class="btn btn-gold" onclick="checkType()">✓ Kiểm tra</button>
+    <button class="btn btn-gold" id="tCheckBtn" onclick="checkType()">✓ Kiểm tra</button>
     <button class="btn btn-next" id="tNext" onclick="nextType()" style="display:none">Tiếp theo →</button>
   </div>
 </div>
@@ -289,7 +554,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 <!-- FLASHCARD -->
 <div class="screen" id="sFlash">
   <div class="qhdr">
-    <button class="btn btn-g" onclick="goHome()" style="padding:7px 14px;font-size:12px">← Về nhà</button>
+    <button class="btn btn-g" onclick="goHome()" style="padding:6px 12px;font-size:12px">← Về nhà</button>
     <div class="badge" style="background:var(--gold-s);color:var(--gold);border-color:rgba(245,166,35,.3)">🃏 Thẻ Ghi Nhớ</div>
     <div style="font-size:12px;color:var(--muted)">Nhấn thẻ để lật</div>
   </div>
@@ -310,14 +575,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
   </div>
   <div class="fc-nav">
     <button class="btn btn-g" onclick="fcPrev()">← Trước</button>
-    <button class="btn btn-g" onclick="fcShuffle()">🔀 Xáo</button>
+    <button class="btn btn-g" onclick="fcShuffle()">🔀 Xáo bài</button>
     <button class="btn btn-g" onclick="fcNext()">Sau →</button>
   </div>
   <div class="fc-marks">
-    <button class="btn" style="background:var(--green-s);border:1.5px solid var(--green);color:var(--green)" onclick="fcMark('know')">✓ Đã thuộc</button>
-    <button class="btn" style="background:var(--red-s);border:1.5px solid var(--red);color:var(--red)" onclick="fcMark('no')">✗ Chưa thuộc</button>
+    <button class="btn" style="background:var(--green-s);border:1.5px solid var(--green);color:var(--green)" onclick="fcMark('know')">✅ Đã thuộc (+5đ)</button>
+    <button class="btn" style="background:var(--red-s);border:1.5px solid var(--red);color:var(--red)" onclick="fcMark('no')">❌ Chưa thuộc</button>
   </div>
-  <div class="fc-stat">Đã thuộc: <b style="color:var(--green)" id="fcKn">0</b> &nbsp;|&nbsp; Chưa: <b style="color:var(--red)" id="fcUn">0</b></div>
+  <div class="fc-stat">Đã thuộc: <b style="color:var(--green)" id="fcKn">0</b> &nbsp;|&nbsp; Chưa: <b style="color:var(--red)" id="fcUn">0</b> &nbsp;|&nbsp; <b style="color:var(--gold)" id="fcPtsDisplay">0đ</b></div>
 </div>
 
 <!-- RESULT -->
@@ -326,6 +591,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <div class="res-ico" id="resIco">🎉</div>
     <div class="res-ttl" id="resTtl">Giỏi lắm!</div>
     <div class="res-sub" id="resSub">Kết quả bài làm của bạn</div>
+  </div>
+  <div class="pts-earned-banner">
+    <div class="pts-earned-big" id="ptsEarned">+0</div>
+    <div class="pts-earned-lbl">Điểm kiếm được</div>
+    <div class="pts-breakdown" id="ptsBreakdown"></div>
   </div>
   <div class="ring-w">
     <div class="ring">
@@ -339,7 +609,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
       </svg>
       <div class="ring-in">
         <div class="ring-n" id="ringN">0%</div>
-        <div class="ring-l">ĐIỂM</div>
+        <div class="ring-l">CHÍNH XÁC</div>
       </div>
     </div>
   </div>
@@ -353,15 +623,58 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <button class="btn btn-gold" onclick="retryQ()">🔄 Làm lại</button>
     <button class="btn btn-next" onclick="goHome()">🏠 Về trang chủ</button>
   </div>
-  <div class="rev-hd">📋 Xem lại <span id="revCnt" style="font-size:12px;color:var(--muted);font-weight:600"></span></div>
+  <div class="rev-hd">📋 Xem lại chi tiết <span id="revCnt" style="font-size:12px;color:var(--muted);font-weight:600"></span></div>
   <div id="revList"></div>
 </div>
+
+<!-- ADMIN PANEL -->
+<div class="screen" id="sAdmin">
+  <div class="admin-topbar">
+    <div>
+      <div class="admin-title">🎓 Bảng Quản Lý Giáo Viên</div>
+      <div class="admin-subtitle">Theo dõi kết quả học sinh theo thời gian thực</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-refresh" onclick="renderAdmin()">🔄 Làm mới</button>
+      <button class="btn btn-g" onclick="show('sHome')" style="font-size:12px;padding:7px 14px">🏠 Về nhà</button>
+    </div>
+  </div>
+  <div class="admin-stats-row" id="adminStatsRow"></div>
+  <div class="leaderboard">
+    <div class="lb-header">
+      <h3>🏆 Bảng Xếp Hạng</h3>
+      <span style="font-size:12px;color:var(--muted)" id="lbCount"></span>
+    </div>
+    <div id="lbList"></div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+    <div class="rev-hd" style="margin-bottom:0">📋 Lịch Sử Bài Làm</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div class="admin-filter" style="margin-bottom:0" id="adminFilter">
+        <button class="af-btn on" onclick="filterAdmin('all',this)">Tất cả</button>
+        <button class="af-btn" onclick="filterAdmin('quiz',this)">Trắc nghiệm</button>
+        <button class="af-btn" onclick="filterAdmin('repeat',this)">Lặp lại</button>
+        <button class="af-btn" onclick="filterAdmin('type',this)">Nhập năm</button>
+      </div>
+      <button class="clear-btn" onclick="clearAdminData()">🗑 Xóa dữ liệu</button>
+    </div>
+  </div>
+  <div class="detail-table">
+    <div class="dt-header">
+      <span style="font-size:13px;font-weight:800">Chi tiết từng lần làm</span>
+      <span style="font-size:11px;color:var(--muted)" id="dtCount"></span>
+    </div>
+    <div id="dtList"></div>
+  </div>
 </div>
 
+</div><!-- appWrap -->
+
+<!-- MODAL: exit confirm -->
 <div class="overlay" id="modal">
   <div class="modal">
     <h3>⚠️ Thoát bài?</h3>
-    <p>Kết quả sẽ không được lưu. Bạn có chắc muốn thoát không?</p>
+    <p>Kết quả sẽ không được lưu nếu bạn thoát giữa chừng. Bạn có chắc chắn không?</p>
     <div class="modal-btns">
       <button class="btn btn-g" onclick="closeModal()">Tiếp tục làm</button>
       <button class="btn btn-next" onclick="confirmHome()">Thoát</button>
@@ -369,7 +682,38 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
   </div>
 </div>
 
+<!-- MODAL: admin login -->
+<div class="overlay" id="adminModal">
+  <div class="modal admin-modal">
+    <h3>🔐 Đăng nhập Giáo Viên</h3>
+    <p>Nhập mật khẩu admin để xem kết quả học sinh.</p>
+    <input class="inp" id="adminPw" type="password" placeholder="Mật khẩu admin..."
+      onkeydown="if(event.key==='Enter')doAdminLogin()">
+    <div class="err-msg" id="adminErr" style="display:none">Mật khẩu không đúng!</div>
+    <div class="modal-btns">
+      <button class="btn btn-g" onclick="closeAdminModal()">Hủy</button>
+      <button class="btn btn-purple" onclick="doAdminLogin()" style="background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff">Đăng nhập</button>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:14px">Mật khẩu mặc định: <b style="color:var(--text)">admin123</b></div>
+  </div>
+</div>
+
+<!-- MODAL: logout confirm -->
+<div class="overlay" id="logoutModal">
+  <div class="modal">
+    <h3>👋 Đăng xuất?</h3>
+    <p>Điểm số của bạn sẽ được giữ lại. Hẹn gặp lại <b id="logoutName"></b>!</p>
+    <div class="modal-btns">
+      <button class="btn btn-g" onclick="closeLogoutModal()">Ở lại</button>
+      <button class="btn btn-next" onclick="confirmLogout()">Đăng xuất</button>
+    </div>
+  </div>
+</div>
+
 <script>
+// ═══════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════
 const DATA = {
 "Lịch Sử Thế Giới": [
   {time:"1914-1918", event:"Chiến tranh thế giới thứ nhất"},
@@ -386,137 +730,239 @@ const DATA = {
   {time:"1955", event:"Tổ chức Hiệp ước Vác-sa-va được thành lập"},
   {time:"1957", event:"Liên minh châu Âu ra đời (tiền thân)"},
   {time:"1961", event:"Hiệp hội Đông Nam Á (ASA) ra đời"},
-  {time:"1967", event:"Hiệp hội các quốc gia Đông Nam Á (ASEAN) ra đời — Tuyên bố Băng Cốc 1967"},
+  {time:"1967", event:"Hiệp hội các quốc gia Đông Nam Á (ASEAN) ra đời — Tuyên bố Băng Cốc"},
   {time:"1971", event:"ASEAN ra Tuyên bố khu vực hòa bình, tự do và trung lập (ZOPFAN)"},
   {time:"1976", event:"Hiệp ước Thân thiện và Hợp tác ở ĐNA (TAC) / Hiệp ước Ba-li kí kết"},
   {time:"1980", event:"Xu thế toàn cầu hóa xuất hiện"},
   {time:"1989", event:"Diễn đàn Hợp tác Kinh tế châu Á-Thái Bình Dương (APEC) thành lập"},
   {time:"1991", event:"Chế độ XHCN ở Liên Xô và Đông Âu tan rã"},
   {time:"1996", event:"Diễn đàn hợp tác Á-Âu (ASEM) thành lập"},
-  {time:"1997", event:"Tầm nhìn ASEAN 2020 thông qua tại HNCC ASEAN lần 2 (Ma-lai-xi-a)"},
-  {time:"2003", event:"Tuyên bố về sự hoà hợp ASEAN II (Ba-li II) tại HNCC ASEAN lần 9 (Inđônêxia)"},
+  {time:"1997", event:"Tầm nhìn ASEAN 2020 thông qua tại HNCC ASEAN lần 2"},
+  {time:"2003", event:"Tuyên bố về sự hoà hợp ASEAN II (Ba-li II) tại HNCC ASEAN lần 9"},
   {time:"2007", event:"Hiến chương ASEAN được thông qua, có hiệu lực năm 2008"},
   {time:"2009", event:"Lộ trình xây dựng Cộng đồng ASEAN (2009-2015) được thông qua"},
-  {time:"2015", event:"Cộng đồng ASEAN được thành lập (3 trụ cột) tại HNCC ASEAN lần 27; ASEAN thông qua Tầm nhìn ASEAN 2025 và Lộ trình giai đoạn 2 (2015-2020)"},
-  {time:"2020", event:"Tuyên bố Hà Nội về Tầm nhìn Cộng đồng ASEAN sau năm 2025 tại HNCC ASEAN lần 37 (Hà Nội)"},
+  {time:"2015", event:"Cộng đồng ASEAN được thành lập (3 trụ cột) tại HNCC ASEAN lần 27"},
+  {time:"2020", event:"Tuyên bố Hà Nội về Tầm nhìn Cộng đồng ASEAN sau 2025 tại HNCC lần 37"},
 ],
 "Lịch Sử Việt Nam": [
-  {time:"938 (thế kỷ X)", event:"Kháng chiến chống quân Nam Hán của Ngô Quyền — trận Bạch Đằng"},
-  {time:"1075-1077 (thế kỷ XI)", event:"Kháng chiến chống Tống thời Lý — trận Sông Như Nguyệt (Lý Thường Kiệt lãnh đạo)"},
-  {time:"1258-1288 (thế kỷ XIII)", event:"Kháng chiến chống Mông-Nguyên thời Trần — trận Tây Kết, Chương Dương, Hàm Tử, Bạch Đằng (Trần Hưng Đạo)"},
-  {time:"1418-1427 (thế kỷ XV)", event:"Kháng chiến chống quân Minh (Lê Lợi lãnh đạo) — trận Chi Lăng, Xương Giang"},
-  {time:"1771-1789 (thế kỷ XVIII)", event:"Phong trào Tây Sơn (Nguyễn Huệ, Nguyễn Nhạc, Nguyễn Lữ) — lật đổ Chúa Nguyễn, tập đoàn Lê-Trịnh, kháng chiến chống Xiêm (1785), chống Thanh (1789)"},
-  {time:"1858-1884 (thế kỷ XIX)", event:"Kháng chiến chống Pháp thời Nguyễn: trận Đà Nẵng (1858), Gia Định (1859), Cầu Giấy (1874, 1883); Các Hiệp ước: Nhâm Tuất (1862), Giáp Tuất (1874), Hác-măng (1883), Pa-tơ-nốt (1884)"},
+  {time:"938 (thế kỷ X)", event:"Kháng chiến chống quân Nam Hán — trận Bạch Đằng (Ngô Quyền)"},
+  {time:"1075-1077 (thế kỷ XI)", event:"Kháng chiến chống Tống thời Lý — trận Sông Như Nguyệt (Lý Thường Kiệt)"},
+  {time:"1258-1288 (thế kỷ XIII)", event:"Kháng chiến chống Mông-Nguyên thời Trần — trận Tây Kết, Chương Dương, Bạch Đằng"},
+  {time:"1418-1427 (thế kỷ XV)", event:"Kháng chiến chống quân Minh (Lê Lợi) — trận Chi Lăng, Xương Giang"},
+  {time:"1771-1789 (thế kỷ XVIII)", event:"Phong trào Tây Sơn — kháng chiến chống Xiêm (1785), chống Thanh (1789)"},
+  {time:"1858-1884 (thế kỷ XIX)", event:"Kháng chiến chống Pháp; Hiệp ước Nhâm Tuất (1862), Giáp Tuất (1874), Hác-măng (1883), Pa-tơ-nốt (1884)"},
   {time:"1905-1908", event:"Phan Bội Châu phát động phong trào Đông Du (Nhật Bản)"},
-  {time:"1908", event:"Phan Bội Châu tham gia thành lập Đông Á Đồng minh hội và Điền-Quế-Việt liên minh"},
-  {time:"1912", event:"Phan Bội Châu thành lập Việt Nam Quang phục hội, tham gia thành lập Hội Chấn Hoa Hưng Á"},
+  {time:"1912", event:"Phan Bội Châu thành lập Việt Nam Quang phục hội"},
   {time:"1925", event:"Hội Việt Nam Cách mạng Thanh niên thành lập"},
   {time:"1929", event:"Ba tổ chức cộng sản ra đời: An Nam Cộng sản Đảng, Đông Dương Cộng sản Đảng, Đông Dương Cộng sản liên đoàn"},
   {time:"1930", event:"Đảng Cộng sản Việt Nam ra đời"},
-  {time:"1941", event:"Hội nghị lần 8 BCH TW ĐCS Đông Dương; Mặt trận Việt Nam Độc lập đồng minh (Việt Minh) thành lập"},
+  {time:"1941", event:"Hội nghị lần 8 BCH TW; Mặt trận Việt Minh thành lập"},
   {time:"1944", event:"Đội Việt Nam Tuyên truyền giải phóng quân thành lập"},
-  {time:"1945", event:"Cách mạng tháng Tám thành công, nước Việt Nam DCCH ra đời; Nhân dân Nam Bộ kháng chiến chống Pháp (23/9/1945)"},
-  {time:"1946", event:"Hiệp định Sơ bộ (Việt-Pháp) và bản Tạm ước kí kết; Cuộc kháng chiến toàn quốc bùng nổ"},
+  {time:"1945", event:"Cách mạng tháng Tám thành công; nước Việt Nam DCCH ra đời; Nam Bộ kháng chiến (23/9)"},
+  {time:"1946", event:"Hiệp định Sơ bộ và Tạm ước; Cuộc kháng chiến toàn quốc bùng nổ"},
   {time:"1947", event:"Chiến dịch Việt Bắc thu-đông, đánh bại kế hoạch ĐNTN"},
-  {time:"1950", event:"Chiến dịch Biên giới thu-đông, đánh bại kế hoạch Rơ-ve, giành thế chủ động; Pháp đề ra Kế hoạch Đờ Lát đơ Tát-xi-nhi; Việt Nam thiết lập ngoại giao với TQ, LX và XHCN"},
-  {time:"1951", event:"Đại hội Đại biểu toàn quốc lần II; Đảng Lao động Việt Nam; Mặt trận Liên Việt; Liên minh nhân dân Việt-Miên-Lào thành lập"},
-  {time:"1953-1954", event:"Pháp-Mỹ đề ra Kế hoạch Na-va (1953); Cuộc Tiến công chiến lược Đông Xuân (1953-1954); Chiến dịch Điện Biên Phủ (1954); Hiệp định Giơ-ne-vơ kí kết (1954)"},
-  {time:"1945-1954", event:"Kháng chiến chống Pháp xâm lược"},
-  {time:"1954-1975", event:"Kháng chiến chống Mỹ, cứu nước"},
-  {time:"1959", event:"Hội nghị BCH TW lần thứ 15 (Hà Nội)"},
+  {time:"1950", event:"Chiến dịch Biên giới thu-đông, đánh bại kế hoạch Rơ-ve"},
+  {time:"1951", event:"Đại hội lần II; Đảng Lao động Việt Nam; Mặt trận Liên Việt thành lập"},
+  {time:"1953-1954", event:"Kế hoạch Na-va; Cuộc Tiến công Đông Xuân; Chiến dịch Điện Biên Phủ; Hiệp định Giơ-ne-vơ"},
   {time:"1959-1960", event:"Phong trào Đồng khởi"},
-  {time:"1960", event:"Đại hội đại biểu toàn quốc lần III (Hà Nội); Mặt trận Dân tộc Giải phóng MNVN; Việt Nam thiết lập quan hệ ngoại giao với Cu-ba"},
-  {time:"1961", event:"Quân Giải phóng miền Nam ra đời"},
-  {time:"1961-1965", event:"Chiến tranh đặc biệt"},
-  {time:"1962", event:"Việt Nam thiết lập quan hệ ngoại giao với Lào"},
-  {time:"1963", event:"Chiến thắng Ấp Bắc (Mỹ Tho)"},
-  {time:"1964", event:"Chiến thắng Bình Giã, An Lão"},
-  {time:"1965", event:"Chiến thắng Ba Gia, Đồng Xoài; Chiến thắng Vạn Tường, Núi Thành; Hội nghị nhân dân ba nước Đông Dương triệu tập"},
-  {time:"1965-1968", event:"Chiến tranh cục bộ, quân Mỹ và đồng minh vào Việt Nam"},
-  {time:"1967", event:"Việt Nam thiết lập quan hệ ngoại giao với Cam-pu-chia"},
-  {time:"1968", event:"Cuộc Tổng tiến công và nổi dậy Xuân Mậu Thân; Mỹ tuyên bố 'Phi Mỹ hóa', xuống thang chiến tranh, chấp nhận đàm phán ở Pa-ri"},
+  {time:"1960", event:"Đại hội lần III; Mặt trận Dân tộc Giải phóng miền Nam Việt Nam ra đời"},
+  {time:"1961-1965", event:"Chiến lược chiến tranh đặc biệt"},
+  {time:"1965-1968", event:"Chiến lược chiến tranh cục bộ — quân Mỹ vào Việt Nam"},
+  {time:"1968", event:"Tổng tiến công và nổi dậy Xuân Mậu Thân; Mỹ tuyên bố phi Mỹ hóa, đàm phán Pa-ri"},
   {time:"1969-1973", event:"Chiến lược Việt Nam hóa chiến tranh, Đông Dương hóa chiến tranh"},
-  {time:"1969", event:"Chính phủ lâm thời Cộng hòa miền Nam Việt Nam ra đời"},
-  {time:"1970", event:"Hội nghị cấp cao 3 nước Đông Dương; Đánh bại cuộc hành quân xâm lược Cam-pu-chia của Mỹ"},
-  {time:"1971", event:"Đánh bại cuộc hành quân Lam Sơn ở Đường 9-Nam Lào"},
-  {time:"1972", event:"Cuộc Tiến công chiến lược miền Nam — buộc Mỹ tuyên bố 'Mỹ hóa'; Trận 'Điện Biên Phủ trên không' (miền Bắc); Mỹ kí Hiệp định Pa-ri; Việt Nam thiết lập quan hệ ngoại giao với Ấn Độ"},
-  {time:"1973", event:"Hiệp định Pa-ri về chấm dứt chiến tranh Việt Nam kí kết; Mỹ và đồng minh rút hết quân; Việt Nam thiết lập ngoại giao với Nhật Bản, Ô-xtrây-li-a, Pháp, Hà Lan"},
-  {time:"1975", event:"Chiến thắng Đường 14-Phước Long (1-1975); Tổng tiến công mùa Xuân 1975 — Đại thắng (3 chiến dịch: Tây Nguyên, Huế-Đà Nẵng, Hồ Chí Minh) — kết thúc kháng chiến chống Mỹ"},
-  {time:"1976", event:"Thống nhất đất nước về mặt Nhà nước; Việt Nam gia nhập Phong trào Không liên kết"},
-  {time:"1977", event:"Việt Nam gia nhập Liên hợp quốc; Việt Nam và Lào kí Hiệp ước hữu nghị và hợp tác"},
-  {time:"1978", event:"Việt Nam và Liên Xô kí Hiệp ước hữu nghị và hợp tác; Việt Nam gia nhập Hội đồng tương trợ kinh tế (SEV)"},
-  {time:"1979-1986", event:"Chiến tranh biên giới Tây Nam, chiến tranh biên giới phía Bắc (Bảo vệ Tổ quốc)"},
-  {time:"1986", event:"Đại hội đại biểu toàn quốc lần VI — Mở đầu công cuộc Đổi mới đất nước"},
-  {time:"1991", event:"Việt Nam bình thường hóa quan hệ ngoại giao với Trung Quốc; Đại hội lần VII — Công nghiệp hóa, hiện đại hóa đất nước"},
-  {time:"1995", event:"Việt Nam bình thường hóa quan hệ ngoại giao với Mỹ; Việt Nam gia nhập ASEAN, tham gia Hiệp định Thương mại tự do ASEAN"},
-  {time:"1996", event:"Việt Nam tham gia Diễn đàn Hợp tác Á-Âu (ASEM)"},
-  {time:"1998", event:"Việt Nam đảm nhiệm vai trò Chủ tịch ASEAN; Việt Nam tham gia APEC"},
-  {time:"2001", event:"Đại hội lần IX — chủ động hội nhập kinh tế quốc tế"},
+  {time:"1972", event:"Tiến công chiến lược miền Nam; Trận Điện Biên Phủ trên không; Mỹ kí Hiệp định Pa-ri"},
+  {time:"1973", event:"Hiệp định Pa-ri kí kết; Mỹ rút quân"},
+  {time:"1975", event:"Tổng tiến công mùa Xuân (3 chiến dịch: Tây Nguyên, Huế-Đà Nẵng, Hồ Chí Minh) — giải phóng hoàn toàn miền Nam"},
+  {time:"1976", event:"Thống nhất đất nước về mặt Nhà nước; gia nhập Phong trào Không liên kết"},
+  {time:"1977", event:"Việt Nam gia nhập Liên hợp quốc"},
+  {time:"1978", event:"Việt Nam gia nhập SEV; kí Hiệp ước hữu nghị với Liên Xô"},
+  {time:"1986", event:"Đại hội lần VI — Mở đầu công cuộc Đổi mới đất nước"},
+  {time:"1991", event:"Bình thường hóa quan hệ với Trung Quốc"},
+  {time:"1995", event:"Bình thường hóa quan hệ với Mỹ; Việt Nam gia nhập ASEAN"},
+  {time:"1998", event:"Việt Nam tham gia APEC"},
   {time:"2007", event:"Việt Nam gia nhập Tổ chức Thương mại Thế giới (WTO)"},
-  {time:"2008", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Trung Quốc"},
-  {time:"2010", event:"Việt Nam đảm nhiệm vai trò Chủ tịch ASEAN"},
-  {time:"2011", event:"Đại hội lần XI — chủ động và tích cực hội nhập quốc tế"},
-  {time:"2012", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Nga"},
-  {time:"2014", event:"Việt Nam bắt đầu tham gia hoạt động giữ gìn hòa bình của Liên hợp quốc"},
-  {time:"2016", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Ấn Độ"},
-  {time:"2020", event:"Việt Nam đảm nhiệm vai trò Chủ tịch ASEAN"},
-  {time:"2022", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Hàn Quốc"},
   {time:"2023", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Mỹ và Nhật"},
-  {time:"2024", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với Úc, Pháp, Ma-lai-xi-a"},
-  {time:"2025", event:"Việt Nam thiết lập quan hệ đối tác chiến lược toàn diện với In-đô-nê-xi-a, Xin-ga-po, Niu-di-lân"},
 ],
 "Hồ Chí Minh": [
   {time:"1911", event:"Nguyễn Ái Quốc sang phương Tây tìm đường cứu nước"},
   {time:"1918", event:"Gia nhập Đảng xã hội Pháp"},
   {time:"1919", event:"Gửi bản Yêu sách của nhân dân An Nam đến Hội nghị Véc-xai"},
-  {time:"1920", event:"Đọc Luận cương của Lê-nin, tìm ra con đường cứu nước; Sáng lập Đảng Cộng sản Pháp; Gia nhập Quốc tế Cộng sản"},
+  {time:"1920", event:"Đọc Luận cương của Lê-nin, tìm ra con đường cứu nước; Gia nhập Quốc tế Cộng sản; Sáng lập Đảng Cộng sản Pháp"},
   {time:"1921", event:"Tham gia sáng lập Hội Liên hiệp thuộc địa (Pa-ri)"},
   {time:"1923", event:"Sang Liên Xô dự Hội nghị Quốc tế Nông dân"},
-  {time:"1925", event:"Sáng lập Hội Việt Nam Cách mạng Thanh niên; Viết Bản án chế độ thực dân Pháp; Sáng lập Báo Thanh niên; Thành lập Hội Liên hiệp các dân tộc bị áp bức ở Á Đông; Đào tạo, tuyên truyền lý luận cách mạng giải phóng dân tộc"},
+  {time:"1925", event:"Sáng lập Hội Việt Nam Cách mạng Thanh niên; Viết Bản án chế độ thực dân Pháp; Sáng lập Báo Thanh niên"},
   {time:"1927", event:"Xuất bản tác phẩm Đường Kách mệnh"},
-  {time:"1930", event:"Thống nhất các tổ chức Cộng sản, thành lập Đảng Cộng sản Việt Nam; Soạn thảo Cương lĩnh chính trị (Chính cương vắn tắt, Sách lược vắn tắt)"},
-  {time:"1941", event:"Chủ trì Hội nghị lần 8 BCH TW ĐCS Đông Dương; Thành lập Mặt trận Việt Nam Độc lập Đồng minh (Việt Minh)"},
+  {time:"1930", event:"Thống nhất các tổ chức Cộng sản, thành lập Đảng Cộng sản Việt Nam; Soạn thảo Cương lĩnh chính trị"},
+  {time:"1941", event:"Chủ trì Hội nghị lần 8 BCH TW; Thành lập Mặt trận Việt Minh"},
   {time:"1944", event:"Thành lập Đội Việt Nam Tuyên truyền giải phóng quân; Thành lập Khu giải phóng Việt Bắc"},
-  {time:"1945", event:"Lãnh đạo Cách mạng tháng Tám thành công; Đọc Tuyên ngôn độc lập — Khai sinh nước Việt Nam DCCH"},
-  {time:"1946", event:"Lãnh đạo giải quyết khó khăn đói, dốt, tài chính; Kí Hiệp định Sơ bộ và Tạm ước; Ra Lời kêu gọi toàn quốc kháng chiến; Phát động kháng chiến chống Pháp"},
+  {time:"1945", event:"Lãnh đạo Cách mạng tháng Tám; Đọc Tuyên ngôn độc lập — Khai sinh nước Việt Nam DCCH"},
+  {time:"1946", event:"Kí Hiệp định Sơ bộ và Tạm ước; Ra Lời kêu gọi toàn quốc kháng chiến"},
   {time:"1947", event:"Lãnh đạo chiến dịch Việt Bắc"},
   {time:"1950", event:"Lãnh đạo chiến dịch Biên giới"},
   {time:"1951", event:"Chủ trì Đại hội đại biểu toàn quốc lần II của Đảng"},
   {time:"1953-1954", event:"Lãnh đạo cuộc Tiến công chiến lược Đông-Xuân và chiến dịch Điện Biên Phủ"},
   {time:"1959", event:"Chủ trì Hội nghị lần 15 BCH Trung ương"},
   {time:"1960", event:"Chủ trì Đại hội đại biểu toàn quốc lần III của Đảng"},
-  {time:"VAI TRÒ", event:"Tìm ra con đường cứu nước (1920); Đào tạo bồi dưỡng lý luận cách mạng; Chuẩn bị tư tưởng, chính trị, tổ chức cho việc thành lập Đảng; Thống nhất các tổ chức Cộng sản, thành lập Đảng với Cương lĩnh đúng đắn; Xây dựng lực lượng (chính trị, vũ trang, căn cứ địa), lãnh đạo Cách mạng tháng Tám; Lãnh đạo nhân dân kháng chiến chống Pháp, chống Mỹ; Chỉ đạo xây dựng và hoàn chỉnh đường lối cách mạng đúng đắn, sáng tạo; Xây dựng mặt trận, đoàn kết toàn dân tộc, đoàn kết quốc tế"},
 ],
 };
 
-const S={
-  mode:'quiz', topics:['Lịch Sử Thế Giới','Lịch Sử Việt Nam','Hồ Chí Minh'],
-  count:9999, qs:[], cur:0, ans:[], t0:0,
-  todayOk:+localStorage.getItem('todayOk')||0,
-  total:+localStorage.getItem('total')||0,
-  fc:[],fcIdx:0,fcKn:new Set(),fcUn:new Set(),fcFlip:false
-};
+const ADMIN_PASSWORD = 'admin123';
+const STORAGE_KEY = 'lichsu_records_v3';
+const USER_KEY = 'lichsu_user_v3';
+const PTS_PER = {quiz:10, repeat:15, type:20, flash:5};
 
-function init(){
-  const box=document.getElementById('topicBox');
-  box.innerHTML=Object.keys(DATA).map(t=>
-    `<button class="tb on" onclick="toggleT(this,'${t}')">${t} <span style="opacity:.6;font-size:11px">(${DATA[t].length})</span></button>`
-  ).join('');
-  upH();
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+let currentUser = null; // {name, totalPts, totalOk, sessions}
+let S = {
+  mode:'quiz', topics:['Lịch Sử Thế Giới','Lịch Sử Việt Nam','Hồ Chí Minh'],
+  count:9999, qs:[], cur:0, ans:[], t0:0, ptsEarned:0,
+  fc:[], fcIdx:0, fcKn:new Set(), fcUn:new Set(), fcPts:0,
+  // repeat mode
+  rpQueue:[], rpDone:0, rpTotalOriginal:0, rpMistakeMap:{}, rpAnsweredThisQ:false
+};
+let adminFilter = 'all';
+
+// ═══════════════════════════════════════
+//  STORAGE HELPERS
+// ═══════════════════════════════════════
+function getRecords(){ try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||[];}catch{return[];} }
+function saveRecord(r){ const rs=getRecords(); rs.push(r); localStorage.setItem(STORAGE_KEY,JSON.stringify(rs)); }
+function clearRecords(){ localStorage.removeItem(STORAGE_KEY); }
+
+function loadUser(name){
+  const all = getRecords().filter(r=>r.name===name);
+  const totalPts = all.reduce((s,r)=>s+(r.pts||0),0);
+  const totalOk  = all.reduce((s,r)=>s+(r.ok||0),0);
+  return {name, totalPts, totalOk, sessions: all.length};
 }
-function upH(){
-  document.getElementById('hTotal').textContent=S.total;
-  document.getElementById('hCorrect').textContent=S.todayOk;
+function refreshUserFromStorage(){
+  if(!currentUser) return;
+  const u = loadUser(currentUser.name);
+  currentUser.totalPts = u.totalPts;
+  currentUser.totalOk  = u.totalOk;
+  currentUser.sessions = u.sessions;
+  updateHdr();
+}
+
+// ═══════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════
+function doLogin(){
+  const nm = document.getElementById('loginName').value.trim();
+  if(!nm){ document.getElementById('loginErr').style.display='block';
+           document.getElementById('loginName').classList.add('inp-err'); return; }
+  document.getElementById('loginErr').style.display='none';
+  document.getElementById('loginName').classList.remove('inp-err');
+  currentUser = loadUser(nm);
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('mainHdr').style.display='flex';
+  document.getElementById('appWrap').style.display='block';
+  updateHdr();
+  renderHomeGreeting();
+  show('sHome');
+}
+function logout(){
+  document.getElementById('logoutName').textContent = currentUser.name;
+  document.getElementById('logoutModal').classList.add('show');
+}
+function closeLogoutModal(){ document.getElementById('logoutModal').classList.remove('show'); }
+function confirmLogout(){
+  closeLogoutModal();
+  currentUser = null;
+  document.getElementById('mainHdr').style.display='none';
+  document.getElementById('appWrap').style.display='none';
+  document.getElementById('loginPage').style.display='';
+  document.getElementById('loginName').value='';
+}
+function updateHdr(){
+  if(!currentUser) return;
+  const av = currentUser.name.trim()[0].toUpperCase();
+  document.getElementById('hdrAv').textContent = av;
+  document.getElementById('hdrName').textContent = currentUser.name;
+  document.getElementById('hdrPts').textContent = currentUser.totalPts+' điểm';
+}
+function renderHomeGreeting(){
+  if(!currentUser) return;
+  const av = currentUser.name.trim()[0].toUpperCase();
+  document.getElementById('greetAv').textContent = av;
+  document.getElementById('greetName').textContent = 'Xin chào, '+currentUser.name+'! 👋';
+  document.getElementById('greetSub').textContent = currentUser.sessions>0
+    ? `Bạn đã làm ${currentUser.sessions} lần. Tiếp tục cố gắng nhé!`
+    : 'Lần đầu học? Chọn chế độ và bắt đầu nào!';
+  document.getElementById('greetPts').textContent = currentUser.totalPts;
+  document.getElementById('greetOkTotal').textContent = currentUser.totalOk;
+  document.getElementById('greetSessions').textContent = currentUser.sessions;
+}
+
+// ADMIN LOGIN
+function showAdminLogin(){
+  document.getElementById('adminPw').value='';
+  document.getElementById('adminErr').style.display='none';
+  document.getElementById('adminModal').classList.add('show');
+  setTimeout(()=>document.getElementById('adminPw').focus(),200);
+}
+function closeAdminModal(){ document.getElementById('adminModal').classList.remove('show'); }
+function doAdminLogin(){
+  const pw = document.getElementById('adminPw').value;
+  if(pw !== ADMIN_PASSWORD){
+    document.getElementById('adminErr').style.display='block'; return;
+  }
+  closeAdminModal();
+  // if not logged in, log in as admin
+  if(!currentUser){
+    currentUser = {name:'Giáo Viên', totalPts:0, totalOk:0, sessions:0};
+    document.getElementById('loginPage').style.display='none';
+    document.getElementById('mainHdr').style.display='flex';
+    document.getElementById('appWrap').style.display='block';
+    updateHdr();
+  }
+  renderAdmin();
+  show('sAdmin');
+}
+
+// ═══════════════════════════════════════
+//  HOME
+// ═══════════════════════════════════════
+function init(){
+  const box = document.getElementById('topicBox');
+  box.innerHTML = Object.keys(DATA).map(t=>
+    `<button class="tb on" onclick="toggleT(this,'${t}')">${t} <span style="opacity:.55;font-size:10px">(${DATA[t].length})</span></button>`
+  ).join('');
 }
 function toggleT(btn,t){
   if(S.topics.includes(t)){if(S.topics.length===1)return;S.topics=S.topics.filter(x=>x!==t);btn.classList.remove('on')}
   else{S.topics.push(t);btn.classList.add('on')}
 }
-function pickMode(m,el){S.mode=m;document.querySelectorAll('.mc').forEach(c=>c.classList.remove('sel'));el.classList.add('sel')}
-function pickCount(n,btn){S.count=n;document.querySelectorAll('.cb').forEach(b=>b.classList.remove('on'));btn.classList.add('on')}
+function pickMode(m,el){
+  S.mode=m;
+  document.querySelectorAll('.mc').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function pickCount(n,btn){
+  S.count=n;
+  document.querySelectorAll('.cb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
 
-function pool(){return S.topics.flatMap(t=>DATA[t].map(d=>({...d,topic:t})))}
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+// ═══════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════
+function pool(){ return S.topics.flatMap(t=>DATA[t].map(d=>({...d,topic:t}))); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a; }
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goHome(){
+  const a=document.querySelector('.screen.active');
+  if(a&&['sQuiz','sRepeat','sType'].includes(a.id)) document.getElementById('modal').classList.add('show');
+  else { refreshUserFromStorage(); renderHomeGreeting(); show('sHome'); }
+}
+function closeModal(){ document.getElementById('modal').classList.remove('show'); }
+function confirmHome(){ closeModal(); refreshUserFromStorage(); renderHomeGreeting(); show('sHome'); }
 
 function buildQuiz(p){
   const all=pool();
@@ -525,18 +971,22 @@ function buildQuiz(p){
     if(byTime){
       const wrongs=shuffle(all.filter(x=>x.event!==item.event)).slice(0,3).map(x=>x.event);
       const opts=shuffle([item.event,...wrongs]);
-      return{q:`Sự kiện nào xảy ra vào năm/giai đoạn <strong>${item.time}</strong>?`,opts,correct:item.event,topic:item.topic,expl:`Năm <strong>${item.time}</strong>: ${item.event}`};
+      return{q:`Sự kiện nào xảy ra vào năm/giai đoạn <strong>${item.time}</strong>?`,
+             opts,correct:item.event,topic:item.topic,
+             expl:`Năm <strong>${item.time}</strong>: ${item.event}`};
     }else{
       const wrongs=shuffle(all.filter(x=>x.time!==item.time)).slice(0,3).map(x=>x.time);
       const opts=shuffle([item.time,...wrongs]);
-      return{q:`Sự kiện "<strong>${item.event}</strong>" xảy ra vào thời gian nào?`,opts,correct:item.time,topic:item.topic,expl:`Đáp án: <strong>${item.time}</strong> — ${item.event}`};
+      return{q:`Sự kiện "<strong>${item.event}</strong>" xảy ra vào thời gian nào?`,
+             opts,correct:item.time,topic:item.topic,
+             expl:`Đáp án: <strong>${item.time}</strong> — ${item.event}`};
     }
   });
 }
 function buildType(p){
   return shuffle([...p]).slice(0,Math.min(S.count,p.length)).map(item=>({
     q:`Sự kiện "<strong>${item.event}</strong>" xảy ra vào năm/giai đoạn nào?`,
-    correct:item.time,topic:item.topic,
+    correct:item.time, topic:item.topic,
     expl:`Đáp án: <strong>${item.time}</strong>`
   }));
 }
@@ -544,14 +994,28 @@ function buildType(p){
 function go(){
   const p=pool();
   if(p.length<4){alert('Vui lòng chọn ít nhất một chủ đề!');return}
-  S.t0=Date.now();S.cur=0;S.ans=[];
-  if(S.mode==='quiz'){S.qs=buildQuiz(p);show('sQuiz');renderQ()}
-  else if(S.mode==='type'){S.qs=buildType(p);show('sType');renderType()}
-  else{S.fc=shuffle([...p]).slice(0,Math.min(S.count,p.length));S.fcIdx=0;S.fcKn=new Set();S.fcUn=new Set();S.fcFlip=false;show('sFlash');renderFC()}
+  S.t0=Date.now(); S.cur=0; S.ans=[]; S.ptsEarned=0;
+  if(S.mode==='quiz'){
+    S.qs=buildQuiz(p); show('sQuiz'); renderQ();
+  } else if(S.mode==='repeat'){
+    const base=buildQuiz(p);
+    S.rpQueue=[...base]; S.rpDone=0; S.rpTotalOriginal=base.length;
+    S.rpMistakeMap={}; S.rpAnsweredThisQ=false;
+    show('sRepeat'); renderRepeat();
+  } else if(S.mode==='type'){
+    S.qs=buildType(p); show('sType'); renderType();
+  } else {
+    S.fc=shuffle([...p]).slice(0,Math.min(S.count,p.length));
+    S.fcIdx=0; S.fcKn=new Set(); S.fcUn=new Set(); S.fcPts=0;
+    show('sFlash'); renderFC();
+  }
 }
 
+// ═══════════════════════════════════════
+//  QUIZ MODE
+// ═══════════════════════════════════════
 function renderQ(){
-  const q=S.qs[S.cur],n=S.qs.length;
+  const q=S.qs[S.cur], n=S.qs.length;
   document.getElementById('qCur').textContent=S.cur+1;
   document.getElementById('qTot').textContent=n;
   document.getElementById('qPbar').style.width=(S.cur/n*100)+'%';
@@ -559,48 +1023,157 @@ function renderQ(){
   document.getElementById('qTxt').innerHTML=q.q;
   document.getElementById('qTag').textContent=q.topic;
   document.getElementById('qNext').style.display='none';
+  document.getElementById('qSkipBtn').style.display='';
   document.getElementById('qExpl').className='expl';
+  document.getElementById('qBanner').innerHTML='';
+  document.getElementById('qCard').className='qcard';
+  document.getElementById('qPtsLive').textContent=S.ptsEarned;
   renderDots('qDots',n);
   const L=['A','B','C','D'];
   document.getElementById('qOpts').innerHTML=q.opts.map((o,i)=>
-    `<button class="opt" onclick="pickAns(${i},this)"><div class="olbl">${L[i]}</div><div>${o}</div></button>`
+    `<button class="opt" onclick="pickAns(${i},this)">
+      <div class="olbl">${L[i]}</div>
+      <div class="opt-body"><div>${o}</div><div class="opt-sub"></div></div>
+    </button>`
   ).join('');
 }
-function renderDots(id,n){
+function renderDots(id,n,extra){
   document.getElementById(id).innerHTML=Array.from({length:n},(_,i)=>{
-    const a=S.ans[i];let c='';
-    if(i===S.cur)c='cur';
-    else if(!a)c='';
-    else if(a.skip)c='sk';
-    else if(a.chose===a.correct)c='ok';
+    const a=S.ans[i]; let c='';
+    if(i===S.cur) c='cur';
+    else if(!a) c='';
+    else if(a.skip) c='sk';
+    else if(a.chose===a.correct) c='ok';
     else c='no';
     return`<div class="dot ${c}"></div>`;
   }).join('');
 }
 function pickAns(idx,btn){
-  const q=S.qs[S.cur],chose=q.opts[idx],isOk=chose===q.correct;
-  rec(chose,q.correct,false);
-  if(isOk){S.todayOk++;localStorage.setItem('todayOk',S.todayOk);upH()}
-  const btns=document.querySelectorAll('.opt');
-  btns.forEach(b=>b.classList.add('dis'));
-  btns.forEach((b,i)=>{if(q.opts[i]===q.correct)b.classList.add('ok');else if(i===idx)b.classList.add('no')});
+  const q=S.qs[S.cur], chose=q.opts[idx], isOk=chose===q.correct;
+  const pts = isOk ? PTS_PER.quiz : 0;
+  S.ptsEarned += pts;
+  recQ(chose, q.correct, false);
+  highlightOpts('qOpts', q.opts, q.correct, idx);
+  showBanner('qBanner', isOk, chose, q.correct, pts, false);
+  document.getElementById('qCard').className='qcard '+(isOk?'glow-ok':'glow-no');
   showExpl(q.expl,'qExpl');
   document.getElementById('qNext').style.display='';
+  document.getElementById('qSkipBtn').style.display='none';
+  document.getElementById('qPtsLive').textContent=S.ptsEarned;
   renderDots('qDots',S.qs.length);
 }
 function skipQ(){
-  const q=S.qs[S.cur];rec(null,q.correct,true);
-  const btns=document.querySelectorAll('.opt');
-  btns.forEach(b=>b.classList.add('dis'));
-  btns.forEach((b,i)=>{if(q.opts[i]===q.correct)b.classList.add('ok')});
+  const q=S.qs[S.cur];
+  recQ(null, q.correct, true);
+  highlightOpts('qOpts', q.opts, q.correct, -1);
+  showBanner('qBanner', false, null, q.correct, 0, true);
+  document.getElementById('qCard').className='qcard';
   showExpl(q.expl,'qExpl');
   document.getElementById('qNext').style.display='';
+  document.getElementById('qSkipBtn').style.display='none';
   renderDots('qDots',S.qs.length);
 }
-function nextQ(){if(S.cur+1>=S.qs.length){showResult();return}S.cur++;renderQ()}
+function nextQ(){ if(S.cur+1>=S.qs.length) showResult('quiz'); else {S.cur++;renderQ();} }
+function recQ(chose,correct,skip){ S.ans[S.cur]={chose,correct,skip}; }
 
+// ═══════════════════════════════════════
+//  REPEAT MODE (Spaced Repetition)
+// ═══════════════════════════════════════
+function renderRepeat(){
+  if(S.rpQueue.length===0){ showResult('repeat'); return; }
+  const q = S.rpQueue[0];
+  const n = S.rpQueue.length;
+  const done = S.rpDone;
+  const total = done + n;
+  const pct = total>0 ? (done/total*100) : 0;
+
+  document.getElementById('rpCur').textContent = done+1;
+  document.getElementById('rpQ').textContent = n;
+  document.getElementById('rpPbar').style.width = pct+'%';
+  document.getElementById('rpNo').textContent = 'Câu '+(done+1);
+  document.getElementById('rpTxt').innerHTML = q.q;
+  document.getElementById('rpTag').textContent = q.topic;
+  document.getElementById('rpNext').style.display='none';
+  document.getElementById('rpExpl').className='expl';
+  document.getElementById('rpBanner').innerHTML='';
+  document.getElementById('rpCard').className='qcard';
+  document.getElementById('rpPtsLive').textContent=S.ptsEarned;
+  S.rpAnsweredThisQ = false;
+
+  // Show if it's a repeated question
+  const mistakeCount = S.rpMistakeMap[q._id||''] || 0;
+  const repTag = document.getElementById('rpRepTag');
+  const comebackDiv = document.getElementById('rpComebackNotice');
+  if(mistakeCount>0){
+    repTag.style.display='';
+    repTag.textContent = '🔄 Lần lặp '+mistakeCount;
+    repTag.style.background='rgba(167,139,250,.15)';
+    repTag.style.color='var(--purple)';
+    comebackDiv.innerHTML=`<div class="comeback-notice">🔁 Câu này bạn đã sai trước đó — đây là lần ôn lại thứ <strong>${mistakeCount}</strong>. Lần này làm cẩn thận hơn nhé!</div>`;
+  } else {
+    repTag.style.display='none';
+    comebackDiv.innerHTML='';
+  }
+
+  // Info bar
+  const newCount = S.rpQueue.filter(q=>!(S.rpMistakeMap[q._id||'']>0)).length;
+  const reviewCount = S.rpQueue.filter(q=>(S.rpMistakeMap[q._id||'']>0)).length;
+  document.getElementById('repInfoBar').innerHTML=
+    `<div class="ri-chip ri-new">📋 ${newCount} câu mới</div>`+
+    (reviewCount>0?`<div class="ri-chip ri-review">🔁 ${reviewCount} câu ôn lại</div>`:'')+
+    `<div class="ri-chip ri-done">✅ ${done} đã xong</div>`;
+
+  document.getElementById('rpProgress').textContent=
+    `Còn lại: ${n} câu | Hoàn thành: ${Math.round(pct)}%`;
+
+  const L=['A','B','C','D'];
+  document.getElementById('rpOpts').innerHTML=q.opts.map((o,i)=>
+    `<button class="opt" onclick="pickRepeat(${i},this)">
+      <div class="olbl">${L[i]}</div>
+      <div class="opt-body"><div>${o}</div><div class="opt-sub"></div></div>
+    </button>`
+  ).join('');
+}
+
+function pickRepeat(idx, btn){
+  if(S.rpAnsweredThisQ) return;
+  S.rpAnsweredThisQ = true;
+  const q = S.rpQueue[0];
+  if(!q._id) q._id = Math.random().toString(36).slice(2);
+  const chose = q.opts[idx], isOk = chose===q.correct;
+  const pts = isOk ? PTS_PER.repeat : 0;
+  S.ptsEarned += pts;
+
+  highlightOpts('rpOpts', q.opts, q.correct, idx);
+  showBanner('rpBanner', isOk, chose, q.correct, pts, false);
+  document.getElementById('rpCard').className='qcard '+(isOk?'glow-ok':'glow-no');
+  showExpl(q.expl,'rpExpl');
+  document.getElementById('rpNext').style.display='';
+  document.getElementById('rpPtsLive').textContent=S.ptsEarned;
+
+  if(isOk){
+    // Remove from queue
+    S.rpQueue.shift();
+    S.rpDone++;
+  } else {
+    // Move to back with delay: reinsert after 2–3 questions
+    S.rpMistakeMap[q._id] = (S.rpMistakeMap[q._id]||0)+1;
+    S.rpQueue.shift();
+    const insertAt = Math.min(2+Math.floor(Math.random()*2), S.rpQueue.length);
+    const clone = {...q};
+    S.rpQueue.splice(insertAt,0,clone);
+  }
+}
+
+function nextRepeat(){
+  renderRepeat();
+}
+
+// ═══════════════════════════════════════
+//  TYPING MODE
+// ═══════════════════════════════════════
 function renderType(){
-  const q=S.qs[S.cur],n=S.qs.length;
+  const q=S.qs[S.cur], n=S.qs.length;
   document.getElementById('tCur').textContent=S.cur+1;
   document.getElementById('tTot').textContent=n;
   document.getElementById('tPbar').style.width=(S.cur/n*100)+'%';
@@ -608,29 +1181,48 @@ function renderType(){
   document.getElementById('tTxt').innerHTML=q.q;
   document.getElementById('tTag').textContent=q.topic;
   const inp=document.getElementById('tInput');
-  inp.value='';inp.disabled=false;inp.style.borderColor='var(--border)';inp.style.color='var(--text)';
+  inp.value=''; inp.disabled=false; inp.style.borderColor='var(--border)';
   document.getElementById('tExpl').className='expl';
+  document.getElementById('tBanner').innerHTML='';
   document.getElementById('tNext').style.display='none';
+  document.getElementById('tCheckBtn').style.display='';
+  document.getElementById('tCard').className='qcard';
+  document.getElementById('tPtsLive').textContent=S.ptsEarned;
+  renderDots('tDots',n);
   setTimeout(()=>inp.focus(),100);
 }
 function checkType(){
-  const q=S.qs[S.cur],val=document.getElementById('tInput').value.trim();
-  if(!val)return;
-  const inp=document.getElementById('tInput');inp.disabled=true;
-  const norm=s=>s.replace(/\s/g,'').toLowerCase();
-  const ok=norm(val)===norm(q.correct);
-  inp.style.borderColor=ok?'var(--green)':'var(--red)';inp.style.color=ok?'var(--green)':'var(--red)';
-  rec(val,q.correct,false);
-  if(ok){S.todayOk++;localStorage.setItem('todayOk',S.todayOk);upH()}
+  const q=S.qs[S.cur], val=document.getElementById('tInput').value.trim();
+  if(!val) return;
+  const inp=document.getElementById('tInput'); inp.disabled=true;
+  const norm=s=>s.replace(/\s+/g,'').toLowerCase().replace(/[()（）]/g,'');
+  const isOk=norm(val)===norm(q.correct)||q.correct.toLowerCase().includes(val.toLowerCase());
+  inp.style.borderColor=isOk?'var(--green)':'var(--red)';
+  const pts=isOk?PTS_PER.type:0;
+  S.ptsEarned+=pts;
+  recQ(val,q.correct,false);
+  showBanner('tBanner',isOk,val,q.correct,pts,false);
+  document.getElementById('tCard').className='qcard '+(isOk?'glow-ok':'glow-no');
   showExpl(q.expl,'tExpl');
   document.getElementById('tNext').style.display='';
+  document.getElementById('tCheckBtn').style.display='none';
+  document.getElementById('tPtsLive').textContent=S.ptsEarned;
+  renderDots('tDots',S.qs.length);
 }
 function skipType(){
-  const q=S.qs[S.cur];document.getElementById('tInput').disabled=true;
-  rec(null,q.correct,true);showExpl(q.expl,'tExpl');document.getElementById('tNext').style.display='';
+  const q=S.qs[S.cur]; document.getElementById('tInput').disabled=true;
+  recQ(null,q.correct,true);
+  showBanner('tBanner',false,null,q.correct,0,true);
+  showExpl(q.expl,'tExpl');
+  document.getElementById('tNext').style.display='';
+  document.getElementById('tCheckBtn').style.display='none';
+  renderDots('tDots',S.qs.length);
 }
-function nextType(){if(S.cur+1>=S.qs.length){showResult();return}S.cur++;renderType()}
+function nextType(){ if(S.cur+1>=S.qs.length) showResult('type'); else {S.cur++;renderType();} }
 
+// ═══════════════════════════════════════
+//  FLASHCARD MODE
+// ═══════════════════════════════════════
 function renderFC(){
   const c=S.fc[S.fcIdx];
   document.getElementById('fcYr').textContent=c.time;
@@ -639,56 +1231,277 @@ function renderFC(){
   document.getElementById('fcCnt').textContent=(S.fcIdx+1)+' / '+S.fc.length;
   document.getElementById('fcKn').textContent=S.fcKn.size;
   document.getElementById('fcUn').textContent=S.fcUn.size;
-  S.fcFlip=false;document.getElementById('fcCard').classList.remove('flip');
+  document.getElementById('fcPtsDisplay').textContent=S.fcPts+'đ';
+  S.fcFlip=false; document.getElementById('fcCard').classList.remove('flip');
 }
-function flipFC(){S.fcFlip=!S.fcFlip;document.getElementById('fcCard').classList.toggle('flip',S.fcFlip)}
+let fcFlip=false;
+function flipFC(){fcFlip=!fcFlip;document.getElementById('fcCard').classList.toggle('flip',fcFlip)}
 function fcNext(){if(S.fcIdx+1<S.fc.length){S.fcIdx++;renderFC()}}
 function fcPrev(){if(S.fcIdx>0){S.fcIdx--;renderFC()}}
 function fcShuffle(){S.fc=shuffle([...S.fc]);S.fcIdx=0;renderFC()}
 function fcMark(t){
-  if(t==='know'){S.fcKn.add(S.fcIdx);S.fcUn.delete(S.fcIdx)}
-  else{S.fcUn.add(S.fcIdx);S.fcKn.delete(S.fcIdx)}
+  if(t==='know'){S.fcKn.add(S.fcIdx);S.fcUn.delete(S.fcIdx);S.fcPts+=PTS_PER.flash;}
+  else{S.fcUn.add(S.fcIdx);S.fcKn.delete(S.fcIdx);}
   document.getElementById('fcKn').textContent=S.fcKn.size;
   document.getElementById('fcUn').textContent=S.fcUn.size;
+  document.getElementById('fcPtsDisplay').textContent=S.fcPts+'đ';
   fcNext();
+  // if all marked, save
+  if(S.fcKn.size+S.fcUn.size===S.fc.length){
+    const rec={
+      name:currentUser.name, mode:'flash', pts:S.fcPts,
+      ok:S.fcKn.size, wrong:S.fcUn.size, skip:0, total:S.fc.length,
+      pct:Math.round(S.fcKn.size/S.fc.length*100), time:0,
+      ts: new Date().toLocaleString('vi-VN')
+    };
+    saveRecord(rec);
+    refreshUserFromStorage();
+  }
 }
 
-function showResult(){
-  const secs=Math.round((Date.now()-S.t0)/1000),total=S.qs.length;
-  const ok=S.ans.filter(a=>a&&!a.skip&&a.chose===a.correct).length;
-  const no=S.ans.filter(a=>a&&!a.skip&&a.chose!==a.correct).length;
-  const sk=S.ans.filter(a=>a&&a.skip).length;
-  const pct=Math.round(ok/total*100);
+// ═══════════════════════════════════════
+//  SHARED UI HELPERS
+// ═══════════════════════════════════════
+function highlightOpts(containerId, opts, correct, chosenIdx){
+  const btns = document.querySelectorAll('#'+containerId+' .opt');
+  btns.forEach((b,i)=>{
+    b.classList.add('dis');
+    const subEl = b.querySelector('.opt-sub');
+    if(opts[i]===correct){
+      if(i===chosenIdx){
+        b.classList.add('st-correct');
+        subEl.textContent='✅ Đúng rồi! Xuất sắc!';
+      } else {
+        b.classList.add('st-correct-hl');
+        subEl.textContent='← Đây là đáp án đúng';
+      }
+    } else if(i===chosenIdx){
+      b.classList.add('st-wrong');
+      subEl.textContent='❌ Sai rồi! Xem đáp án đúng nhé';
+    }
+  });
+}
+
+function showBanner(containerId, isOk, chose, correct, pts, isSkip){
+  let html='';
+  if(isSkip){
+    html=`<div class="ans-banner ab-skip">
+      <div class="ab-ico">⏭</div>
+      <div class="ab-body">
+        <div class="ab-label">Đã bỏ qua</div>
+        <div class="ab-main" style="color:var(--gold)">Câu này bạn chưa trả lời</div>
+        <div class="ab-correct-ans">Đáp án đúng: <strong>${correct}</strong></div>
+        <div class="ab-pts pts-zero">+0 điểm</div>
+      </div>
+    </div>`;
+  } else if(isOk){
+    html=`<div class="ans-banner ab-ok">
+      <div class="ab-ico">🎉</div>
+      <div class="ab-body">
+        <div class="ab-label">Chính xác!</div>
+        <div class="ab-main" style="color:var(--green)">Bạn đã trả lời đúng!</div>
+        <div class="ab-pts pts-gain">+${pts} điểm</div>
+      </div>
+    </div>`;
+  } else {
+    html=`<div class="ans-banner ab-no">
+      <div class="ab-ico">😔</div>
+      <div class="ab-body">
+        <div class="ab-label">Chưa đúng</div>
+        <div class="ab-main" style="color:var(--red)">Bạn chọn: <em>${chose||'—'}</em></div>
+        <div class="ab-correct-ans">Đáp án đúng: <strong>${correct}</strong></div>
+        <div class="ab-pts pts-zero">+0 điểm</div>
+      </div>
+    </div>`;
+  }
+  document.getElementById(containerId).innerHTML=html;
+}
+
+function showExpl(txt,id){
+  const el=document.getElementById(id);
+  el.innerHTML='💡 '+txt;
+  el.className='expl show';
+}
+
+// ═══════════════════════════════════════
+//  RESULT
+// ═══════════════════════════════════════
+function showResult(mode){
+  const secs=Math.round((Date.now()-S.t0)/1000);
+  let total, ok, no, sk;
+  if(mode==='repeat'){
+    // all done means all answered correctly
+    total=S.rpTotalOriginal;
+    const entries=Object.values(S.rpMistakeMap);
+    no=entries.filter(v=>v>0).length;
+    ok=total-no;
+    sk=0;
+  } else {
+    total=S.qs.length;
+    ok=S.ans.filter(a=>a&&!a.skip&&a.chose===a.correct).length;
+    no=S.ans.filter(a=>a&&!a.skip&&a.chose!==a.correct).length;
+    sk=S.ans.filter(a=>a&&a.skip).length;
+  }
+  const pct=total>0?Math.round(ok/total*100):0;
+  const pts=S.ptsEarned;
+
   let ico='😔',ttl='Cần cố gắng hơn!';
-  if(pct>=90){ico='🏆';ttl='Xuất sắc!'}else if(pct>=70){ico='🎉';ttl='Giỏi lắm!'}else if(pct>=50){ico='💪';ttl='Khá tốt!'}
+  if(pct>=90){ico='🏆';ttl='Xuất sắc! Tuyệt vời!';}
+  else if(pct>=70){ico='🎉';ttl='Giỏi lắm! Rất tốt!';}
+  else if(pct>=50){ico='💪';ttl='Khá tốt, tiếp tục cố!';}
   document.getElementById('resIco').textContent=ico;
   document.getElementById('resTtl').textContent=ttl;
-  document.getElementById('resSub').textContent=`Bạn đạt ${ok}/${total} câu đúng`;
-  document.getElementById('rOk').textContent=ok;document.getElementById('rNo').textContent=no;
-  document.getElementById('rSk').textContent=sk;document.getElementById('rTm').textContent=secs+'s';
+  document.getElementById('resSub').textContent=`${currentUser.name} đạt ${ok}/${total} câu đúng`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=no;
+  document.getElementById('rSk').textContent=sk;
+  document.getElementById('rTm').textContent=secs+'s';
   document.getElementById('ringN').textContent=pct+'%';
   document.getElementById('ringN').style.color=pct>=70?'var(--green)':pct>=50?'var(--gold)':'var(--red)';
-  setTimeout(()=>{const off=364-(pct/100*364);document.getElementById('ringC').style.transition='stroke-dashoffset 1.2s ease';document.getElementById('ringC').style.strokeDashoffset=off},100);
+  setTimeout(()=>{
+    const off=364-(pct/100*364);
+    document.getElementById('ringC').style.transition='stroke-dashoffset 1.2s ease';
+    document.getElementById('ringC').style.strokeDashoffset=off;
+  },100);
+
+  // Points banner
+  document.getElementById('ptsEarned').textContent='+'+pts;
+  document.getElementById('ptsBreakdown').innerHTML=
+    `<div class="pb-item"><b style="color:var(--green)">${ok}</b>câu đúng</div>`+
+    `<div class="pb-item"><b style="color:var(--red)">${no}</b>câu sai</div>`+
+    `<div class="pb-item"><b style="color:var(--blue)">${pct}%</b>chính xác</div>`;
+
+  // Review list
   document.getElementById('revCnt').textContent='('+total+' câu)';
-  document.getElementById('revList').innerHTML=S.qs.map((q,i)=>{
-    const a=S.ans[i]||{};const cls=a.skip?'sk':a.chose===q.correct?'ok':'no';
-    const ic2=a.skip?'⏭':a.chose===q.correct?'✅':'❌';
-    return`<div class="rev-item ${cls}">
-      <div class="rev-q">${ic2} ${q.q.replace(/<[^>]+>/g,'')}</div>
-      <div class="rev-row"><span class="rtag rt-ok">✓ Đúng</span><span>${q.correct}</span></div>
-      ${a.chose!==q.correct?`<div class="rev-row"><span class="rtag ${a.skip?'rt-sk':'rt-no'}">${a.skip?'⏭':'✗ Bạn'}</span><span style="color:var(--muted)">${a.chose||'(Bỏ qua)'}</span></div>`:''}
+  if(mode==='repeat'){
+    document.getElementById('revList').innerHTML=`<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">
+      ✅ Bạn đã ôn lại tất cả ${total} câu thành công! Các câu sai được lặp lại cho đến khi bạn trả lời đúng.
     </div>`;
-  }).join('');
+  } else {
+    document.getElementById('revList').innerHTML=S.qs.map((q,i)=>{
+      const a=S.ans[i]||{};
+      const cls=a.skip?'sk':a.chose===q.correct?'ok':'no';
+      const ic=a.skip?'⏭':a.chose===q.correct?'✅':'❌';
+      const qText=q.q.replace(/<[^>]+>/g,'');
+      return`<div class="rev-item ${cls}">
+        <div class="rev-q">${ic} ${qText}</div>
+        <div class="rev-ans-row row-ok">
+          <span class="rtag rt-ok">✓ Đúng</span>
+          <span class="rev-ans-txt">${q.correct}</span>
+        </div>
+        ${(a.chose!==q.correct)?`<div class="rev-ans-row ${a.skip?'row-sk':'row-no'}">
+          <span class="rtag ${a.skip?'rt-sk':'rt-no'}">${a.skip?'⏭ Bỏ qua':'✗ Bạn chọn'}</span>
+          <span class="rev-ans-txt muted">${a.chose||'(không trả lời)'}</span>
+        </div>`:''}
+      </div>`;
+    }).join('');
+  }
+
+  // Save record
+  const modeLabel = {quiz:'quiz',repeat:'repeat',type:'type'}[mode]||mode;
+  const rec = {
+    name: currentUser.name, mode: modeLabel,
+    pts, ok, wrong:no, skip:sk, total, pct, time:secs,
+    ts: new Date().toLocaleString('vi-VN')
+  };
+  saveRecord(rec);
+  refreshUserFromStorage();
   show('sResult');
 }
-function retryQ(){go()}
-function rec(chose,correct,skip){S.ans[S.cur]={chose,correct,skip};S.total++;localStorage.setItem('total',S.total);upH()}
-function showExpl(txt,id){const el=document.getElementById(id);el.innerHTML='💡 '+txt;el.className='expl show'}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
-function goHome(){const a=document.querySelector('.screen.active');if(a&&a.id!=='sHome'&&a.id!=='sResult')document.getElementById('modal').classList.add('show');else show('sHome')}
-function closeModal(){document.getElementById('modal').classList.remove('show')}
-function confirmHome(){closeModal();show('sHome')}
+function retryQ(){ go(); }
+
+// ═══════════════════════════════════════
+//  ADMIN PANEL
+// ═══════════════════════════════════════
+function renderAdmin(){
+  const records = getRecords();
+  // Summary stats
+  const names = [...new Set(records.map(r=>r.name))];
+  const totalSessions = records.length;
+  const avgPct = records.length>0 ? Math.round(records.reduce((s,r)=>s+(r.pct||0),0)/records.length) : 0;
+  document.getElementById('adminStatsRow').innerHTML=
+    `<div class="admin-stat-card"><div class="asc-n" style="color:var(--blue)">${names.length}</div><div class="asc-l">Học sinh</div></div>`+
+    `<div class="admin-stat-card"><div class="asc-n" style="color:var(--gold)">${totalSessions}</div><div class="asc-l">Lần làm bài</div></div>`+
+    `<div class="admin-stat-card"><div class="asc-n" style="color:var(--green)">${avgPct}%</div><div class="asc-l">Tỉ lệ đúng TB</div></div>`;
+
+  // Leaderboard: by total pts per student
+  const byName = {};
+  records.forEach(r=>{
+    if(!byName[r.name]) byName[r.name]={name:r.name,pts:0,ok:0,sessions:0,bestPct:0};
+    byName[r.name].pts += (r.pts||0);
+    byName[r.name].ok  += (r.ok||0);
+    byName[r.name].sessions++;
+    byName[r.name].bestPct = Math.max(byName[r.name].bestPct, r.pct||0);
+  });
+  const lb = Object.values(byName).sort((a,b)=>b.pts-a.pts);
+  document.getElementById('lbCount').textContent=lb.length+' học sinh';
+  if(lb.length===0){
+    document.getElementById('lbList').innerHTML='<div class="lb-empty">Chưa có dữ liệu học sinh nào 📭</div>';
+  } else {
+    document.getElementById('lbList').innerHTML=lb.map((s,i)=>{
+      const rankClass=i===0?'r1':i===1?'r2':i===2?'r3':'';
+      const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'';
+      const av=s.name.trim()[0].toUpperCase();
+      return`<div class="lb-row">
+        <div class="lb-rank ${rankClass}">${medal}</div>
+        <div class="lb-av">${av}</div>
+        <div class="lb-info">
+          <div class="lb-name">${s.name}</div>
+          <div class="lb-meta">${s.sessions} lần làm · ${s.ok} câu đúng · tốt nhất ${s.bestPct}%</div>
+        </div>
+        <div class="lb-score">
+          <div class="lb-pts">${s.pts}</div>
+          <div class="lb-pct">điểm</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Detail table
+  renderAdminDetail(records);
+}
+
+function renderAdminDetail(records){
+  const filtered = adminFilter==='all' ? records : records.filter(r=>r.mode===adminFilter);
+  const sorted = [...filtered].reverse(); // newest first
+  document.getElementById('dtCount').textContent=sorted.length+' bài';
+  const modeLabel={quiz:'Trắc nghiệm',repeat:'Lặp lại',type:'Nhập năm',flash:'Thẻ ghi nhớ'};
+  const modeClass={quiz:'dm-quiz',repeat:'dm-repeat',type:'dm-type',flash:'dm-quiz'};
+  if(sorted.length===0){
+    document.getElementById('dtList').innerHTML='<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px">Không có dữ liệu 📭</div>';
+    return;
+  }
+  document.getElementById('dtList').innerHTML=sorted.map(r=>`
+    <div class="dt-row">
+      <div class="dt-name">${r.name.trim()[0].toUpperCase()} ${r.name}</div>
+      <span class="dt-mode ${modeClass[r.mode]||'dm-quiz'}">${modeLabel[r.mode]||r.mode}</span>
+      <span style="font-size:12px;color:var(--muted)">✅${r.ok} ❌${r.wrong||0} ⏭${r.skip||0}</span>
+      <span style="font-size:12px;color:${r.pct>=70?'var(--green)':r.pct>=50?'var(--gold)':'var(--red)'};font-weight:800">${r.pct}%</span>
+      <div class="dt-pts">+${r.pts}</div>
+      <div class="dt-time">${r.ts}</div>
+    </div>
+  `).join('');
+}
+
+function filterAdmin(f,btn){
+  adminFilter=f;
+  document.querySelectorAll('.af-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderAdminDetail(getRecords());
+}
+function clearAdminData(){
+  if(confirm('Xóa toàn bộ dữ liệu học sinh? Hành động này không thể hoàn tác!')){
+    clearRecords(); renderAdmin();
+  }
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
 init();
+document.getElementById('loginName').addEventListener('keydown', e=>{
+  if(e.key==='Enter') doLogin();
+});
 </script>
 </body>
 </html>
