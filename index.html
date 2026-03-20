@@ -867,14 +867,7 @@ function doLogin(){
     errEl.style.display='block'; inpEl.classList.add('inp-err'); return;
   }
   errEl.style.display='none'; inpEl.classList.remove('inp-err');
-  const u = loadUserStats(nm);
-  currentUser = {...u};
-  document.getElementById('loginPage').style.display='none';
-  document.getElementById('mainHdr').style.display='flex';
-  document.getElementById('appWrap').style.display='block';
-  updateHdr();
-  renderGreeting();
-  show('sHome');
+  enterApp(nm);
 }
 function logout(){
   document.getElementById('logoutName').textContent=currentUser.name;
@@ -884,6 +877,7 @@ function closeLogoutModal(){ document.getElementById('logoutModal').classList.re
 function confirmLogout(){
   closeLogoutModal();
   hideStickyBar();
+  clearSession();
   currentUser=null;
   document.getElementById('mainHdr').style.display='none';
   document.getElementById('appWrap').style.display='none';
@@ -918,10 +912,11 @@ function closeStartSheet(e){
 function init(){
   const box=document.getElementById('topicBox');
   box.innerHTML=Object.keys(DATA).map(t=>
-    `<button class="tb on" onclick="toggleT(this,'${t}')">${t} <span style="opacity:.55;font-size:10px">(${DATA[t].length})</span></button>`
+    `<button class="tb on" data-topic="${t}" onclick="toggleT('${t}')">${t} <span style="opacity:.55;font-size:10px">(${DATA[t].length})</span></button>`
   ).join('');
 }
-function toggleT(btn,t){
+function toggleT(t){
+  const btn=document.querySelector(`.tb[data-topic="${t}"]`);
   if(S.topics.includes(t)){
     S.topics=S.topics.filter(x=>x!==t);
     btn.classList.remove('on');
@@ -1486,7 +1481,32 @@ function retryQ(){ go(); }
 // ════════════════════════════════════════════════════════════
 //  INIT
 // ════════════════════════════════════════════════════════════
+const SESSION_KEY = 'lichsu_session_v4';
+
+function saveSession(name){ localStorage.setItem(SESSION_KEY, name); }
+function clearSession(){ localStorage.removeItem(SESSION_KEY); }
+function getSavedSession(){ return localStorage.getItem(SESSION_KEY)||null; }
+
+function enterApp(name){
+  const u = loadUserStats(name);
+  currentUser = {...u};
+  saveSession(name);
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('mainHdr').style.display='flex';
+  document.getElementById('appWrap').style.display='block';
+  updateHdr();
+  renderGreeting();
+  show('sHome');
+}
+
 init();
+
+// Tự động đăng nhập nếu đã có session
+const saved = getSavedSession();
+if(saved){
+  enterApp(saved);
+} 
+
 document.getElementById('loginName').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
 function openStartSheet(){
