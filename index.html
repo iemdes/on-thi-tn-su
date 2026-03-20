@@ -111,7 +111,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
   font-size:12px;font-weight:700;transition:.2s}
 .cb:hover{border-color:var(--blue);color:var(--blue)}
 .cb.on{background:var(--blue-s);border-color:var(--blue);color:var(--blue)}
-.go{display:block;width:100%;max-width:280px;margin:0 auto;padding:14px;
+.go{display:block;width:100%;padding:14px;
   border:none;border-radius:13px;background:linear-gradient(135deg,#e05555,#f5a623);
   color:#fff;font-family:inherit;font-size:15px;font-weight:800;
   cursor:pointer;box-shadow:0 6px 20px rgba(224,85,85,.3);transition:.2s}
@@ -203,7 +203,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .opt.st-answer{border-color:var(--green);background:rgba(61,186,122,.06)}
 .opt.st-answer .olbl{background:rgba(61,186,122,.22);color:var(--green);border-color:var(--green)}
 .opt.st-answer .opt-sub{display:block;color:var(--green)}
-.opt.dis{cursor:default}
+.opt.dis{cursor:default;pointer-events:none}
 
 /* ── ANSWER BANNER ── */
 .ans-banner{border-radius:13px;padding:13px 16px;margin-bottom:10px;
@@ -1061,6 +1061,8 @@ function renderDots(id,n){
   }).join('');
 }
 function pickAns(idx,btn){
+  // Chặn chọn lại nếu câu đã trả lời
+  if(S.ans[S.cur]) return;
   const q=S.qs[S.cur], chose=q.opts[idx], isOk=chose===q.correct;
   if(isOk) S.liveOk++; else S.liveNo++;
   S.ans[S.cur]={chose,correct:q.correct,skip:false};
@@ -1070,7 +1072,6 @@ function pickAns(idx,btn){
   showExpl(q.expl,'qExpl');
   updateQLive();
   renderDots('qDots',S.qs.length);
-  // set sticky next & scroll down to show it
   const isLast = S.cur+1>=S.qs.length;
   setStickyNext(isLast?'Xem kết quả 🎉':'Câu tiếp theo →');
   scrollToAnswer();
