@@ -652,9 +652,13 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 
 <!-- BOTTOM SHEET: start settings -->
 <div class="sheet-overlay" id="startSheet">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">⚙️ Cài đặt bài thi</div>
+  <div class="sheet" id="sheetInner">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div class="sheet-title" style="margin-bottom:0">⚙️ Cài đặt bài thi</div>
+      <button onclick="document.getElementById('startSheet').classList.remove('show')"
+        style="background:var(--card2);border:1.5px solid var(--border);border-radius:8px;
+        padding:5px 12px;color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">✕</button>
+    </div>
     <div class="sheet-lbl">📚 Chủ đề</div>
     <div class="topics" id="topicBox"></div>
     <div class="sheet-lbl">🔢 Số câu</div>
@@ -894,22 +898,28 @@ function closeStartSheet(e){
     document.getElementById('startSheet').classList.remove('show');
 }
 function init(){
-  const box=document.getElementById('topicBox');
-  box.innerHTML=Object.keys(DATA).map((t,i)=>
-    `<button class="tb on" id="tb_${i}" onclick="toggleT('${t}')">${t} <span style="opacity:.55;font-size:10px">(${DATA[t].length})</span></button>`
+  const box = document.getElementById('topicBox');
+  const keys = Object.keys(DATA);
+  box.innerHTML = keys.map((t,i) =>
+    `<button class="tb on" id="tb_${i}" data-t="${i}">${t} <span style="opacity:.55;font-size:10px">(${DATA[t].length})</span></button>`
   ).join('');
+  // Dùng event delegation — 1 listener duy nhất, không bị bubble lên overlay
+  box.addEventListener('click', function(e){
+    const btn = e.target.closest('.tb');
+    if(!btn) return;
+    e.stopPropagation();
+    const i = parseInt(btn.dataset.t);
+    const t = keys[i];
+    if(S.topics.includes(t)){
+      S.topics = S.topics.filter(x => x !== t);
+      btn.classList.remove('on');
+    } else {
+      S.topics.push(t);
+      btn.classList.add('on');
+    }
+  });
 }
-function toggleT(t){
-  const i = Object.keys(DATA).indexOf(t);
-  const btn = document.getElementById('tb_'+i);
-  if(S.topics.includes(t)){
-    S.topics = S.topics.filter(x=>x!==t);
-    if(btn) btn.classList.remove('on');
-  } else {
-    S.topics.push(t);
-    if(btn) btn.classList.add('on');
-  }
-}
+function toggleT(t){} // kept for safety, logic moved to delegation above
 function pickMode(m,el){
   S.mode=m;
   document.querySelectorAll('.mc').forEach(c=>c.classList.remove('sel'));
@@ -1485,11 +1495,6 @@ function enterApp(name){
 }
 
 init();
-
-// Đóng sheet khi nhấn vùng tối bên ngoài
-document.getElementById('startSheet').addEventListener('click', function(e){
-  if(e.target === this) this.classList.remove('show');
-});
 
 // Tự động đăng nhập nếu đã có session
 const saved = getSavedSession();
