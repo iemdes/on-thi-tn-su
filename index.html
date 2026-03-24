@@ -245,7 +245,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
   background:linear-gradient(135deg,var(--gold),#f0c040);color:#1a1d27;
   font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;
   box-shadow:0 6px 20px rgba(245,166,35,.3);transition:.2s}
-.btn-check-fixed:hover{transform:translateY(-2px)}
+.btn-exit-fixed{padding:12px 14px;border-radius:11px;border:1.5px solid var(--border);
+  background:var(--card2);color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;
+  cursor:pointer;transition:.2s;flex-shrink:0}
+.btn-exit-fixed:hover{border-color:var(--red);color:var(--red)}
 
 /* Typing input */
 .tinput{width:100%;background:var(--card);border:2px solid var(--border);
@@ -972,17 +975,19 @@ function hideStickyBar(){
 }
 
 function setStickySkipOnly(){
-  _currentMode = document.querySelector('.screen.active')?.id||'';
-  showStickyBar(`<button class="btn-skip-fixed" onclick="skipCurrent()">⏭ Bỏ qua</button>
-    <button class="btn-next-fixed" disabled>Chọn đáp án trước →</button>`);
+  showStickyBar(`<button class="btn-exit-fixed" onclick="goHome()">🏠</button>
+    <button class="btn-skip-fixed" onclick="skipCurrent()">⏭ Bỏ qua</button>
+    <button class="btn-next-fixed" disabled>Chọn đáp án →</button>`);
 }
 function setStickyNext(label){
   const modeId = document.querySelector('.screen.active')?.id||'';
   const fn = modeId==='sQuiz'?'nextQ()':modeId==='sRepeat'?'nextRepeat()':'nextType()';
-  showStickyBar(`<button class="btn-next-fixed" onclick="${fn}">${label||'Tiếp theo →'}</button>`);
+  showStickyBar(`<button class="btn-exit-fixed" onclick="goHome()">🏠</button>
+    <button class="btn-next-fixed" onclick="${fn}">${label||'Tiếp theo →'}</button>`);
 }
 function setStickyCheck(){
-  showStickyBar(`<button class="btn-skip-fixed" onclick="skipType()">⏭ Bỏ qua</button>
+  showStickyBar(`<button class="btn-exit-fixed" onclick="goHome()">🏠</button>
+    <button class="btn-skip-fixed" onclick="skipType()">⏭ Bỏ qua</button>
     <button class="btn-check-fixed" onclick="checkType()">✓ Kiểm tra</button>`);
 }
 function skipCurrent(){
